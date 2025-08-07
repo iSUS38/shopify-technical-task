@@ -1,0 +1,202 @@
+{%- assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' -%}
+
+<script src="{{ 'recipient-form.js' | asset_url }}" defer="defer"></script>
+
+<recipient-form
+  class="recipient-form"
+  data-section-id="{{ section.id }}"
+  data-product-variant-id="{{ product.selected_or_first_available_variant.id }}"
+>
+  <div class="checkbox">
+    <input
+      id="Recipient-checkbox-{{ section.id }}"
+      type="checkbox"
+      name="{{ gift_card_recipient_control_flag }}"
+      class="checkbox__input"
+    >
+    <label for="Recipient-checkbox-{{ section.id }}" class="checkbox__label">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="checkbox__icon" viewBox="0 0 16 16"><path fill="" d="m12.9 5.77-6 6a.56.56 0 0 1-.8 0L3.48 9.15a.56.56 0 0 1 .8-.8l2.22 2.23 5.6-5.6a.56.56 0 0 1 .8.8Z"/></svg>
+      <span class="checkbox__label-text">
+        {{ 'recipient.form.checkbox' | t }}
+      </span>
+    </label>
+  </div>
+
+  <div
+    class="product-form__recipient-error-message-wrapper"
+    role="alert"
+    {% unless form.errors %}
+      hidden
+    {% endunless %}
+  >
+    <h2 class="form__message" tabindex="-1" autofocus>
+      {{- 'icon-error.svg' | inline_asset_content -}}
+      <span class="error-message">{{ 'contact.error_heading' | t }}</span>
+    </h2>
+
+    <ul>
+      {%- if form.errors -%}
+        {%- for field in form.errors -%}
+          <li>
+            {%- if field == 'form' -%}
+              {{ form.errors.messages[field] }}
+            {%- else -%}
+              <a href="#Recipient-{{ field }}-{{ section.id }}">
+                {{ form.errors.messages[field] }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  </div>
+  <p
+    id="Recipient-fields-live-region-{{ section.id }}"
+    class="visually-hidden"
+    role="status"
+  ></p>
+
+  <div class="recipient-form__fields">
+    <div
+      id="RecipientForm-email-error-{{ section.id }}"
+      class="form__errors text-s exception justify-{{ section.settings.horizontal_alignment }}{% unless form.errors contains 'email' %} hidden{% endunless %}"
+    >
+      {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+      {%- if form.errors contains 'email' -%}
+        {{ form.errors.messages.email }}
+      {%- endif -%}
+    </div>
+    <div class="field">
+      <label class="field__label" for="Recipient-email-{{ section.id }}">
+        {{ 'recipient.form.email_label' | t }}
+        <span aria-hidden="true">*</span>
+      </label>
+      <input
+        placeholder=" "
+        id="Recipient-email-{{ section.id }}"
+        type="email"
+        name="properties[Recipient email]"
+        class="field__input"
+        value="{{ form.email }}"
+        {% if form.errors contains 'email' %}
+          aria-invalid="true"
+          aria-describedby="RecipientForm-email-error-{{ section.id }}"
+        {% endif %}
+      >
+    </div>
+
+    <div
+      id="RecipientForm-name-error-{{ section.id }}"
+      class="form__errors text-s exception justify-{{ section.settings.horizontal_alignment }}{% unless form.errors contains 'name' %} hidden{% endunless %}"
+    >
+      {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+      {%- if form.errors contains 'name' -%}
+        {{ form.errors.messages.name }}
+      {%- endif -%}
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="Recipient-name-{{ section.id }}">
+        {{- 'recipient.form.name_label' | t -}}
+      </label>
+      <input
+        placeholder=" "
+        id="Recipient-name-{{ section.id }}"
+        type="text"
+        autocomplete="name"
+        name="properties[Recipient name]"
+        class="field__input"
+        value="{{ form.name }}"
+        {% if form.errors contains 'name' %}
+          aria-invalid="true"
+          aria-describedby="RecipientForm-name-error-{{ section.id }}"
+        {% endif %}
+        dir="auto"
+      >
+    </div>
+
+    <div
+      id="RecipientForm-message-error-{{ section.id }}"
+      class="form__errors text-s exception justify-{{ section.settings.horizontal_alignment }}{% unless form.errors contains 'message' %} hidden{% endunless %}"
+    >
+      {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+      {%- if form.errors contains 'message' -%}
+        {{ form.errors.messages.message }}
+      {%- endif -%}
+    </div>
+
+    <div class="field">
+      {%- assign max_chars_message = 200 -%}
+      {%- assign max_chars_message_rendered = 'recipient.form.max_characters' | t: max_chars: max_chars_message -%}
+      {%- assign message_label_rendered = 'recipient.form.message_label' | t -%}
+
+      <label class="field__label field__textarea-label" for="Recipient-message-{{ section.id }}">
+        {{ message_label_rendered }}
+      </label>
+      <textarea
+        rows="10"
+        id="Recipient-message-{{ section.id }}"
+        name="properties[Message]"
+        maxlength="{{ max_chars_message }}"
+        class="field__input"
+        placeholder=" "
+        aria-label="{{ message_label_rendered }} {{ max_chars_message_rendered }}"
+        {% if form.errors contains 'message' %}
+          aria-invalid="true"
+          aria-describedby="RecipientForm-message-error-{{ section.id }}"
+        {% endif %}
+        dir="auto"
+      >
+        {{- form.message -}}
+      </textarea>
+    </div>
+
+    <label class="">
+      <span class="text-xs">{{ max_chars_message_rendered }}</span>
+    </label>
+
+    <div
+      id="RecipientForm-send_on-error-{{ section.id }}"
+      class="form__errors text-s exception justify-{{ section.settings.horizontal_alignment }}{% unless form.errors contains 'send_on' %} hidden{% endunless %}"
+    >
+      {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+      {%- if form.errors contains 'send_on' -%}
+        {{ form.errors.messages.send_on }}
+      {%- endif -%}
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="Recipient-send-on-{{ section.id }}">
+        {{ 'recipient.form.send_on_label' | t }}
+      </label>
+      <input
+        class="field__input"
+        autocomplete="send_on"
+        type="date"
+        id="Recipient-send-on-{{ section.id }}"
+        name="properties[Send on]"
+        pattern="\d{4}-\d{2}-\d{2}"
+        placeholder=" "
+        value="{{ form.send_on }}"
+        {% if form.errors contains 'send_on' %}
+          aria-invalid="true"
+          aria-describedby="RecipientForm-send_on-error-{{ section.id }}"
+        {% endif %}
+      >
+    </div>
+  </div>
+
+  <input
+    type="hidden"
+    name="{{ gift_card_recipient_control_flag }}"
+    value="if_present"
+    id="Recipient-control-{{ section.id }}"
+  >
+  <input
+    type="hidden"
+    name="properties[__shopify_offset]"
+    value=""
+    id="Recipient-timezone-offset-{{ section.id }}"
+    disabled
+  >
+</recipient-form>

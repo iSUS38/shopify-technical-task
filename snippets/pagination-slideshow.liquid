@@ -1,0 +1,38 @@
+{%- assign arrow_style = arrow_style | default: 'below' -%}
+{%- assign counter_style = counter_style | default: 'counter' -%}
+{%- if arrow_style == 'below' -%}
+  {%- assign button_style = 'text' -%}
+{%- endif -%}
+
+
+<div class="slider-component__controls pagination">
+  <button
+    type="button"
+    class="pagination__item pagination__item--prev button button--square button--{{ button_style }}"
+    name="previous"
+    aria-controls="Slider-{{ section.id }}"
+    data-direction="previous"
+  >
+    <span class="visually-hidden">{{ 'sections.slider.previous_slide' | t }}</span>
+    {%- render 'icon' with 'caret-left', class: 'pagination__icon icon--l' -%}
+  </button>
+  <div class="pagination__count text-xs slider-counter {% if counter_style != 'counter' %}visually-hidden{% endif %}">
+    <span class="slider-counter--current">1</span>
+    <span aria-hidden="true"> / </span>
+    <span class="visually-hidden">{{ 'sections.slider.of' | t }}</span>
+    <span class="slider-counter--total">{{ total }}</span>
+  </div>
+  {%- if counter_style == 'progress' -%}
+    <div class="slider-component__progress faded-out" data-progress></div>
+  {%- endif -%}
+  <button
+    type="button"
+    class="pagination__item pagination__item--next button button--square button--{{ button_style }}"
+    name="next"
+    data-direction="next"
+    aria-controls="Slider-{{ section.id }}"
+  >
+    <span class="visually-hidden">{{ 'sections.slider.next_slide' | t }}</span>
+    {%- render 'icon' with 'caret-right', class: 'pagination__icon icon--l' -%}
+  </button>
+</div>

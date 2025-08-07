@@ -1,0 +1,21 @@
+<div class="rich-text__page rte rte--loose" {{ block.shopify_attributes }}>
+  {{- block.settings.page.content -}}
+</div>
+
+{% schema %}
+{
+  "name": "t:page",
+  "settings": [
+    {
+      "type": "page",
+      "id": "page",
+      "label": "t:page"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:page"
+    }
+  ]
+}
+{% endschema %}

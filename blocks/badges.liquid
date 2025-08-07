@@ -1,0 +1,51 @@
+{% assign badges_list = block.settings.badges | split: ',' %}
+{%- capture badges -%}
+  {%- for badge in badges_list -%}
+    <li class="list-separator__item">{{- badge -}}</li>
+  {%- endfor -%}
+{%- endcapture -%}
+
+<ul class="rich-text__badges list-separator list-separator--{{ block.settings.badges_style }} caption-xs media-banner__pointer" {{ block.shopify_attributes }}>
+  {{ badges }}
+</ul>
+
+{% schema %}
+{
+  "name": "t:badges",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "badges_style",
+      "label": "t:badge-style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:secondary"
+        },
+        {
+          "value": "text",
+          "label": "t:text"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "text",
+      "id": "badges",
+      "label": "t:badges",
+      "info": "t:comma-separated-list-of-badges-eg-new-sale-limited",
+      "default": "t:badge-badge"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:badges"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,53 @@
+.gift-card__qr-code {
+  inline-size: fit-content;
+  padding: var(--space-3xs);
+  background-color: white;
+}
+
+.gift-card__field {
+  inline-size: 100%;
+  padding-inline-end: 2rem;
+}
+
+.gift-card__copy-wrapper {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.gift-card__copy-button {
+  position: relative;
+  padding: var(--space-2xs);
+  background-color: transparent;
+  border: none;
+}
+
+.gift-card__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+}
+
+.gift-card__buttons .button {
+  flex: 1 1 100%;
+}
+
+@media (min-width: 40em) {
+  .gift-card__buttons .button {
+    flex: 1 1 40%;
+  }
+}
+
+@media print {
+  * {
+    color: black !important;
+  }
+
+  header-menu,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+}

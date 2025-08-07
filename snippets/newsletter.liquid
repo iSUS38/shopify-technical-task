@@ -1,0 +1,6 @@
+<div class="newsletter rte {{ horizontal_alignment }} {% if class %} {{ class }}{% endif %}">
+  {% unless hide_blocks == true %}
+    {%- render 'generic-blocks' with settings: settings, horizontal_alignment: horizontal_alignment -%}
+  {% endunless %}
+  {% render 'newsletter-form' with settings: settings, form_id: form_id %}
+</div>

@@ -1,0 +1,81 @@
+<div class="product-info__description rte" {{ block.shopify_attributes }} data-replace-description>
+  {%- if block.settings.enable_truncation -%}
+    {% assign text = block.settings.text | strip_html | truncatewords: block.settings.word_limit %}
+    {% assign compare_text = block.settings.text | strip_html %}
+    {%- if text == compare_text -%}
+      <div>
+        {{ block.settings.text }}
+      </div>
+    {% else %}
+      <div>
+        {{ text }}
+      </div>
+      {%- capture dialog_name -%}dialog-{{ section.id }}-block-{{ block.id }}{% endcapture %}
+      {%- capture title_id -%}dialog-title-{{ section.id }}-block-{{ block.id }}-title{% endcapture %}
+      <custom-dialog data-modal="true" data-overlay="true" data-name="{{ dialog_name }}" data-display="flex" class="product-info__description-dialog flex justify-inherit">
+        <button class="product-info__read-more button button--text" aria-haspopup="dialog" data-toggle>
+          <span class="button-text__label">{{ 'products.product.read_more' | t }}</span>
+          {%- render 'icon' with 'plus', class: 'button-text__icon icon--xs' -%}
+        </button>
+        <dialog class="dialog" aria-labelledby="{{ title_id }}">
+          <div class="dialog__window dialog__animateable dialog__window--drawer ui product-info__description-dialog-window" data-color-scheme="{{ section.settings.color_scheme }}">
+            <div class="dialog__header">
+              <h2 id="{{ title_id }}" class="h4">{{ block.settings.title }}</h2>
+              {% render 'close-button' %}
+            </div>
+            <div class="dialog__body rte" data-description>
+              {{ block.settings.text }}
+            </div>
+          </div>
+        </dialog>
+      </custom-dialog>
+    {%- endif -%}
+  {%- else -%}
+    {{ block.settings.text }}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:text",
+      "default": "<p>{{ closest.product.description }}</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:truncate-content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:truncate-and-display-the-full-content-in-a-modal-instead"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_truncation",
+      "label": "t:enable-truncation"
+    },
+    {
+      "type": "number",
+      "id": "word_limit",
+      "label": "t:word-limit",
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:modal-title",
+      "default": "{{ closest.product.title }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:description"
+    }
+  ]
+}
+{% endschema %}

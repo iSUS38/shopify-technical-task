@@ -1,0 +1,52 @@
+{%- unless heading_level -%}
+  {%- assign heading_level = 'h2' -%}
+{%- endunless -%}
+
+{% if settings.page_title == true %}{% assign heading_level = 'h1' %}{% endif %}
+
+{%- if settings.badges != blank -%}
+  {% assign badges_list = settings.badges | split: ',' %}
+  {%- capture badges -%}
+    {%- for badge in badges_list -%}
+      <li class="list-separator__item">{{- badge -}}</li>
+    {%- endfor -%}
+  {%- endcapture -%}
+  <ul class="list-separator list-separator--{{ settings.badges_style }} caption-xs justify-{{ horizontal_alignment }}">
+    {{ badges }}
+  </ul>
+{%- endif -%}
+
+{%- if settings.subheading != blank or settings.heading != blank -%}
+  <{{ heading_level }}>
+{%- endif -%}
+{%- if settings.subheading != blank -%}
+  <p class="rich-text__subheading subheading">
+    {{- settings.subheading -}}
+  </p>
+{%- endif -%}
+{%- if settings.heading != blank -%}
+  <p class="{{ settings.heading_size }} heading">{{ settings.heading }}</p>
+{%- endif -%}
+{%- if settings.subheading != blank or settings.heading != blank -%}
+  </{{ heading_level }}>
+{%- endif -%}
+
+{%- if settings.text != blank -%}
+  <div class="rich-text__text">
+    {{- settings.text -}}
+  </div>
+{%- endif -%}
+
+{%- if show_button != false and settings.button_label != blank -%}
+  <div class="button-group justify-{{ horizontal_alignment }}">
+    {%- if settings.enable_single_visual_button and settings.button_link != blank -%}
+      {%
+        render 'button-visual'
+        with settings: settings,
+        font_text_button_decoration: settings.font_text_button_decoration
+      -%}
+    {%- else -%}
+      {%- render 'button' with settings: settings -%}
+    {%- endif -%}
+  </div>
+{%- endif -%}

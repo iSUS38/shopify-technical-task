@@ -1,0 +1,53 @@
+.shopify-model-viewer-ui {
+  --icon-size: var(--icon-m);
+  inline-size: 100%;
+  block-size: 100%;
+  z-index: 3;
+
+  model-viewer {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  button.shopify-model-viewer-ui__button {
+    inline-size: auto;
+    block-size: auto;
+    padding: calc(var(--space-2xs) - 0.375rem);
+    background-color: rgb(var(--color-button));
+    color: rgb(var(--color-button-label));
+    border: var(--border);
+
+    :where(svg) {
+      display: block;
+      inline-size: calc(var(--icon-size) + 0.75rem);
+      block-size: calc(var(--icon-size) + 0.75rem);
+    }
+
+    &:hover,
+    &:focus {
+      background-color: rgb(var(--color-button-hover));
+      border-color: rgb(var(--color-button-border-hover));
+      color: rgb(var(--color-button-label));
+    }
+
+    & + & {
+      border-block-start: none;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .shopify-model-viewer-ui__button .shopify-model-viewer-ui__control-icon--exit-fullscreen {
+    display: none;
+  }
+}
+
+.buttons--text {
+  .shopify-model-viewer-ui {
+    .shopify-model-viewer-ui__button {
+      background: var(--color-background-solid);
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{%- liquid
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  if results.url
+    assign results_url = results.url
+  else
+    assign terms = results.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
+{% if results_count == blank %}
+  {% assign results_count = results.products_count %}
+{% endif %}
+
+{% capture search_params %}
+  {% if results.current_vendor or results.current_type %}
+    <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+  {% endif %}
+
+  {%- if results.terms -%}
+    <input type="hidden" name="q" value="{{ results.terms | escape }}">
+    <input name="options[prefix]" type="hidden" value="last">
+  {%- endif -%}
+{% endcapture %}
+
+{% capture facets_form %}
+  <facets-form>
+    <div data-facet-loader aria-hidden="true" class="facets-filters-form__loader"></div>
+    <form class="facets-filters-form {% if enable_max_height %}facets-filters-form--max-height{% endif %}" id="FacetsFiltersForm" data-filter-form aria-labelledby="facets-modal-heading">
+      <div class="facets-filters-form__main">
+        <div class="facets-filters-form__content">
+          <div class="facets-filters-form__header">
+            <h2 class="h4" id="facets-modal-heading">{{ 'products.facets.filter_button' | t }}</h2>
+            {% render 'close-button' %}
+          </div>
+
+          {% render 'filters' with results: results, layout: 'modal', open: open %}
+        </div>
+      </div>
+      <div class="facets-filters-form__footer">
+        <button
+          tabindex="0"
+          type="button"
+          class="button button--primary facets-filters-form__footer-button"
+        >
+          {{ 'products.facets.apply' | t: count: results_count }}
+        </button>
+
+        <facet-remove class="facets-filters-form__footer-remove">
+          {%- assign label = 'products.facets.clear_all' | t -%}
+          {%- render 'text-button', label: label, url: results_url, show_icon: false -%}
+        </facet-remove>
+      </div>
+    </form>
+    <span class="visually-hidden" aria-live="polite" data-facets-filter-count>{{ 'search.results_with_count' | t: count: results_count }}</span>
+    <span data-facets-active-filter-count class="hidden">
+      {{- count -}}
+    </span>
+    <span data-facets-filtered-product-count class="hidden">
+      {{ results_count }}
+    </span>
+  </facets-form>
+{% endcapture %}
+
+
+<span class="visually-hidden" id="FacetsInstructions">{{  'products.facets.instruction' | t }}</span>
+
+{%- if enable_filtering -%}
+  <dialog-trigger data-name="facets" class="facets__dialog-trigger">
+    <button
+      tabindex="0"
+      type="button"
+      class="disclosure__button caption"
+      aria-haspopup="dialog"
+      aria-describedby="FacetsInstructions"
+    >
+      <span class="caption">
+        {{- 'products.facets.filter_button' | t -}}
+        <span data-active-filter-count class="facets__filter-button-count">
+          {%- if count > 0 -%}{{ count }}{%- endif -%}
+        </span>
+      </span>
+      {%- render 'icon' with 'plus', class: 'icon--xs' -%}
+    </button>
+  </dialog-trigger>
+  <custom-dialog data-modal="true" data-overlay="true" data-name="facets" data-display="flex">
+    <dialog class="dialog" aria-labelledby="facets-modal-heading">
+      <div class="dialog__window dialog__animateable dialog__window--drawer v-stack facets__dialog " data-color-scheme="{{ settings.overlay_color_scheme }}">
+      {{ facets_form }}
+      </div>
+    </dialog>
+  </custom-dialog>
+{%- endif -%}
+
+<div class="facets__aside">
+  <div class="facets__results caption">
+    {%- if enable_filtering -%}
+      {%- if total -%}
+        {{ total }}
+      {% else %}
+        {{ 'products.facets.results_html' | t: count: results.products_count, total: collection.all_products_count }}
+      {% endif %}
+    {%- else -%}
+      {%- assign count = collection.all_products_count | default: search.results_count -%}
+      {{ 'search.results_products_with_count' | t: count: count }}
+    {%- endif -%}
+  </div>
+  {%- if enable_sorting -%}
+    <facets-form>
+      <form id="FacetsSortForm" class="button select" aria-labelledby="SortByLabel">
+        <label for="SortBy" id="SortByLabel" class="visually-hidden">{{ 'products.facets.sort_by_label' | t }}</label>
+        <select
+          id="SortBy"
+          class="facets__select select__field caption"
+          name="sort_by"
+          aria-describedby="FacetsInstructions"
+        >
+          {%- for option in results.sort_options -%}
+            <option
+              value="{{ option.value | escape }}"
+              {%- if option.value == sort_by -%}
+                selected="selected"
+              {%- endif -%}
+            >
+              {{ option.name | escape }}
+            </option>
+          {%- endfor -%}
+        </select>
+        {%- render 'icon' with 'caret-down', class: 'icon--xs select__icon facets__select-icon' -%}
+      </form>
+    </facets-form>
+  {%- endif -%}
+</div>

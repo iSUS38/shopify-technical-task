@@ -1,0 +1,134 @@
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'lazy'
+  if section.index == 1 and section.location != 'footer'
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+-%}
+
+{%- if block.settings.image != blank -%}
+  {%- assign image_ratio = block.settings.image.aspect_ratio -%}
+  {%- if block.settings.image_ratio != 'default' -%}
+    {%- assign image_ratio = block.settings.image_ratio -%}
+  {%- endif -%}
+
+  <li class="stacked-images-with-text__list-item">
+    <div class="stacked-images-with-text__image-outer">
+      <div
+        class="stacked-images-with-text__image-wrapper"
+        style="--image-ratio: {{ image_ratio }};--width: {{ block.settings.max_width | append: '%' }};"
+        {{ block.shopify_attributes }}
+      >
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}" class="stacked-images-with-text__link">
+        {%- endif -%}
+        {%- capture sizes -%}calc(50vw * calc({{ block.settings.max_width }} / 100)){%- endcapture -%}
+        {%- assign widths = '100, 200, 300, 400, 600, 800, 1000, 1200, 1300, 1400, 1600, 1800, 2000' -%}
+        {{
+          block.settings.image
+          | image_url: width: 2200
+          | image_tag:
+            sizes: sizes,
+            widths: widths,
+            fetchpriority: fetch_priority,
+            class: 'stacked-images-with-text__image',
+            loading: loading
+        }}
+        {%- if block.settings.link != blank -%}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </li>
+{%- else -%}
+  {%- assign image_ratio = '1' -%}
+  {%- if block.settings.image_ratio != 'default' -%}
+    {%- assign image_ratio = block.settings.image_ratio -%}
+  {%- endif -%}
+  <li class="stacked-images-with-text__list-item">
+    <div class="stacked-images-with-text__image-outer">
+      {%- if block.settings.link != blank -%}
+        <a href="{{ block.settings.link }}" class="stacked-images-with-text__link">
+          <span class="visually-hidden">{{  block.settings.link_label }}</span>
+      {%- endif -%}
+      <div
+        class="stacked-images-with-text__image-wrapper stacked-images-with-text__image-wrapper--empty"
+        style="--image-ratio: {{ image_ratio }};--width: {{ block.settings.max_width | append: '%' }};"
+      >
+        {{- 'image' | placeholder_svg_tag: 'placeholder-svg stacked-images-with-text__image' -}}
+      </div>
+      {%- if block.settings.link != blank -%}
+        </a>
+      {%- endif -%}
+    </div>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:adapt-to-image"
+        },
+        {
+          "value": "2 / 3",
+          "label": "t:portrait"
+        },
+        {
+          "value": "1",
+          "label": "t:square"
+        },
+        {
+          "value": "3 / 2",
+          "label": "t:landscape"
+        }
+      ],
+      "default": "default",
+      "label": "t:image-ratio"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "t:image-width",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 100,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "t:behavior"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "t:link-label",
+      "info": "t:hidden-text-to-describe-the-link-destination-required-for-accessibility"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:image"
+    }
+  ]
+}
+{% endschema %}

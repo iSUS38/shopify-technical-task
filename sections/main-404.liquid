@@ -1,0 +1,189 @@
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+  <div
+    class="rich-text padding--section" style="{% render 'padding-override' with settings: section.settings %}">
+    <div class="container container--md {{ section.settings.horizontal_alignment }}">
+      <div class="rich-text__blocks rte rte--loose">
+        <h1>{{ '404.title' | t }}</h1>
+        <p>{{ '404.text' | t }}</p>
+        <div class="button-group justify-{{ section.settings.horizontal_alignment }}">
+          {% assign link_1 = '404.link_1_route' | t %}
+          {% assign text_2 = '404.link_2_text' | t %}
+          <a href="{{ routes[link_1] }}"class="button button--primary">
+            {{ '404.link_1_text' | t }}
+          </a>
+          {%- render 'text-button', label: text_2, url: section.settings.continue_shopping_link -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:404",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "url",
+      "id": "continue_shopping_link",
+      "label": "t:continue-shopping-link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "left",
+      "label": "t:horizontal-alignment"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

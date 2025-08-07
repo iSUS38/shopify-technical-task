@@ -1,0 +1,216 @@
+{%- if product and product != empty -%}
+  {%- capture product_badges -%}
+    {%- if settings.card_show_sold_out_badge and product.selected_or_first_available_variant.available == false -%}
+      <li class="list-separator__item">Sold out</li>
+    {%- elsif settings.card_show_sale_badge and product.compare_at_price > product.price and product.available -%}
+      <li class="list-separator__item exception">Sale</li>
+    {%- endif -%}
+    {%- if settings.card_show_custom_badges -%}
+      {%- assign custom_badges = product.metafields.theme.badges.value -%}
+      {%- for badge in custom_badges -%}
+        <li class="list-separator__item">{{ badge }}</li>
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endcapture -%}
+
+  {%- assign image_ratio = product.featured_media.aspect_ratio -%}
+  {%- if settings.card_image_ratio != 'default' -%}
+    {%- assign image_ratio = settings.card_image_ratio -%}
+  {%- endif -%}
+
+  {%- assign loading = 'lazy' -%}
+  {%- if lazy_load == false -%}
+    {%- assign loading = nil -%}
+  {%- endif -%}
+
+  {%- assign product_url = product.url -%}
+  {%- if settings.enable_collection_filter and enable_collection_filter -%}
+    {%- assign product_url = product.url | within: collection -%}
+  {%- endif -%}
+
+{%- capture variants -%}
+  {%- if product.variants.size >= 1 -%}
+    {%- if settings.variant_color_display != 'none' -%}
+      {%- assign display_type = settings.variant_color_display -%}
+      {%- assign option_names = 'products.product.variants.color.option_name' | t | split: ',' -%}
+      {%- assign count_translation = 'products.product.variants.color.count' -%}
+      {%- render 'card-product-variant',
+        product: product,
+        display_type: display_type,
+        option_names: option_names,
+        count_translation: count_translation
+      -%}
+    {%- endif -%}
+    {%- if settings.variant_size_display != 'none' -%}
+      {%- assign display_type = settings.variant_size_display -%}
+      {%- assign option_names = 'products.product.variants.size.option_name' | t | split: ',' -%}
+      {%- assign count_translation = 'products.product.variants.size.count' -%}
+      {%- render 'card-product-variant',
+        product: product,
+        display_type: display_type,
+        option_names: option_names,
+        count_translation: count_translation
+      -%}
+    {%- endif -%}
+    {%- if settings.variant_other_display != 'none' -%}
+      {%- assign display_type = settings.variant_other_display -%}
+      {%- assign option_names_translation = 'products.product.variants.other.option_name' | t | split: ',' -%}
+      {%- assign option_names = '' -%}
+      {%- assign option_names_pluralized = '' -%}
+
+      {%- for option_name in option_names_translation -%}
+        {%- assign value = option_name | split: ':' -%}
+        {%- capture option_names -%}
+          {{- option_names -}}
+          {%- unless forloop.first -%},{%- endunless -%}
+          {{- value[0] -}}
+        {%- endcapture -%}
+        {%- capture option_names_pluralized -%}
+          {{- option_names_pluralized -}}
+          {%- unless forloop.first -%},{%- endunless -%}
+          {{- value[1] -}}
+        {%- endcapture -%}
+      {%- endfor -%}
+
+      {%- assign option_names = option_names | split: ',' -%}
+      {%- assign option_names_pluralized = option_names_pluralized | split: ',' -%}
+      {%- render 'card-product-variant',
+        product: product,
+        display_type: display_type,
+        option_names: option_names,
+        count_translation_custom: option_names_pluralized
+      -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if section.settings.enable_infinite_scroll -%}
+  {%- capture product_link_id = -%}Product-{{ product.id }}{% endcapture %}
+{%- else -%}
+  {%- capture product_link_id = -%}{{ section.id }}-Product-{{ product.id }}{% endcapture %}
+{%- endif -%}
+
+  <div class="card card-product {{ class }} {% if settings.variant_display == 'hover' %}card-product--has-hover{% endif %} expand-link">
+    <h3>
+      <a
+        class="expand-link__link"
+        href="{{ product_url }}"
+        {% if page %}data-product-page="{{ page }}"{% endif %}
+        id="{{ product_link_id }}"
+      >
+        <span class="visually-hidden">{{ product.title | escape }}</span>
+      </a>
+    </h3>
+    {%- if product.featured_media -%}
+      {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+      {%- capture sizes -%}
+        {%- if section.settings.container_type == 'full' or section.settings.container_type == 'padded' -%}
+          (min-width: 64em) calc(100vw / {{ section.settings.columns_desktop }}), calc(100vw / {{ section.settings.columns_mobile }})
+        {%- else -%}
+          (min-width: 64em) min(calc(100vw / {{ section.settings.columns_desktop }}), calc(1400px / {{ section.settings.columns_desktop }})), min(calc(100vw / {{ section.settings.columns_mobile }}), calc(1400px / {{ section.settings.columns_mobile }}))
+        {%- endif -%}
+      {%- endcapture -%}
+      <div class="card__media-wrapper" style="--image-ratio: {{ image_ratio }};">
+        {{
+          product.featured_media
+          | image_url: width: product.featured_media.width
+          | image_tag: sizes: sizes, widths: widths, loading: loading, fetchpriority: 'low'
+        }}
+        {%- if product.media[1] != null and settings.card_show_second_image -%}
+          {{
+            product.media[1]
+            | image_url: width: product.media[1].width
+            | image_tag: sizes: sizes, widths: widths, loading: loading, fetchpriority: 'low', class: 'card__media-hover'
+          }}
+        {%- endif -%}
+        {%- if settings.badge_display == 'image' -%}
+          {%- unless product_badges == empty -%}
+            <div class="card-product__media-badges">
+              <ul class="list-separator list-separator--{{ settings.badge_style }} list-separator--exception caption-xs caption secondary">
+                {{ product_badges }}
+              </ul>
+            </div>
+          {%- endunless -%}
+        {%- endif -%}
+        {%- if settings.enable_quick_add -%}
+          {% render 'quick-add', product: product, section_id: section_id, button_style: settings.quick_add_style, classes: 'card-product__quick-add expand-link--ignore' %}
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      <div class="card__media-wrapper media-wrapper--placeholder" style="--image-ratio: {{ image_ratio }};">
+      </div>
+    {%- endif -%}
+    <div class="padding--text card__content card-content card-product-content">
+      <div class="card-content__main card-product-content__main">
+        {%- if settings.badge_display == 'below_image' -%}
+          {%- unless product_badges == empty -%}
+            <div class="card-product-content__badges card-product-content__badges--mobile">
+              <ul class="list-separator list-separator--{{ settings.badge_style }} caption-xs caption secondary">
+                {{ product_badges }}
+              </ul>
+            </div>
+          {%- endunless -%}
+        {%- endif -%}
+        <p class="card-product-content__title {{ settings.card_title_font_style }}" aria-hidden="true">
+          {{ product.title | escape }}
+        </p>
+        {%- if settings.card_show_product_subtitle and product.metafields.descriptors.subtitle != blank -%}
+          <h4 class="card__interactive caption secondary">{{ product.metafields.descriptors.subtitle }}</h4>
+        {%- endif -%}
+        {%- if settings.card_show_vendor -%}
+          <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+          <div class="card__interactive caption-xs secondary">{{ product.vendor }}</div>
+        {%- endif -%}
+        {%- render 'price', product: product, font_style: settings.card_price_font_style, class: 'card-product-content__price card__interactive' -%}
+        {%- if settings.card_show_rating and product.metafields.reviews.rating.value != blank -%}
+          {%- render 'product-rating', product: product, classes: 'card__interactive' -%}
+        {%- endif -%}
+      </div>
+      {%- if settings.badge_display == 'below_image' -%}
+        {%- unless product_badges == empty -%}
+          <div class="card-product-content__badges card-product-content__badges--desktop">
+            <ul class="list-separator list-separator--{{ settings.badge_style }} caption-xs caption secondary">
+              {{ product_badges }}
+            </ul>
+          </div>
+        {%- endunless -%}
+      {%- endif -%}
+      {%- if settings.variant_display != 'none' and variants != empty -%}
+        <div class="card-product-variants card__interactive {% if settings.variant_display == 'hover' %} card-product-content__hover-variants{% endif %}">
+          {{- variants -}}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- else -%}
+  <div class="card card-product {{ class }}">
+    <div class="card__media-wrapper" style="{% if settings.card_image_ratio == 'default' %}--image-ratio: 2 / 3{% else %}--image-ratio: {{ settings.card_image_ratio }}{% endif %};">
+      {%- if placeholder_image -%}
+        {{- placeholder_image | placeholder_svg_tag: 'placeholder-svg' -}}
+      {%- else -%}
+        {{- 'product-5' | placeholder_svg_tag: 'placeholder-svg' -}}
+      {%- endif -%}
+    </div>
+    <div class="padding--text expand-link card__content card-content justify-left left">
+      <div class="card-content__main">
+        <h3 class="{{ settings.card_title_font_style }}">
+          <a
+            class="expand-link__link card__interactive link-unstyled"
+            role="link"
+            aria-disabled="true"
+          >
+            {{- 'onboarding.product_title' | t -}}
+          </a>
+        </h3>
+        {%- if settings.card_show_product_subtitle -%}
+          <h4 class="caption secondary">{{ 'onboarding.product_subtitle' | t }}</h4>
+        {%- endif -%}
+        {%- if settings.card_show_vendor -%}
+          <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+          <div class="caption secondary">{{ 'onboarding.product_vendor' | t }}</div>
+        {%- endif -%}
+        {%- render 'price', product: product, font_style: settings.card_price_font_style, class: 'card-product-content__price' -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}

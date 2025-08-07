@@ -1,0 +1,131 @@
+{% liquid
+  unless title_tag
+    assign title_tag = 'h2'
+  endunless
+
+  assign quantity_selector_block = section.blocks | where: 'type', 'quantity_selector' | first
+  assign show_quantity_selector = false
+  if quantity_selector_block == null
+    assign show_quantity_selector = true
+  endif
+%}
+
+{% if product != blank %}
+    {% if product.metafields.custom.pdp_color != blank %}
+      {% style %}
+          :root {
+            --pdp_color: {{ product.metafields.custom.pdp_color }}
+          }
+
+          .variant-picker__input input[type=radio]+label span {
+            background-color: rgb(var(--color-background));
+          }
+      
+          .variant-picker__input input[type=radio]:checked+label span {
+            background-color: var(--pdp_color);
+            color: rgb(var(--color-foreground));
+          }
+      {% endstyle %}
+    {% endif %}
+
+  <div {% render 'color-scheme-attributes' with scoped_settings: section.settings, class: 'pdp--full', borders: true %} {% if section.settings.enable_transparent_header %}data-support-transparent-header{% endif %}>
+    {%- assign product_form_id = 'product-form-' | append: section.id | append: product.id -%}
+    <product-page
+      {% if update_url == true %}data-update-url="true"{% endif %}
+      id="MainProduct-{{ section.id }}"
+      data-section="{{ section.id }}"
+      data-url="{{ product.url }}"
+      data-media-button="{{ section.settings.button_style }}"
+      data-media-scheme="{{ section.settings.media_color_scheme }}"
+      class="pdp pdp--media-{{ section.settings.media_style }} pdp--media-{{ section.settings.image_aspect_ratio }} container--xl {% if section.settings.media_color_scheme == section.settings.color_scheme %}pdp--container{% endif %} {% if section.settings.show_block_borders %}pdp--borders{% endif %} {% if class %}{{ class }}{% endif %}"
+      data-product-form-id="{{ product_form_id }}"
+    >
+      {%- assign first_3d_model = product.media | where: 'media_type', 'model' | first -%}
+      {%- if first_3d_model -%}
+        {{ 'component-model-viewer-ui.css' | asset_url | stylesheet_tag }}
+        <link
+          id="ModelViewerStyle"
+          rel="stylesheet"
+          href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+          media="print"
+          onload="this.media='all'"
+        >
+        <link
+          id="ModelViewerOverride"
+          rel="stylesheet"
+          href="{{ 'component-model-viewer-ui.css' | asset_url }}"
+          media="print"
+          onload="this.media='all'"
+        >
+        <script type="application/json" id="ProductJSON-{{ product.id }}">
+          {{ product.media | where: 'media_type', 'model' | json }}
+        </script>
+        <script src="{{ 'product-model.js' | asset_url }}" defer></script>
+      {%- endif -%}
+
+      <script src="{{ 'product-page.js' | asset_url }}" defer="defer"></script>
+
+      <div class="pdp__media" data-color-scheme="{{ section.settings.media_color_scheme }}">
+        {% render 'product-media-gallery'  with settings: section.settings, id: section.id, product: product %}
+      </div>
+      <div class="pdp__border"></div>
+      {{ content }}
+    </product-page>
+  </div>
+{% else %}
+  <div {% render 'color-scheme-attributes' with scoped_settings: section.settings, class: 'pdp--full', borders: true %} {% if section.settings.enable_transparent_header %}data-support-transparent-header{% endif %}>
+    <div
+      class="pdp pdp--media-{{ section.settings.media_style }} pdp--media-{{ section.settings.image_aspect_ratio }} {% if section.settings.media_color_scheme == section.settings.color_scheme %}pdp--container container--xl{% endif %} {% if section.settings.show_block_borders %}pdp--borders{% endif %}"
+    >
+      <div class="pdp__media" data-color-scheme="{{ section.settings.media_color_scheme }}">
+        <div
+          class="media-gallery media-gallery--{{ section.settings.media_style }} media-gallery--{{ section.settings.image_aspect_ratio }} media-gallery--transparent-header-{{ section.settings.enable_transparent_header }} {% if section.settings.mobile_max_width != '100%' %}media-gallery--mobile-max{% endif %}"
+          data-color-scheme="{{ section.settings.media_color_scheme }}"
+          style="--image-padding: {{ section.settings.spacing }}; {% if section.settings.mobile_max_width != '100%' %}--mobile-max-width: {{ section.settings.mobile_max_width }}{% endif %}">
+          <div class="pdp-thumbnails__main-wrapper media-gallery__single--placeholder" style="background-color: rgba(var(--color-foreground), 0.2)">
+            {{- 'product-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+          </div>
+        </div>
+      </div>
+      <div class="pdp__border"></div>
+      <div class="pdp__content flex alignment--middle-center">
+        <div class="pdp__content-wrapper container container--xs flex alignment--middle-center justify-center">
+          <section class="product-info padding--section">
+            <div class="product-info__container container container--xs">
+              <div class="product-info__blocks">
+                <div class="product-info__heading-wrapper product-info__heading-wrapper--center">
+                  <h2 class="product-info__heading heading">
+                    {{- 'onboarding.product_title' | t -}}
+                  </h2>
+                </div>
+                <div class="product-info__price">
+                  {%- render 'price',
+                    product: product,
+                    use_variant: true
+                  -%}
+                </div>
+                <div class="buy-buttons">
+                  <div class="buy-buttons__buttons">
+                    {% # theme-check-disable UnclosedHTMLElement %}
+                    {%- if show_quantity_selector and block.settings.show_quantity_selector -%}
+                      <div class="buy-buttons__button-group button button--full {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}">
+                      {%- render 'quantity-input', product_form_id: product_form_id  -%}
+                    {%- endif -%}
+                    <button
+                      type="submit"
+                      name="add"
+                      class="product-form__submit button button--full button--primary"
+                      disabled
+                    >
+                      <span>{{ 'products.product.add_to_cart' | t }}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

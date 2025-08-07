@@ -1,0 +1,16 @@
+{%- assign product = section.settings.product | default: product -%}
+<div {{ block.shopify_attributes }}>
+  {%- render 'pickup-availability', product: product -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:pickup-availability",
+  "tag": null,
+  "presets": [
+    {
+      "name": "t:pickup-availability"
+    }
+  ]
+}
+{% endschema %}

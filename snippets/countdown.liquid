@@ -1,0 +1,41 @@
+{%- if color_scheme == null -%}
+  {%- assign color_scheme = settings.color_scheme -%}
+{%- endif -%}
+
+<script src="{{ 'countdown.js' | asset_url }}" defer="defer"></script>
+
+<countdown-timer
+  class="countdown-timer{% if global_settings.card_border_radius == 'rounded' %} countdown-timer--rounded{% endif %}{% if settings.enable_blur %} countdown-timer--blur{% endif %} {{ settings.font_style }}"
+  data-end-date="{{ settings.date | date: '%FT%T%:z' | escape }}"
+  data-color-scheme="{{ color_scheme }}"
+  data-description="{{ settings.accessibility_description }}"
+  {%- if settings.hide_section -%}
+    data-section-hide="{{ section.id }}"
+  {%- endif -%}
+  style="--opacity: {{ settings.opacity | divided_by: 100.0 }}"
+>
+  {% # theme-check-disable UnusedAssign %}
+  {%- assign countdown_text = 'accessibility.countdown' | t | prepend: ' ' -%}
+  {%- assign pause_text = 'accessibility.pause' | t | append: countdown_text -%}
+  {%- assign play_text = 'accessibility.play' | t | append: countdown_text  -%}
+  {%- assign class = 'countdown-timer__play-pause button button--primary' -%}
+  {% # theme-check-enable UnusedAssign %}
+  {%- render 'play-pause-button' with pause_text: pause_text, play_text: play_text, class: class -%}
+  <div class="countdown-timer__item">
+    <span data-type="days" class="countdown-timer__value">00</span>
+    <span class="countdown-timer__label caption">Days</span>
+  </div>
+  <div class="countdown-timer__item">
+    <span data-type="hours" class="countdown-timer__value">00</span>
+    <span class="countdown-timer__label caption">Hours</span>
+  </div>
+  <div class="countdown-timer__item">
+    <span data-type="minutes" class="countdown-timer__value">00</span>
+    <span class="countdown-timer__label caption">Minutes</span>
+  </div>
+  <div class="countdown-timer__item" aria-hidden="true">
+    <span data-type="seconds" class="countdown-timer__value">00</span>
+    <span class="countdown-timer__label caption">Seconds</span>
+  </div>
+  <div class="visually-hidden" aria-live="assertive" role="alert" data-live-region></div>
+</countdown-timer>

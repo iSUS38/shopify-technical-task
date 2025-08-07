@@ -1,0 +1,163 @@
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'lazy'
+
+  if section.index == 1 and section.location != 'footer'
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+
+  assign image_ratio = block.settings.image.aspect_ratio | default: '4 / 3'
+  if block.settings.image_ratio != 'default'
+    assign image_ratio = block.settings.image_ratio
+  endif
+  assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200'
+  assign max_width = block.settings.max_width | times: 1.0 | divided_by: 16 | append: 'rem'
+
+-%}
+{%- capture sizes %}min(92vw, {{ max_width }}){%- endcapture -%}
+{% if section.settings.columns_desktop %}
+  {%- capture sizes -%}
+    {%- if section.settings.container_type == 'full' or section.settings.container_type == 'padded' -%}
+      (min-width: 64em) calc(100vw / {{ section.settings.columns_desktop }}), calc(100vw / {{ section.settings.columns_mobile }})
+    {%- else -%}
+      (min-width: 64em) min(calc(100vw / {{ section.settings.columns_desktop }}), calc(1400px / {{ section.settings.columns_desktop }})), min(calc(100vw / {{ section.settings.columns_mobile }}), calc(1400px / {{ section.settings.columns_mobile }}))
+    {%- endif -%}
+  {%- endcapture -%}
+{%- endif -%}
+
+{%-if section.id contains 'rich_text_columns' -%}
+  {%- capture sizes %}'(min-width:48em) min(42vw, {{ max_width }}), min(92vw, {{ max_width }}){%- endcapture -%}
+{%- endif -%}
+
+{%- if block.settings.image != blank -%}
+  <div
+    {{ block.shopify_attributes }}
+    class="rich-text__image flex justify-{{ block.settings.horizontal_alignment }} scroll-trigger animate--slide-up" style="--image-ratio: {{ image_ratio }}; --max-width: {{ max_width }};"
+  >
+    <div class="rich-text__image-wrapper alignment--bottom-right flex expand-link">
+      {% if block.settings.link -%}
+        <a href="{{ block.settings.link }}" class="expand-link__link expand-link__link--media">
+          <span class="visually-hidden">{{ block.settings.link_label }}</span>
+        </a>
+      {%- endif -%}
+      {{
+        block.settings.image
+        | image_url: width: 2200
+        | image_tag:
+          sizes: sizes,
+          widths: widths,
+          fetchpriority: fetch_priority,
+          class: '',
+          loading: loading
+      }}
+      <div class="rich-text__image-quick-add">
+        {% render 'quick-add', product: block.settings.product, section: section -%}
+      </div>
+    </div>
+  </div>
+{%- else -%}
+  <div class="rich-text__image image-ratio flex justify-inherit">
+    <div class="card__media-wrapper" style="--image-ratio: {{ image_ratio }}; max-width: {{ max_width }}">
+      {{- 'image' | placeholder_svg_tag: 'placeholder-svg' -}}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:adapt-to-image"
+        },
+        {
+          "value": "2 / 3",
+          "label": "t:portrait"
+        },
+        {
+          "value": "1",
+          "label": "t:square"
+        },
+        {
+          "value": "3 / 2",
+          "label": "t:landscape"
+        }
+      ],
+      "default": "default",
+      "label": "t:image-ratio"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "t:maximum-width",
+      "min": 0,
+      "max": 1400,
+      "step": 20,
+      "default": 1400,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "t:default"
+        },
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "inherit",
+      "label": "t:horizontal-alignment"
+    },
+    {
+      "type": "header",
+      "content": "t:behavior"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "t:link-label",
+      "info": "t:hidden-text-to-describe-the-link-destination-required-for-accessibility"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:product",
+      "info": "t:connect-a-product-to-enable-quick-add"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:image"
+    }
+  ]
+}
+{% endschema %}

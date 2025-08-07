@@ -1,0 +1,527 @@
+{%- liquid
+  assign font_body_bold = settings.font_body | font_modify: 'weight', 'bold'
+  assign font_body_italic = settings.font_body | font_modify: 'style', 'italic'
+  assign font_body_bold_italic = font_body_bold | font_modify: 'style', 'italic'
+  assign heading_font_italic = settings.font_heading | font_modify: 'style', 'italic'
+
+  assign font_button_scale = settings.font_button_size | divided_by: 100.0
+  # theme-check-disable UnusedAssign
+  assign font_button_size = 1 | times: font_button_scale
+  # theme-check-enable UnusedAssign
+%}
+
+{% style %}
+  {{ settings.font_body | font_face: font_display: 'swap' }}
+  {{ font_body_bold | font_face: font_display: 'swap' }}
+  {{ font_body_italic | font_face: font_display: 'swap' }}
+  {{ font_body_bold_italic | font_face: font_display: 'swap' }}
+  {{ settings.font_heading | font_face: font_display: 'swap' }}
+  {{ heading_font_italic | font_face: font_display: 'swap' }}
+
+  {% for scheme in settings.color_schemes -%}
+    {% if forloop.index == 1 -%}
+      :root,
+    {%- endif %}
+
+    [data-color-scheme="{{ scheme.id }}"] {
+      {% if scheme.settings.background_gradient != empty %}
+        --color-background: {{ scheme.settings.background_gradient }};
+        --color-background-gradient: {{ scheme.settings.background_gradient }};
+      {% else %}
+        --color-background: {{ scheme.settings.background }};
+        --color-background-rgb: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
+      {% endif %}
+      {%- assign color_border_opacity = settings.border_opacity | divided_by: 100.0 -%}
+      {%- if scheme.settings.color_border.alpha == 0.0 -%}
+        {%- assign color_border_opacity = scheme.settings.color_border.alpha | divided_by: 100.0 -%}
+      {%- endif -%}
+
+      --color-background-solid: {{ scheme.settings.background }};
+      --color-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+      --color-text-secondary: {{ scheme.settings.text_secondary.red }},{{ scheme.settings.text_secondary.green }},{{ scheme.settings.text_secondary.blue }};
+      --color-border: {{ scheme.settings.color_border.red }},{{ scheme.settings.color_border.green }},{{ scheme.settings.color_border.blue }},{{ color_border_opacity }};
+      --color-primary-button: {{ scheme.settings.primary_button.red }},{{ scheme.settings.primary_button.green }},{{ scheme.settings.primary_button.blue }},{{ scheme.settings.primary_button.alpha }};
+      --color-primary-button-label: {{ scheme.settings.on_primary_button.red }},{{ scheme.settings.on_primary_button.green }},{{ scheme.settings.on_primary_button.blue }},{{ scheme.settings.on_primary_button.alpha }};
+      --color-primary-button-border: {{ scheme.settings.primary_button_border.red }},{{ scheme.settings.primary_button_border.green }},{{ scheme.settings.primary_button_border.blue }},{{ scheme.settings.primary_button_border.alpha }};
+      --color-secondary-button: {{ scheme.settings.secondary_button.red }},{{ scheme.settings.secondary_button.green }},{{ scheme.settings.secondary_button.blue }},{{ scheme.settings.secondary_button.alpha }};
+      --color-secondary-button-label: {{ scheme.settings.on_secondary_button.red }},{{ scheme.settings.on_secondary_button.green }},{{ scheme.settings.on_secondary_button.blue }},{{ scheme.settings.on_secondary_button.alpha }};
+      --color-secondary-button-border: {{ scheme.settings.secondary_button_border.red }},{{ scheme.settings.secondary_button_border.green }},{{ scheme.settings.secondary_button_border.blue }},{{ scheme.settings.secondary_button_border.alpha }};
+
+      {%- assign primary_button_hex = scheme.settings.primary_button | color_to_hex -%}
+      {%- assign primary_button_border_hex = scheme.settings.primary_button_border | color_to_hex -%}
+      {%- assign secondary_button_hex = scheme.settings.secondary_button | color_to_hex -%}
+      {%- assign secondary_button_border_hex = scheme.settings.secondary_button_border | color_to_hex -%}
+
+      {% liquid
+        assign primary_button_hover = nil
+        assign primary_button_brightness = scheme.settings.primary_button | color_brightness
+        assign primary_button_border_hover = scheme.settings.primary_button_border
+
+        if scheme.settings.primary_button.alpha > 0.0
+          if primary_button_brightness > 160
+            assign primary_button_hover = scheme.settings.primary_button | color_darken: 5
+          elsif primary_button_brightness > 100
+            assign primary_button_hover = scheme.settings.primary_button | color_lighten: 10
+          else
+            assign primary_button_hover = scheme.settings.primary_button | color_lighten: 15
+          endif
+        endif
+
+        if scheme.settings.primary_button_border.alpha > 0.0
+          if primary_button_hex == primary_button_border_hex
+            assign primary_button_border_hover = primary_button_hover
+          else
+            assign primary_button_border_hover = scheme.settings.primary_button_border
+          endif
+        endif
+      %}
+
+      --color-primary-button-hover: {{ primary_button_hover.red }},{{ primary_button_hover.green }},{{ primary_button_hover.blue }};
+      --color-primary-button-border-hover: {{ primary_button_border_hover.red }},{{ primary_button_border_hover.green }},{{ primary_button_border_hover.blue }},{{ primary_button_border_hover.alpha }};
+
+      {% liquid
+        assign secondary_button_hover = nil
+        assign secondary_button_brightness = scheme.settings.secondary_button | color_brightness
+        assign secondary_button_border_hover = scheme.settings.secondary_button_border
+
+        if scheme.settings.secondary_button.alpha > 0.0
+          if secondary_button_brightness > 160
+            assign secondary_button_hover = scheme.settings.secondary_button | color_darken: 5
+          elsif secondary_button_brightness > 100
+            assign secondary_button_hover = scheme.settings.secondary_button | color_lighten: 10
+          else
+            assign secondary_button_hover = scheme.settings.secondary_button | color_lighten: 15
+          endif
+        endif
+
+        if scheme.settings.secondary_button_border.alpha > 0.0
+          if secondary_button_hex == secondary_button_border_hex
+            assign secondary_button_border_hover = secondary_button_hover
+          else
+            assign secondary_button_border_hover = scheme.settings.secondary_button_border
+          endif
+        endif
+      %}
+
+      --color-secondary-button-hover: {{ secondary_button_hover.red }},{{ secondary_button_hover.green }},{{ secondary_button_hover.blue }};
+      --color-secondary-button-border-hover: {{ secondary_button_border_hover.red }},{{ secondary_button_border_hover.green }},{{ secondary_button_border_hover.blue }},{{ secondary_button_border_hover.alpha }};
+
+      {%- if primary_button_hex != primary_button_border_hex or scheme.settings.primary_button.alpha == 0.0 -%}
+        {%- assign color_primary_button_separator = scheme.settings.primary_button_border -%}
+      {%- else -%}
+        {%- assign color_primary_button_separator = scheme.settings.background -%}
+      {%- endif -%}
+      {%- if secondary_button_hex != secondary_button_border_hex or scheme.settings.secondary_button.alpha == 0.0 -%}
+        {%- assign color_secondary_button_separator = scheme.settings.secondary_button_border -%}
+      {%- else -%}
+        {%- assign color_secondary_button_separator = scheme.settings.background -%}
+      {%- endif -%}
+
+      --color-primary-button-separator: {{ color_primary_button_separator.red }},{{ color_primary_button_separator.green }},{{ color_primary_button_separator.blue }},{{ color_primary_button_separator.alpha }};
+      --color-secondary-button-separator: {{ color_secondary_button_separator.red }},{{ color_secondary_button_separator.green }},{{ color_secondary_button_separator.blue }},{{ color_secondary_button_separator.alpha }};
+
+      {% liquid
+        assign exception_brightness = scheme.settings.color_exception | color_brightness
+        if exception_brightness > 140
+          assign exception_foreground = scheme.settings.color_exception | color_darken: 100
+        else
+          assign exception_foreground = scheme.settings.color_exception | color_lighten: 100
+        endif
+      %}
+      --color-exception: {{ scheme.settings.color_exception.red }},{{ scheme.settings.color_exception.green }},{{ scheme.settings.color_exception.blue }};
+      --color-exception-foreground: {{ exception_foreground.red }},{{ exception_foreground.green }},{{ exception_foreground.blue }};
+      --border: {{ settings.border_thickness | append: 'px' }} solid rgba({{ scheme.settings.color_border.red }},{{ scheme.settings.color_border.green }},{{ scheme.settings.color_border.blue }}, {{ color_border_opacity }});
+
+    }
+  {% endfor %}
+
+  :root {
+    --leading-none: 1;
+    --leading-extra-tight: 1.125;
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 1.75;
+
+    --font-body-family: {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
+    --font-body-style: {{ settings.font_body.style }};
+    --font-body-weight: {{ settings.font_body.weight }};
+    --font-body-weight-bold: {{ settings.font_body.weight | plus: 300 | at_most: 1000 }};
+    --font-body-line-height: var(--{{ settings.font_body_line_height }});
+    --font-body-letter-spacing: {% if language_code == 'ar' %}0{% else %}{{ settings.font_body_letter_spacing | divided_by: 100.0 }}{% endif %}em;
+
+    {%- case settings.font_body_size -%}
+      {%- when 'xsmall' -%}
+        --font-xs-size: 0.75rem;
+        --font-s-size: 0.875rem;
+        --font-body-size: 0.75rem;
+        --font-l-size: 0.875rem;
+        --font-xl-size: 1rem;
+      {%- when 'small' -%}
+        --font-xs-size: 0.75rem;
+        --font-s-size: 0.875rem;
+        --font-body-size: 0.875rem;
+        --font-l-size: 1rem;
+        --font-xl-size: 1.125rem;
+      {%- when 'medium' -%}
+        --font-xs-size: 0.75rem;
+        --font-s-size: 0.875rem;
+        --font-body-size: 1rem;
+        --font-l-size: 1.125rem;
+        --font-xl-size: 1.25rem;
+      {%- when 'large' -%}
+        --font-xs-size: clamp(0.7813rem, 0.9208rem + -0.1595vw, 0.8889rem);
+        --font-s-size: clamp(0.9375rem, 1.0185rem + -0.0926vw, 1rem);
+        --font-body-size: 1.125rem;
+        --font-l-size: 1.25rem;
+        --font-xl-size: 1.375rem;
+      {%- when 'xlarge' -%}
+        --font-xs-size: clamp(0.8681rem, 1.0231rem + -0.1772vw, 0.9877rem);
+        --font-s-size: clamp(1.0417rem, 1.1317rem + -0.1029vw, 1.1111rem);
+        --font-body-size: 1.25rem;
+        --font-l-size: 1.375rem;
+        --font-xl-size: 1.5rem;
+    {%- endcase -%}
+
+    --font-heading-family: {{ settings.font_heading.family }}, {{ settings.font_heading.fallback_families }};
+    --font-heading-style: {{ settings.font_heading.style }};
+    --font-heading-weight: {{ settings.font_heading.weight }};
+    --font-heading-line-height: var(--{{ settings.font_heading_line_height }});
+    --font-heading-letter-casing: {{ settings.font_heading_letter_casing }};
+    --font-heading-letter-spacing: {% if language_code == 'ar' %}0{% else %}{{ settings.font_heading_letter_spacing | divided_by: 100.0 }}{% endif %}em;
+
+    {%- if settings.font_subheading == 'heading' -%}
+      --font-subheading-family: var(--font-heading-family);
+      --font-subheading-style: {{ settings.font_heading.style }};
+      --font-subheading-weight: {{ settings.font_heading.weight }};
+    {% else %}
+      --font-subheading-family: var(--font-body-family);
+      --font-subheading-style: {{ settings.font_body.style }};
+      --font-subheading-weight: {{ settings.font_body.weight }};
+    {% endif %}
+
+    --font-subheading-size: var(--font-body-size);
+
+    {%- case settings.font_heading_size -%}
+      {%- when 'xsmall' -%}
+        --font-heading-h6-size: clamp(0.8438rem, 0.8049rem + 0.1944vw, 0.975rem);
+        --font-heading-h5-size: clamp(0.9492rem, 0.8838rem + 0.3271vw, 1.17rem);
+        --font-heading-h4-size: clamp(1.0679rem, 0.9683rem + 0.498vw, 1.404rem);
+        --font-heading-h3-size: clamp(1.2014rem, 1.0581rem + 0.7162vw, 1.6848rem);
+        --font-heading-h2-size: clamp(1.3515rem, 1.1529rem + 0.9929vw, 2.0218rem);
+        --font-heading-h1-size: clamp(1.5205rem, 1.2521rem + 1.3417vw, 2.4261rem);
+      {%- when 'small' -%}
+        --font-heading-h6-size: clamp(0.9844rem, 0.9649rem + 0.0972vw, 1.05rem);
+        --font-heading-h5-size: clamp(1.1074rem, 1.0622rem + 0.226vw, 1.26rem);
+        --font-heading-h4-size: clamp(1.2458rem, 1.167rem + 0.3943vw, 1.512rem);
+        --font-heading-h3-size: clamp(1.4016rem, 1.2793rem + 0.6116vw, 1.8144rem);
+        --font-heading-h2-size: clamp(1.5768rem, 1.3989rem + 0.8896vw, 2.1773rem);
+        --font-heading-h1-size: clamp(1.7739rem, 1.5253rem + 1.2428vw, 2.6127rem);
+      {%- when 'medium' -%}
+        --font-heading-h6-size: clamp(1.125rem, 1.1028rem + 0.1111vw, 1.2rem);
+        --font-heading-h5-size: clamp(1.2656rem, 1.214rem + 0.2583vw, 1.44rem);
+        --font-heading-h4-size: clamp(1.4238rem, 1.3337rem + 0.4506vw, 1.728rem);
+        --font-heading-h3-size: clamp(1.6018rem, 1.462rem + 0.699vw, 2.0736rem);
+        --font-heading-h2-size: clamp(1.802rem, 1.5987rem + 1.0167vw, 2.4883rem);
+        --font-heading-h1-size: clamp(2.0273rem, 1.7432rem + 1.4203vw, 2.986rem);
+      {%- when 'large' -%}
+        --font-heading-h6-size: clamp(1.2656rem, 1.1962rem + 0.3472vw, 1.5rem);
+        --font-heading-h5-size: clamp(1.4238rem, 1.3124rem + 0.5573vw, 1.8rem);
+        --font-heading-h4-size: clamp(1.6018rem, 1.4364rem + 0.827vw, 2.16rem);
+        --font-heading-h3-size: clamp(1.802rem, 1.568rem + 1.1703vw, 2.592rem);
+        --font-heading-h2-size: clamp(2.0273rem, 1.7064rem + 1.6046vw, 3.1104rem);
+        --font-heading-h1-size: clamp(2.2807rem, 1.8505rem + 2.1508vw, 3.7325rem);
+      {%- when 'xlarge' %}
+        --font-heading-h6-size: clamp(1.4063rem, 1.2007rem + 1.0278vw, 2.1rem);
+        --font-heading-h5-size: clamp(1.582rem, 1.3041rem + 1.3896vw, 2.52rem);
+        --font-heading-h4-size: clamp(1.7798rem, 1.4111rem + 1.8433vw, 3.024rem);
+        --font-heading-h3-size: clamp(2.0023rem, 1.5203rem + 2.4097vw, 3.6288rem);
+        --font-heading-h2-size: clamp(2.2525rem, 1.6297rem + 3.1141vw, 4.3546rem);
+        --font-heading-h1-size: clamp(2.5341rem, 1.7367rem + 3.9872vw, 5.2255rem);
+      {%- when 'xxlarge' %}
+        --font-heading-h6-size: clamp(1.6875rem, 1.2986rem + 1.9444vw, 3rem);
+        --font-heading-h5-size: clamp(1.8984rem, 1.3943rem + 2.5208vw, 3.6rem);
+        --font-heading-h4-size: clamp(2.1357rem, 1.4886rem + 3.2359vw, 4.32rem);
+        --font-heading-h3-size: clamp(2.4027rem, 1.5786rem + 4.1204vw, 5.184rem);
+        --font-heading-h2-size: clamp(2.703rem, 1.6608rem + 5.2115vw, 6.2208rem);
+        --font-heading-h1-size: clamp(3.0409rem, 1.7301rem + 6.5541vw, 7.465rem);
+      {%- when 'xxxlarge' %}
+        --font-heading-h6-size: clamp(2.25rem, 1.7611rem + 2.4444vw, 3.9rem);
+        --font-heading-h5-size: clamp(2.5313rem, 1.8946rem + 3.1833vw, 4.68rem);
+        --font-heading-h4-size: clamp(2.8477rem, 2.0274rem + 4.1012vw, 5.616rem);
+        --font-heading-h3-size: clamp(3.2036rem, 2.156rem + 5.2379vw, 6.7392rem);
+        --font-heading-h2-size: clamp(3.6041rem, 2.2758rem + 6.6414vw, 8.087rem);
+        --font-heading-h1-size: clamp(4.0546rem, 2.3805rem + 8.3702vw, 9.7044rem);
+    {%- endcase -%}
+
+    --font-subheading-line-height: var(--{{ settings.font_heading_line_height }});
+    --font-subheading-letter-casing: {{ settings.font_subheading_letter_casing }};
+    --font-subheading-letter-spacing: {% if language_code == 'ar' %}0{% else %}{{ settings.font_subheading_letter_spacing | divided_by: 100.0 }}{% endif %}em;
+
+    --font-button-family: {%- if settings.font_button == 'heading' -%}var(--font-heading-family){%- else -%}var(--font-body-family){%- endif -%};
+    --font-button-style: {%- if settings.font_button == 'heading' -%}var(--font-heading-style){%- else -%}var(--font-body-style){%- endif -%};
+    --font-button-weight: {%- if settings.font_button == 'heading' -%}var(--font-heading-weight){%- else -%}var(--font-body-weight){%- endif -%};
+    --font-button-letter-casing: {{ settings.font_button_letter_casing }};
+    --font-button-letter-spacing: {% if language_code == 'ar' %}0{% else %}{{ settings.font_button_letter_spacing | divided_by: 100.0 }}{% endif %}em;
+    {%- case settings.font_button_size -%}
+      {%- when 'xsmall' -%}
+        --font-button-size: 0.75rem;
+      {%- when 'small' -%}
+        --font-button-size: 0.875rem;
+      {%- when 'medium' -%}
+        --font-button-size: 1rem;
+      {%- when 'large' -%}
+        --font-button-size: 1.25rem;
+      {%- when 'xlarge' -%}
+        --font-button-size: 1.5rem;
+    {%- endcase -%}
+
+    --font-text-button-letter-casing: {{ settings.font_text_button_letter_casing }};
+    --font-text-button-letter-spacing: {% if language_code == 'ar' %}0{% else %}{{ settings.font_text_button_letter_spacing | divided_by: 100.0 }}{% endif %}em;
+
+    {%- case settings.font_button_padding -%}
+      {%- when 'xsmall' -%}
+        --font-button-padding-block: 0.5rem;
+        --font-button-padding-inline: 1.5rem;
+        --button-square-size: 2.25rem;
+      {%- when 'small' -%}
+        --font-button-padding-block: 0.75rem;
+        --font-button-padding-inline: 1.75rem;
+        --button-square-size: 2.5rem;
+      {%- when 'medium' -%}
+        --font-button-padding-block: 0.875rem;
+        --font-button-padding-inline: 2rem;
+        --button-square-size: 2.75rem;
+      {%- when 'large' -%}
+        --font-button-padding-block: 1rem;
+        --font-button-padding-inline: 2.25rem;
+        --button-square-size: 3rem;
+      {%- when 'xlarge' -%}
+        --font-button-padding-block: 1.125rem;
+        --font-button-padding-inline: 2.5rem;
+        --button-square-size: 3.25rem;
+    {%- endcase -%}
+
+    --font-navigation-family: {%- if settings.font_navigation == 'heading' -%}var(--font-heading-family){%- else -%}var(--font-body-family){%- endif -%};
+    --font-navigation-style: {%- if settings.font_navigation == 'heading' -%}var(--font-heading-style){%- else -%}var(--font-body-style){%- endif -%};
+    --font-navigation-weight: {%- if settings.font_navigation == 'heading' -%}var(--font-heading-weight){%- else -%}var(--font-body-weight){%- endif -%};
+    --font-navigation-line-height: var(--leading-tight);
+    --font-navigation-letter-casing: {{ settings.font_navigation_letter_casing }};
+    --font-navigation-letter-spacing: {% if language_code == 'ar' %}0{% else %}{{ settings.font_navigation_letter_spacing | divided_by: 100.0 }}{% endif %}em;
+
+    {%- case settings.font_navigation_size -%}
+      {%- when 'xsmall' -%}
+        --font-navigation-size: 0.75rem;
+        --font-navigation-sm-size: 0.75rem;
+        --font-navigation-xs-size: 0.75rem;
+      {%- when 'small' -%}
+        --font-navigation-size: 0.875rem;
+        --font-navigation-sm-size: 0.8125rem;
+        --font-navigation-xs-size: 0.75rem;
+      {%- when 'medium' -%}
+        --font-navigation-size: 1rem;
+        --font-navigation-sm-size: 0.875rem;
+        --font-navigation-xs-size: 0.75rem;
+      {%- when 'large' -%}
+        --font-navigation-size: 1.125rem;
+        --font-navigation-sm-size: 0.9375rem;
+        --font-navigation-xs-size: 0.8125rem;
+      {%- when 'xlarge' -%}
+        --font-navigation-size: 1.25rem;
+        --font-navigation-sm-size: 1rem;
+        --font-navigation-xs-size: 0.875rem;
+    {%- endcase -%}
+
+    --font-sidebar-menu-family: {%- if settings.font_sidebar_menu == 'heading' -%}var(--font-heading-family){%- else -%}var(--font-body-family){%- endif -%};
+    --font-sidebar-menu-style: {%- if settings.font_sidebar_menu == 'heading' -%}var(--font-heading-style){%- else -%}var(--font-body-style){%- endif -%};
+    --font-sidebar-menu-weight: {%- if settings.font_sidebar_menu == 'heading' -%}var(--font-heading-weight){%- else -%}var(--font-body-weight){%- endif -%};
+    --font-sidebar-menu-line-height: var(--leading-snug);
+    --font-sidebar-menu-letter-casing: {{ settings.font_sidebar_menu_letter_casing }};
+    --font-sidebar-menu-letter-spacing: {% if language_code == 'ar' %}0{% else %}{{ settings.font_sidebar_menu_letter_spacing | divided_by: 100.0 }}{% endif %}em;
+
+    {%- case settings.font_sidebar_menu_size -%}
+      {%- when 'xsmall' -%}
+        --font-sidebar-menu-size: 0.875rem;
+      {%- when 'small' -%}
+        --font-sidebar-menu-size: 1rem;
+      {%- when 'medium' -%}
+        --font-sidebar-menu-size: 1.25rem;
+      {%- when 'large' -%}
+        --font-sidebar-menu-size: 1.5rem;
+      {%- when 'xlarge' -%}
+        --font-sidebar-menu-size: 1.75rem;
+    {%- endcase -%}
+
+    --font-search-family: {%- if settings.font_search == 'heading' -%}var(--font-heading-family){%- else -%}var(--font-body-family){%- endif -%};
+
+    {%- case settings.font_icon_size -%}
+      {%- when 'small' -%}
+        --icon: 0.875rem;
+        --icon-xs: 0.75rem;
+        --icon-s: var(--icon);
+        --icon-m: 1rem;
+        --icon-l: 1.25rem;
+        --icon-xl: 1.5rem;
+        --icon-xxl: 1.75rem;
+        --icon-gap: 0.375rem;
+      {%- when 'medium' -%}
+        --icon: 1rem;
+        --icon-xs: 0.875rem;
+        --icon-s: var(--icon);
+        --icon-m: 1.25rem;
+        --icon-l: 1.5rem;
+        --icon-xl: 1.75rem;
+        --icon-xxl: 2rem;
+        --icon-gap: 0.375rem;
+      {%- when 'large' -%}
+        --icon: 1.25rem;
+        --icon-xs: 1rem;
+        --icon-s: var(--icon);
+        --icon-m: 1.5rem;
+        --icon-l: 1.75rem;
+        --icon-xl: 2rem;
+        --icon-xxl: 2.25rem;
+        --icon-gap: var(--space-2xs);
+        --icon-gap: 0.5rem;
+    {%- endcase -%}
+
+    {%- case settings.spacing_size -%}
+      {%- when 'xsmall' -%}
+        --space-3xs: clamp(0.125rem, 0.1065rem + 0.0926vw, 0.1875rem);
+        --space-2xs: clamp(0.25rem, 0.213rem + 0.1852vw, 0.375rem);
+        --space-xs: clamp(0.375rem, 0.3194rem + 0.2778vw, 0.5625rem);
+        --space-s: clamp(0.5rem, 0.4259rem + 0.3704vw, 0.75rem);
+        --space-m: clamp(0.75rem, 0.6389rem + 0.5556vw, 1.125rem);
+        --space-l: clamp(1rem, 0.8519rem + 0.7407vw, 1.5rem);
+        --space-xl: clamp(1.5rem, 1.2778rem + 1.1111vw, 2.25rem);
+        --space-2xl: clamp(2rem, 1.7037rem + 1.4815vw, 3rem);
+        --space-3xl: clamp(3rem, 2.5556rem + 2.2222vw, 4.5rem);
+        --space-3xs-2xs: clamp(0.125rem, 0.0509rem + 0.3704vw, 0.375rem);
+        --space-2xs-xs: clamp(0.25rem, 0.1574rem + 0.463vw, 0.5625rem);
+        --space-xs-s: clamp(0.375rem, 0.2639rem + 0.5556vw, 0.75rem);
+        --space-s-m: clamp(0.5rem, 0.3148rem + 0.9259vw, 1.125rem);
+        --space-m-l: clamp(0.75rem, 0.5278rem + 1.1111vw, 1.5rem);
+        --space-l-xl: clamp(1rem, 0.6296rem + 1.8519vw, 2.25rem);
+        --space-xl-2xl: clamp(1.5rem, 1.0556rem + 2.2222vw, 3rem);
+        --space-2xl-3xl: clamp(2rem, 1.2593rem + 3.7037vw, 4.5rem);
+      {%- when 'small' -%}
+        --space-3xs: clamp(0.1875rem, 0.169rem + 0.0926vw, 0.25rem);
+        --space-2xs: clamp(0.375rem, 0.338rem + 0.1852vw, 0.5rem);
+        --space-xs: clamp(0.5625rem, 0.5069rem + 0.2778vw, 0.75rem);
+        --space-s: clamp(0.75rem, 0.6759rem + 0.3704vw, 1rem);
+        --space-m: clamp(1.125rem, 1.0139rem + 0.5556vw, 1.5rem);
+        --space-l: clamp(1.5rem, 1.3519rem + 0.7407vw, 2rem);
+        --space-xl: clamp(2.25rem, 2.0278rem + 1.1111vw, 3rem);
+        --space-2xl: clamp(3rem, 2.7037rem + 1.4815vw, 4rem);
+        --space-3xl: clamp(4.5rem, 4.0556rem + 2.2222vw, 6rem);
+        --space-3xs-2xs: clamp(0.1875rem, 0.0949rem + 0.463vw, 0.5rem);
+        --space-2xs-xs: clamp(0.375rem, 0.2639rem + 0.5556vw, 0.75rem);
+        --space-xs-s: clamp(0.5625rem, 0.4329rem + 0.6481vw, 1rem);
+        --space-s-m: clamp(0.75rem, 0.5278rem + 1.1111vw, 1.5rem);
+        --space-m-l: clamp(1.125rem, 0.8657rem + 1.2963vw, 2rem);
+        --space-l-xl: clamp(1.5rem, 1.0556rem + 2.2222vw, 3rem);
+        --space-xl-2xl: clamp(2.25rem, 1.7315rem + 2.5926vw, 4rem);
+        --space-2xl-3xl: clamp(3rem, 2.1111rem + 4.4444vw, 6rem);
+      {%- when 'medium' -%}
+        --space-3xs: clamp(0.25rem, 0.2315rem + 0.0926vw, 0.3125rem);
+        --space-2xs: clamp(0.5rem, 0.463rem + 0.1852vw, 0.625rem);
+        --space-xs: clamp(0.75rem, 0.6944rem + 0.2778vw, 0.9375rem);
+        --space-s: clamp(1rem, 0.9259rem + 0.3704vw, 1.25rem);
+        --space-m: clamp(1.5rem, 1.3889rem + 0.5556vw, 1.875rem);
+        --space-l: clamp(2rem, 1.8519rem + 0.7407vw, 2.5rem);
+        --space-xl: clamp(3rem, 2.7778rem + 1.1111vw, 3.75rem);
+        --space-2xl: clamp(4rem, 3.7037rem + 1.4815vw, 5rem);
+        --space-3xl: clamp(6rem, 5.5556rem + 2.2222vw, 7.5rem);
+        --space-3xs-2xs: clamp(0.25rem, 0.1389rem + 0.5556vw, 0.625rem);
+        --space-2xs-xs: clamp(0.5rem, 0.3704rem + 0.6481vw, 0.9375rem);
+        --space-xs-s: clamp(0.75rem, 0.6019rem + 0.7407vw, 1.25rem);
+        --space-s-m: clamp(1rem, 0.7407rem + 1.2963vw, 1.875rem);
+        --space-m-l: clamp(1.5rem, 1.2037rem + 1.4815vw, 2.5rem);
+        --space-l-xl: clamp(2rem, 1.4815rem + 2.5926vw, 3.75rem);
+        --space-xl-2xl: clamp(3rem, 2.4074rem + 2.963vw, 5rem);
+        --space-2xl-3xl: clamp(4rem, 2.963rem + 5.1852vw, 7.5rem);
+      {%- when 'large' -%}
+        --space-3xs: clamp(0.3125rem, 0.294rem + 0.0926vw, 0.375rem);
+        --space-2xs: clamp(0.5625rem, 0.5255rem + 0.1852vw, 0.6875rem);
+        --space-xs: clamp(0.875rem, 0.8194rem + 0.2778vw, 1.0625rem);
+        --space-s: clamp(1.125rem, 1.0509rem + 0.3704vw, 1.375rem);
+        --space-m: clamp(1.6875rem, 1.5764rem + 0.5556vw, 2.0625rem);
+        --space-l: clamp(2.25rem, 2.1019rem + 0.7407vw, 2.75rem);
+        --space-xl: clamp(3.375rem, 3.1528rem + 1.1111vw, 4.125rem);
+        --space-2xl: clamp(4.5rem, 4.2037rem + 1.4815vw, 5.5rem);
+        --space-3xl: clamp(6.75rem, 6.3056rem + 2.2222vw, 8.25rem);
+        --space-3xs-2xs: clamp(0.3125rem, 0.2014rem + 0.5556vw, 0.6875rem);
+        --space-2xs-xs: clamp(0.5625rem, 0.4144rem + 0.7407vw, 1.0625rem);
+        --space-xs-s: clamp(0.875rem, 0.7269rem + 0.7407vw, 1.375rem);
+        --space-s-m: clamp(1.125rem, 0.8472rem + 1.3889vw, 2.0625rem);
+        --space-m-l: clamp(1.6875rem, 1.3727rem + 1.5741vw, 2.75rem);
+        --space-l-xl: clamp(2.25rem, 1.6944rem + 2.7778vw, 4.125rem);
+        --space-xl-2xl: clamp(3.375rem, 2.7454rem + 3.1481vw, 5.5rem);
+        --space-2xl-3xl: clamp(4.5rem, 3.3889rem + 5.5556vw, 8.25rem);
+      {%- when 'xlarge' -%}
+        --space-3xs: clamp(0.3125rem, 0.294rem + 0.0926vw, 0.375rem);
+        --space-2xs: clamp(0.625rem, 0.588rem + 0.1852vw, 0.75rem);
+        --space-xs: clamp(0.9375rem, 0.8819rem + 0.2778vw, 1.125rem);
+        --space-s: clamp(1.25rem, 1.1759rem + 0.3704vw, 1.5rem);
+        --space-m: clamp(1.875rem, 1.7639rem + 0.5556vw, 2.25rem);
+        --space-l: clamp(2.5rem, 2.3519rem + 0.7407vw, 3rem);
+        --space-xl: clamp(3.75rem, 3.5278rem + 1.1111vw, 4.5rem);
+        --space-2xl: clamp(5rem, 4.7037rem + 1.4815vw, 6rem);
+        --space-3xl: clamp(7.5rem, 7.0556rem + 2.2222vw, 9rem);
+        --space-3xs-2xs: clamp(0.3125rem, 0.1829rem + 0.6481vw, 0.75rem);
+        --space-2xs-xs: clamp(0.625rem, 0.4769rem + 0.7407vw, 1.125rem);
+        --space-xs-s: clamp(0.9375rem, 0.7708rem + 0.8333vw, 1.5rem);
+        --space-s-m: clamp(1.25rem, 0.9537rem + 1.4815vw, 2.25rem);
+        --space-m-l: clamp(1.875rem, 1.5417rem + 1.6667vw, 3rem);
+        --space-l-xl: clamp(2.5rem, 1.9074rem + 2.963vw, 4.5rem);
+        --space-xl-2xl: clamp(3.75rem, 3.0833rem + 3.3333vw, 6rem);
+        --space-2xl-3xl: clamp(5rem, 3.8148rem + 5.9259vw, 9rem);
+    {%- endcase -%}
+
+    --gap-horizontal: {{ settings.grid_gap_horizontal_mobile }};
+    --gap-vertical:  {{ settings.grid_gap_vertical_mobile }};
+    --padding-section: {{ settings.section_padding_vertical_mobile }};
+    --gap-section: {{ settings.section_gap_vertical_mobile }};
+    --logo-width: {{ settings.logo_width_mobile | append: 'px' }};
+
+    @media screen and (min-width: 48em) {
+      --gap-horizontal: {{ settings.grid_gap_horizontal }};
+      --gap-vertical:  {{ settings.grid_gap_vertical }};
+      --padding-section: {{ settings.section_padding_vertical }};
+      --gap-section: {{ settings.section_gap_vertical }};
+    }
+
+    @media screen and (min-width: 76em) {
+      --logo-width: {{ settings.logo_width | append: 'px' }};
+    }
+
+    --border-thickness: {{ settings.border_thickness | append: 'px' }};
+    --border-opacity: {{ settings.border_opacity | divided_by: 100.0 }};
+
+    --border-radius-button: {% if settings.button_border_radius == 'slightly_rounded' %}0.25rem{% elsif settings.button_border_radius == 'rounded'%}2.5rem{% else %}0{% endif %};
+    --border-radius-card: {% if settings.card_border_radius == 'slightly_rounded' %}0.375rem{% elsif settings.card_border_radius == 'rounded'%}0.75rem{% else %}0{% endif %};
+    --border-radius-card-inner: {% if settings.card_border_radius == 'slightly_rounded' %}0.28125rem{% elsif settings.card_border_radius == 'rounded'%}0.5625rem{% else %}0{% endif %};
+
+    --border-radius-cart-count-badge: {% if settings.cart_count_badge_border_radius == 'slightly_rounded' %}0.25rem{% elsif settings.cart_count_badge_border_radius == 'rounded'%}2.5rem{% else %}0{% endif %};
+    --border-radius-swatch: {% if settings.button_border_radius == 'slightly_rounded' %}0.125rem{% elsif settings.button_border_radius == 'rounded'%}0.25rem{% else %}0{% endif %};
+    --border-radius-input: {% if settings.button_border_radius != 'none' and settings.input_style == 'box' %}
+    0.25rem{% endif %};
+
+    --mini-product-width: {{ settings.product_block_width | times: 1.0 | divided_by: 16 }}rem;
+
+    --color-overlay: rgba({{ settings.overlay.red }}, {{ settings.overlay.green }}, {{ settings.overlay.blue }}, 0.5);
+
+    {%- case settings.input_padding -%}
+      {%- when 'small' -%}
+        --input-horizontal-padding: calc(var(--space-2xs) * 1.375);
+        --input-vertical-padding: var(--space-2xs);
+      {%- when 'medium' -%}
+        --input-horizontal-padding: var(--space-xs);
+        --input-vertical-padding: var(--space-xs);
+      {%- when 'large' -%}
+        --input-horizontal-padding: var(--space-s);
+        --input-vertical-padding: var(--space-s);
+    {%- endcase -%}
+  }
+{% endstyle %}

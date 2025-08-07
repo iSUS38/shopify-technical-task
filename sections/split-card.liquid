@@ -1,0 +1,269 @@
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %} >
+  <div class="container--{{ section.settings.container_type }} container padding--section" style="{% render 'padding-override' with settings: section.settings %}">
+    <div class="content-blocks split-card {% if section.settings.show_borders %}content-blocks--border split-card--border{% endif %} split-card--radius-{{ section.settings.border_radius }} {% if section.settings.border_radius == 'section' or section.settings.show_borders %}card-border-radius{% endif %} ">
+      {%- content_for 'blocks' -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:split-card",
+  "tag": "section",
+  "max_blocks": 2,
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "_block-rich-text"
+    },
+    {
+      "type": "_image-banner"
+    },
+    {
+      "type": "_shoppable-banner"
+    },
+    {
+      "type": "_video-banner"
+    },
+    {
+      "type": "_product-banner"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "container_type",
+      "options": [
+        {
+          "value": "padded",
+          "label": "t:padded"
+        },
+        {
+          "value": "max",
+          "label": "t:page-width"
+        }
+      ],
+      "default": "max",
+      "label": "t:container-type"
+    },
+    {
+      "type": "select",
+      "id": "border_radius",
+      "label": "t:border-radius",
+      "default": "section",
+      "info": "t:choose-where-to-apply-the-card-border-radius-to-create",
+      "options": [
+        {
+          "value": "section",
+          "label": "t:section"
+        },
+        {
+          "value": "blocks",
+          "label": "t:blocks"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "t:show-split-card-borders",
+      "default": false,
+      "info": "t:applies-a-border-around-the-card-and-a-divider-between"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:split-card",
+      "blocks": [
+        {
+          "type": "_image-banner"
+        },
+        {
+          "type": "_block-rich-text",
+          "settings": {
+            "color_scheme": "scheme-3"
+          },
+          "blocks": [
+            {
+              "type": "heading-group",
+              "blocks": [
+                {
+                  "type": "_subheading"
+                },
+                {
+                  "type": "_heading",
+                  "settings": {
+                    "heading": "Split card"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text"
+            },
+            {
+              "type": "button-group",
+              "blocks": [
+                {
+                  "type": "_button"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

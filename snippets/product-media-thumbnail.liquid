@@ -1,0 +1,26 @@
+<li
+  class="pdp-thumbnails__item"
+  style="--width: {{ media.preview_image.width }}; --height: {{ media.preview_image.height }}"
+>
+  <button tabindex="0" data-thumbnail="{{ media.id }}" class="pdp-thumbnails__thumbnail" {% if is_active %}aria-pressed="true"{% endif %}>
+    {% assign sizes = '(min-width:48em) 100px, 20vw' %}
+    {% assign widths = '100, 200, 300' %}
+    {% assign alt = 'products.product.media.load_image' | t: index: index %}
+    {{
+      media.preview_image
+      | image_url: width: 500
+      | image_tag: sizes: sizes, widths: widths, alt: alt, class:"pdp-thubmnails__image", loading: 'eager'
+    }}
+    {%- if media.media_type == 'model' -%}
+      <span class="pdp-thumbnails__button button button--square button--{{ settings.button_style }}" aria-hidden="true">
+        {{- 'icon-3d-model.svg' | inline_asset_content -}}
+      </span>
+      <span class="visually-hidden">{{ 'products.product.media.load_model' | t: index: index }}</span>
+    {%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
+      <span class="pdp-thumbnails__button button button--square button--{{ settings.button_style }}" aria-hidden="true">
+        {%- render 'icon' with 'play', class: 'deferred-media__icon icon-m' -%}
+      </span>
+      <span class="visually-hidden">{{ 'products.product.media.load_video' | t: index: index }}</span>
+    {%- endif -%}
+  </button>
+</li>

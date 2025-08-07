@@ -1,0 +1,404 @@
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'lazy'
+  if section.index == 1 and section.location != 'footer'
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+-%}
+
+{% # theme-check-disable UnusedAssign %}
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+  <div
+    class="gap--section padding--section logo-list--{{ section.settings.layout }} logo-list--{{ section.settings.horizontal_alignment }}"
+    style="--horizontal-gap: {{ section.settings.spacing }}; --base-height: {{ section.settings.size | times: 1.0 | divided_by: 16 }}rem; {% render 'padding-override' with settings: section.settings %}"
+  >
+    {% content_for "block", type: "_section-header", id: "section-header" %}
+    {%- capture logo_items -%}
+      {% content_for 'blocks' %}
+    {%- endcapture -%}
+    {%- if section.settings.layout == 'autoscroll' -%}
+      <div>
+        <scrolling-content
+          class="logo-list__scroll play-pause--hover-focus"
+          data-speed="{{ section.settings.speed }}"
+          data-direction="{{ section.settings.scroll_direction }}"
+        >
+          {%- assign pause_text = 'accessibility.pause_animation' | t -%}
+          {%- assign play_text = 'accessibility.play_animation' | t -%}
+          {%- assign class = 'scrolling-content__button button button--primary' -%}
+          {%- render 'play-pause-button' with pause_text: pause_text, play_text: play_text, class: class -%}
+          <div class="scrolling-content__content" role="region">
+            <ul class="scrolling-content__items logo-list__list container container--xl alignment--middle-{{ section.settings.horizontal_alignment }}">
+              {{ logo_items }}
+            </ul>
+          </div>
+        </scrolling-content>
+        <script src="{{ 'scrolling-content.js' | asset_url }}" defer="defer"></script>
+      </div>
+    {%- else -%}
+      <ul class="logo-list__list container container--xl container--{{ section.settings.container_type }} alignment--middle-{{ section.settings.horizontal_alignment }}">
+        {{ logo_items }}
+      </ul>
+    {%- endif -%}
+
+    <div class="section-button-group container container--xl">
+      {% content_for "block", type: "button-group", id: "button-group" %}
+    </div>
+  </div>
+</div>
+ {% # theme-check-enable UnusedAssign %}
+
+{% schema %}
+{
+  "name": "t:logo-list",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:layout",
+      "options": [
+        {
+          "value": "autoscroll",
+          "label": "t:auto-scroll"
+        },
+        {
+          "value": "grid",
+          "label": "t:grid"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 0.6,
+      "max": 8,
+      "step": 0.1,
+      "unit": "ms",
+      "label": "t:scrolling-speed",
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:to-left"
+        },
+        {
+          "value": "right",
+          "label": "t:to-right"
+        }
+      ],
+      "default": "left",
+      "label": "t:scroll-direction"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "t:base-size",
+      "min": 16,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "options": [
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-xl)",
+      "label": "t:spacing"
+    },
+    {
+      "type": "header",
+      "content": "t:grid-layout"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "center",
+      "label": "t:horizontal-alignment"
+    },
+    {
+      "type": "select",
+      "id": "container_type",
+      "options": [
+        {
+          "value": "max",
+          "label": "t:page-width"
+        },
+        {
+          "value": "full",
+          "label": "t:full-width"
+        },
+        {
+          "value": "padded",
+          "label": "t:full-width-padded"
+        }
+      ],
+      "default": "max",
+      "label": "t:container-type"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_logo"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:logo-list",
+      "blocks": [
+        {
+          "type": "_section-header",
+          "id": "section-header",
+          "static": true,
+          "settings": {
+            "heading": "Logo list"
+          }
+        },
+        {
+          "type": "_logo"
+        },
+        {
+          "type": "_logo"
+        },
+        {
+          "type": "_logo"
+        },
+        {
+          "type": "button-group",
+          "id": "button-group",
+          "settings": {
+            "horizontal_alignment": "center"
+          },
+          "static": true,
+          "blocks": [
+            {
+              "type": "_button",
+              "settings": {
+                "button_label": ""
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

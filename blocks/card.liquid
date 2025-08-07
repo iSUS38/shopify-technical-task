@@ -1,0 +1,138 @@
+{%- if block.blocks.size > 0 -%}
+  <div class="rich-text__block-width rich-text__card rte {% if block.settings.card_width == 'adapt' %}rich-text__card--adapt{% endif %} {% if block.settings.show_borders %}border{% endif %} {% if block.settings.enable_blur %}blur{% endif %}" style="--card-padding: {{ block.settings.spacing }}"  data-color-scheme="{{ block.settings.color_scheme }}" {{  block.shopify_attributes }}>
+    {%- content_for 'blocks' -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:card",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "card_width",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:adapt-to-content"
+        },
+        {
+          "value": "container",
+          "label": "t:container-width"
+        }
+      ],
+      "label": "t:width"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "options": [
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-l)",
+      "label": "t:padding"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_blur",
+      "label": "t:enable-background-blur",
+      "default": true,
+      "info": "t:applies-to-background-gradients-with-transparency"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "t:show-card-borders",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:card",
+      "blocks": [
+        {
+          "type": "heading-group",
+          "blocks": [
+            {
+              "type": "_subheading"
+            },
+            {
+              "type": "_heading"
+            }
+          ]
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button-group",
+          "blocks": [
+            {
+              "type": "_button"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

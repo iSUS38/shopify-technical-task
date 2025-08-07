@@ -1,0 +1,112 @@
+{%- capture input_id -%}line-item-property-{{ section.id }}-block-{{ block.settings.field_label | handleize }}{%- endcapture -%}
+{%- case block.settings.type -%}
+  {%- when 'text' -%}
+    <div class="field">
+      {%- case block.settings.text_type -%}
+        {%- when 'text' -%}
+          <label class="field__label" for="{{ input_id }}">
+            {{- block.settings.field_label | escape -}}
+            {%- if block.settings.required -%}
+              <span aria-hidden="true">*</span>
+            {%- endif -%}
+          </label>
+          <input
+            form="{{ product_form_id }}"
+            id="{{ input_id }}"
+            type="text"
+            name="properties[{{ block.settings.field_label | escape }}]"
+            class="field__input"
+            placeholder=" "
+            aria-required="{{ block.settings.required }}"
+            {% if block.settings.required %}
+              required
+            {% endif %}
+            autocorrect="off"
+            dir="auto"
+          >
+        {%- when 'textarea' -%}
+          <label class="field__label field__textarea-label" for="{{ input_id }}">
+            {{- block.settings.field_label | escape -}}
+            {%- if block.settings.required -%}
+              <span aria-hidden="true">*</span>
+            {%- endif -%}
+          </label>
+          <textarea
+            form="{{ product_form_id }}"
+            rows="4"
+            id="{{ input_id }}"
+            name="properties[{{ block.settings.field_label | escape }}]"
+            class="field__input"
+            placeholder=" "
+            aria-required="{{ block.settings.required }}"
+            {% if block.settings.required %}
+              required
+            {% endif %}
+            dir="auto"
+          ></textarea>
+      {%- endcase -%}
+    </div>
+  {%- when 'checkbox' -%}
+    <div class="checkbox">
+      {%- if block.settings.required == false -%}
+        <input
+          form="{{ product_form_id }}"
+          type="hidden"
+          aria-hidden="true"
+          name="properties[{{ block.settings.field_label | escape }}]"
+          value="{{ block.settings.checkbox_unchecked | escape }}"
+        >
+      {%- endif -%}
+      <input
+        form="{{ product_form_id }}"
+        type="checkbox"
+        name="properties[{{ block.settings.field_label | escape }}]"
+        value="{{ block.settings.checkbox_checked | escape }}"
+        id="{{ input_id }}"
+        class="checkbox__input"
+        aria-required="{{ block.settings.required }}"
+        {% if block.settings.required %}
+          required
+        {% endif %}
+      >
+      <label for="{{ input_id }}" class="checkbox__label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="checkbox__icon" viewBox="0 0 16 16"><path fill="" d="m12.9 5.77-6 6a.56.56 0 0 1-.8 0L3.48 9.15a.56.56 0 0 1 .8-.8l2.22 2.23 5.6-5.6a.56.56 0 0 1 .8.8Z"/></svg>
+        <span class="checkbox__label-text">
+          {{ block.settings.field_label | escape }}
+          {%- if block.settings.required -%}
+            <span aria-hidden="true">*</span>
+          {%- endif -%}
+        </span>
+      </label>
+    </div>
+  {%- when 'select' -%}
+    {%- assign options = block.settings.options | split: ',' -%}
+    {%- if options.size > 0 -%}
+      <div class="select">
+        <label class="field__label visually-hidden" for="{{ input_id }}">
+          {{- block.settings.field_label | escape -}}
+        </label>
+        <select
+          form="{{ product_form_id }}"
+          id="{{ input_id }}"
+          name="properties[{{ block.settings.field_label | escape }}]"
+          class="select__field caption"
+          aria-required="{{ block.settings.required }}"
+          {% if block.settings.required %}
+            required
+          {% endif %}
+        >
+          <option selected value="">
+            <span>{{ block.settings.field_label | escape }}</span>
+            {%- if block.settings.required -%}<span aria-hidden="true">*</span>
+            {%- endif -%}
+          </option>
+          {%- for option in options -%}
+            {%- assign option_value = option | strip -%}
+            <option value="{{ option_value }}">{{ option_value }}</option>
+          {%- endfor -%}
+        </select>
+        {%- render 'icon' with 'caret-down', class: 'icon--xs select__icon' -%}
+      </div>
+    {%- endif -%}
+{%- endcase -%}

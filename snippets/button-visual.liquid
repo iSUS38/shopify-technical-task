@@ -1,0 +1,16 @@
+{%- assign button_style = button_style | default: settings.button_style -%}
+{%- assign button_label = button_label | default: settings.button_label -%}
+
+{%  if button_label != blank %}
+  {%- if button_style == 'text' -%}
+    {%- render 'text-button-visual', label: button_label, url: settings.button_link, block: block -%}
+  {%- else -%}
+    <span
+      class="button button--{{ button_style }}"
+      aria-hidden="true"
+      {{ block.shopify_attributes }}
+    >
+      {{- button_label | escape -}}
+    </span>
+  {%- endif -%}
+{%- endif -%}

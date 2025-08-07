@@ -1,0 +1,492 @@
+{%- paginate blog.articles by section.settings.product_limit -%}
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+  <div class="padding--section gap--section" style="{% render 'padding-override' with settings: section.settings %}">
+    {% comment %} Blog header {% endcomment %}
+    <div
+      class="collection-header collection-header--{{ section.settings.layout_header }} collection-header--color-scheme"
+    >
+      <div class="collection-header__padding v-stack gap-8 container container--xl">
+        <div class="collection-header__content">
+          <div class="collection-header__heading {{ section.settings.heading_size }}">
+            <h1>
+              <p class="heading {{ section.settings.heading_size }}">
+                {{- blog.title -}}
+                {%- if settings.enable_heading_accents -%}
+                  <span class="heading__count">
+                    (<span>{{ blog.articles_count }}</span>)
+                  </span>
+                {%- endif -%}
+              </p>
+              {% if current_tags.size > 0 %}
+                <p class="subheading">
+                  Tagged with
+                  {% for tag in current_tags %}
+                    {{ tag }}{% unless forloop.last %}, {% endunless %}
+                  {% endfor %}
+                </p>
+              {% endif %}
+            </h1>
+          </div>
+          {%- if section.settings.text != blank -%}
+            <div class="collection-header__description rte">
+              {{- section.settings.text -}}
+            </div>
+          {%- endif -%}
+          {% if section.settings.show_tag_menu and blog.all_tags.size > 0 %}
+            <nav class="collection-header__submenu-nav" aria-label="{{ 'blogs.article.blog' | t }}">
+              <ul class="collection-header__submenu list-unstyled">
+                {%- capture attributes -%}{%- unless current_tags.size > 0 -%}aria-current="page"{%- endunless -%}{%- endcapture -%}
+                <li>
+                  <a href="{{ blog.url }}" class="link-hover-underline caption" {{ attributes }}>
+                    <span>{{ 'blogs.all_posts' | t  }}</span>
+                  </a>
+                </li>
+                {%- for tag in blog.all_tags -%}
+                  {%- capture url -%}{{ blog.url }}/tagged/{{ tag | replace: ' ', '-' | url_encode }}{%- endcapture -%}
+                  {%- capture attributes -%}{%- if current_tags contains tag -%}aria-current="page"{%- endif -%}{%- endcapture -%}
+                  <li class="collection-header__submenu-item">
+                    <a href="{{ url }}" class="link-hover-underline caption" {{ attributes }}>
+                      <span>{{ tag  }}</span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </nav>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="v-stack product-grid__container container container--{{ section.settings.container_type }} padding-text--{{ section.settings.container_type }}">
+      {% comment %} Blog featured post {% endcomment %}
+      {% assign featured = blog.articles.first %}
+      {% render 'featured-post', featured: featured, layout: section.settings.featured_post, heading_size: section.settings.featured_post_heading_size %}
+
+      {% comment %} Blog grid {% endcomment %}
+      <ul
+        class="grid grid--text grid-cols-{{ section.settings.columns_mobile }} lg:grid-cols-{{ section.settings.columns_desktop }}"
+      >
+        {%- for article in blog.articles -%}
+          {% if section.settings.featured_post != 'none' %}
+            {% unless forloop.first %}
+              {%- render 'card-article' article: article, lazy_load: true, heading_level: 'h2' -%}
+            {% endunless %}
+          {% else %}
+            {%- render 'card-article' article: article, lazy_load: true, heading_level: 'h2' -%}
+          {% endif %}
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{%- endpaginate -%}
+
+
+{% schema %}
+{
+  "name": "t:blog-posts",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:header"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:heading-1"
+        },
+        {
+          "value": "h2",
+          "label": "t:heading-2"
+        },
+        {
+          "value": "h3",
+          "label": "t:heading-3"
+        },
+        {
+          "value": "h4",
+          "label": "t:heading-4"
+        },
+        {
+          "value": "h5",
+          "label": "t:heading-5"
+        },
+        {
+          "value": "h6",
+          "label": "t:heading-6"
+        }
+      ],
+      "default": "h2",
+      "label": "t:heading-size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:text"
+    },
+    {
+      "type": "select",
+      "id": "layout_header",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left-aligned"
+        },
+        {
+          "value": "center",
+          "label": "t:centered"
+        }
+      ],
+      "default": "left",
+      "label": "t:desktop-header-layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tag_menu",
+      "label": "t:show-tag-menu",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:featured-blog-post"
+    },
+    {
+      "type": "select",
+      "id": "featured_post",
+      "label": "t:style",
+      "default": "split",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:none"
+        },
+        {
+          "value": "banner",
+          "label": "t:banner"
+        },
+        {
+          "value": "split",
+          "label": "t:split"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "featured_post_heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:heading-1"
+        },
+        {
+          "value": "h2",
+          "label": "t:heading-2"
+        },
+        {
+          "value": "h3",
+          "label": "t:heading-3"
+        },
+        {
+          "value": "h4",
+          "label": "t:heading-4"
+        },
+        {
+          "value": "h5",
+          "label": "t:heading-5"
+        },
+        {
+          "value": "h6",
+          "label": "t:heading-6"
+        }
+      ],
+      "default": "h2",
+      "label": "t:heading-size"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "center",
+      "label": "t:horizontal-alignment"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:top"
+        },
+        {
+          "value": "middle",
+          "label": "t:middle"
+        },
+        {
+          "value": "bottom",
+          "label": "t:bottom"
+        }
+      ],
+      "default": "middle",
+      "label": "t:vertical-alignment"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "options": [
+        {
+          "value": "xxs",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "xs",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "sm",
+          "label": "t:small"
+        },
+        {
+          "value": "md",
+          "label": "t:medium"
+        },
+        {
+          "value": "lg",
+          "label": "t:large"
+        },
+        {
+          "value": "xl",
+          "label": "t:xlarge"
+        }
+      ],
+      "default": "md",
+      "label": "t:container-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "featured_post_color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:articles"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "label": "t:maximum-blog-posts-to-show",
+      "min": 1,
+      "max": 25,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "t:desktop-columns",
+      "default": "3",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:two"
+        },
+        {
+          "value": "3",
+          "label": "t:three"
+        },
+        {
+          "value": "4",
+          "label": "t:four"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "t:mobile-columns",
+      "default": "2",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:one"
+        },
+        {
+          "value": "2",
+          "label": "t:two"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "container_type",
+      "options": [
+        {
+          "value": "max",
+          "label": "t:page-width"
+        },
+        {
+          "value": "full",
+          "label": "t:full-width"
+        },
+        {
+          "value": "padded",
+          "label": "t:full-width-padded"
+        }
+      ],
+      "default": "max",
+      "label": "t:container-type"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

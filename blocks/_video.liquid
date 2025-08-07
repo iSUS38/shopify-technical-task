@@ -1,0 +1,105 @@
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'lazy'
+
+  if section.index == 1 and section.location != 'footer'
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+
+  assign sizes = 'min(100vw, 87.5rem)'
+-%}
+
+{%- if block.settings.video != blank -%}
+  <div class="play-pause--hover-focus">
+    {%- render 'deferred-media',
+      block: block,
+      media: block.settings.video,
+      fetchpriority: fetch_priority
+      button_style: block.settings.button_style,
+      sizes: sizes,
+      autoplay: block.settings.enable_autoplay,
+    -%}
+  </div>
+{% elsif block.settings.external_video != blank %}
+  {%- render 'external-video',
+    block: block,
+    poster: block.settings.poster,
+    media: block.settings.external_video,
+    description: block.settings.description,
+    button_style: block.settings.button_style,
+    fetchpriority: fetch_priority,
+    sizes: sizes,
+    autoplay: block.settings.enable_autoplay,
+    loading: loading
+  -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:video",
+  "tag": null,
+  "settings": [
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:video"
+    },
+    {
+      "type": "video_url",
+      "id": "external_video",
+      "label": "t:external-video-link",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "info": "t:accepts-youtube-and-vimeo-videos-for-best-results-use-a"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "t:external-video-poster-image",
+      "info": "t:displayed-before-video-is-loaded-must-match-the-aspect-ratio"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "t:enable-autoplay",
+      "default": false,
+      "info": "t:due-to-browser-policy-autoplaying-video-will-be-muted"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:external-video-description",
+      "info": "t:for-accessibility"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:button-style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:secondary"
+        },
+        {
+          "value": "text",
+          "label": "t:text"
+        }
+      ],
+      "default": "primary"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:video"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,15 @@
+{% assign description = description | default: media.alt %}
+
+{% if settings.enable_video_descriptions and description != blank %}
+  <dialog-trigger
+    data-name="video-description"
+    data-detail="{{ description | escape }}"
+  >
+    <button class="{{ class }} video-description__button button--square" tabindex="0">
+      <span data-label class="visually-hidden">
+        {{- 'accessibility.video_description' | t -}}
+      </span>
+      {%- render 'icon' with 'reader', class: 'icon--s' -%}
+    </button>
+  </dialog-trigger>
+{% endif %}

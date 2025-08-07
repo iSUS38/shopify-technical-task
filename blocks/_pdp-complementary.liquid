@@ -1,0 +1,187 @@
+{%- assign product = section.settings.product | default: product -%}
+<script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"
+  data-quick-add-remove></script>
+<product-recommendations
+  data-quick-add-remove
+  data-url="{{ routes.product_recommendations_url }}?limit={{ block.settings.product_list_limit }}&intent=complementary"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+>
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <aside
+      class="complementary-products"
+      aria-label="{{ 'accessibility.complementary_products' | t }}"
+      {{ block.shopify_attributes -}}
+    >
+      <div class="complementary-products__container v-stack">
+        {%- if block.settings.heading != blank -%}
+          <h2 class="{{ block.settings.font_style }}">{{ block.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if block.settings.block_text != blank -%}
+          <div>{{ block.settings.block_text }}</div>
+        {%- endif -%}
+        <div class="complementary-products__list-wrapper flex justify-inherit">
+          <ul class="complementary-products__list list-unstyled v-stack" role="list">
+            {%- for product in recommendations.products limit: block.settings.product_list_limit -%}
+              <li class="mini-product__wrapper--{{ block.settings.style }}">
+                {%- case block.settings.style -%}
+                  {%- when 'card' -%}
+                    {% render 'mini-product-card' with scoped_settings: block.settings, card_product: product %}
+                  {%- when 'list' -%}
+                    {% render 'mini-product-list' with scoped_settings: block.settings, card_product: product %}
+                {%- endcase -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+    </aside>
+  {%- endif -%}
+</product-recommendations>
+
+{% schema %}
+{
+  "name": "t:complementary-products",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:to-select-complementary-products-add-the-search-and-discovery-app"
+    },
+    {
+      "type": "header",
+      "content": "t:text-content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:heading",
+      "default": "t:complementary-products"
+    },
+    {
+      "type": "select",
+      "id": "font_style",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "heading h4",
+      "label": "t:font-style"
+    },
+    {
+      "type": "richtext",
+      "id": "block_text",
+      "default": "t:this-is-an-optional-description",
+      "label": "t:text"
+    },
+    {
+      "type": "header",
+      "content": "t:products"
+    },
+    {
+      "type": "range",
+      "id": "product_list_limit",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 10,
+      "label": "t:maximum-products-to-list"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "default": "list",
+      "options": [
+        {
+          "label": "t:card",
+          "value": "card"
+        },
+        {
+          "label": "t:list",
+          "value": "list"
+        }
+      ],
+      "label": "t:style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:card-color-scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:complementary-products"
+    }
+  ]
+}
+{% endschema %}

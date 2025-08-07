@@ -1,0 +1,249 @@
+{%- liquid
+  assign render_dialog = true
+
+  if section.settings.homepage == true and template.name != 'index'
+    assign render_dialog = false
+  endif
+
+  if section.settings.account != true and customer
+    assign render_dialog = false
+  endif
+
+  if customer and customer.accepts_marketing
+    assign render_dialog = false
+  endif
+
+  if request.design_mode
+    assign render_dialog = true
+  endif
+-%}
+
+{% if render_dialog == true %}
+  <custom-dialog data-name="newsletter-{{ section.id }}" data-allow-click-outside="true" data-display="flex" {% if section.settings.once %}data-once="newsletter"{% endif %} data-delay="{{  section.settings.delay }}">
+    <dialog class="dialog dialog--positioner alignment--{{ section.settings.vertical_alignment }}-{{ section.settings.horizontal_alignment }}" aria-labelledby="newsletter-{{ section.id }}-heading">
+      <div class="dialog__window dialog__animateable dialog__window--custom-alignment left" data-color-scheme="{{ section.settings.color_scheme }}">
+        <header class="dialog__header dialog__header--border">
+          <h2 id="newsletter-{{ section.id }}-heading" class="dialog__heading {{ section.settings.font_style }}">
+            {{ section.settings.heading }}
+          </h2>
+          {% render 'close-button' %}
+        </header>
+        <div class="rte">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+    </dialog>
+  </custom-dialog>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "t:newsletter-popup",
+  "class": "dialog-section",
+  "enabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "_newsletter"
+    },
+    {
+      "type": "_countdown"
+    }
+  ],
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:heading",
+      "default": "t:subscribe-to-our-newsletter"
+    },
+    {
+      "type": "select",
+      "id": "font_style",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "heading h5",
+      "label": "t:heading-font"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "left",
+      "label": "t:horizontal-alignment"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:top"
+        },
+        {
+          "value": "middle",
+          "label": "t:middle"
+        },
+        {
+          "value": "bottom",
+          "label": "t:bottom"
+        }
+      ],
+      "default": "bottom",
+      "label": "t:vertical-alignment"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "header",
+      "content": "t:display-conditions"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:some-display-conditions-are-ignored-in-design-mode"
+    },
+    {
+      "type": "checkbox",
+      "id": "once",
+      "label": "t:show-once-per-visitor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage",
+      "label": "t:only-show-on-homepage",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "account",
+      "label": "t:show-for-logged-in-users",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "delay",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 5,
+      "unit": "s",
+      "label": "t:popup-delay"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:newsletter-popup",
+      "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "_newsletter",
+          "settings": {
+            "button_width": "full"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

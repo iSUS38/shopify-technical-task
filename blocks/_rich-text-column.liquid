@@ -1,0 +1,266 @@
+<div class="rich-text__blocks rte justify-{{ block.settings.horizontal_alignment }} {{ block.settings.horizontal_alignment }}" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "t:column",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "_newsletter"
+    },
+    {
+      "type": "_countdown"
+    },
+    {
+      "type": "_video"
+    },
+    {
+      "type": "_image-banner"
+    },
+    {
+      "type": "_shoppable-banner"
+    },
+    {
+      "type": "_video-banner"
+    },
+    {
+      "type": "_product-banner"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "left",
+      "label": "t:horizontal-alignment"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:rich-text",
+      "blocks": [
+        {
+          "type": "heading-group",
+          "blocks": [
+            {
+              "type": "_subheading"
+            },
+            {
+              "type": "_heading"
+            }
+          ]
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button-group",
+          "blocks": [
+            {
+              "type": "_button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "t:collapsible-content",
+      "blocks": [
+        {
+          "type": "heading-group",
+          "blocks": [
+            {
+              "type": "_subheading"
+            },
+            {
+              "type": "_heading"
+            }
+          ]
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "collapsible",
+          "blocks": [
+            {
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "collapsible",
+          "blocks": [
+            {
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "collapsible",
+          "blocks": [
+            {
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "t:newsletter",
+      "blocks": [
+        {
+          "type": "heading-group",
+          "blocks": [
+            {
+              "type": "_subheading"
+            },
+            {
+              "type": "_heading"
+            }
+          ]
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "_newsletter"
+        }
+      ]
+    },
+    {
+      "name": "t:countdown-timer",
+      "blocks": [
+        {
+          "type": "heading-group",
+          "blocks": [
+            {
+              "type": "_subheading"
+            },
+            {
+              "type": "_heading"
+            }
+          ]
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "_countdown"
+        }
+      ]
+    },
+    {
+      "name": "t:image",
+      "blocks": [
+        {
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "t:video",
+      "blocks": [
+        {
+          "type": "_video"
+        }
+      ]
+    },
+    {
+      "name": "t:image-banner",
+      "blocks": [
+        {
+          "type": "_image-banner",
+          "blocks": [
+            {
+              "type": "heading-group",
+              "blocks": [
+                {
+                  "type": "_heading"
+                }
+              ]
+            },
+            {
+              "type": "button-group",
+              "blocks": [
+                {
+                  "type": "_button"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "t:video-banner",
+      "blocks": [
+        {
+          "type": "_video-banner",
+          "blocks": [
+            {
+              "type": "heading-group",
+              "blocks": [
+                {
+                  "type": "_heading"
+                }
+              ]
+            },
+            {
+              "type": "button-group",
+              "blocks": [
+                {
+                  "type": "_button"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "t:shoppable-banner",
+      "blocks": [
+        {
+          "type": "_shoppable-banner",
+          "blocks": [
+            {
+              "type": "mini-product"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "t:product-banner",
+      "blocks": [
+        {
+          "type": "_product-banner"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

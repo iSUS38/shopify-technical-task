@@ -1,0 +1,53 @@
+<nav
+  class="breadcrumbs caption"
+  aria-label="{{ 'accessibility.breadcrumbs' | t }}"
+  data-quick-add-remove
+  {{ block.shopify_attributes }}
+>
+  <ul class="breadcrumbs__list list-unstyled justify-{{ section.settings.horizontal_alignment }}">
+    <li class="breadcrumbs__list-item">
+      <a href="{{ routes.root_url }}" class="link-hover-underline secondary">
+        <span>{{- 'general.breadcrumbs_homepage' | t -}}</span>
+      </a>
+    </li>
+    {%- if collection.url -%}
+      <li class="breadcrumbs__list-item">
+        <span class="breadcrumbs__separator secondary" aria-hidden="true">/</span>
+        <a href="{{ collection.url }}" class="link-hover-underline secondary">
+          <span>{{- collection.title -}}</span>
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if product.url -%}
+      <li class="breadcrumbs__list-item">
+        <span class="breadcrumbs__separator secondary" aria-hidden="true">/</span>
+        <a
+          href="{{ product.url }}"
+          class="link-hover-underline"
+          role="link"
+          aria-current="page"
+        >
+          <span>{{- product.title -}}</span>
+        </a>
+      </li>
+    {%- endif -%}
+  </ul>
+</nav>
+
+{% schema %}
+{
+  "name": "t:breadcrumbs",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:for-collection-aware-breadcrumbs-enable-collection-aware-product-links-in"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:breadcrumbs"
+    }
+  ]
+}
+{% endschema %}

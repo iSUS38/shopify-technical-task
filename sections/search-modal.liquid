@@ -1,0 +1,193 @@
+<custom-dialog data-modal="true" data-overlay="true" data-name="search">
+  <dialog class="dialog" aria-labelledby="search-modal-heading">
+    <div class="dialog__window dialog__animateable dialog__window--scroll search-modal__dialog" data-color-scheme="{{ section.settings.color_scheme }}">
+      <div class="search-modal__container container container--xl">
+        <header class="dialog__header">
+          <a href="{{ routes.root_url }}" class="link-unstyled">
+            {% if settings.logo != blank %}
+              {% assign logo = settings.logo %}
+              {% if section.settings.use_alt_logo and settings.logo_alt != blank %}
+                {% assign logo = settings.logo_alt %}
+              {% endif %}
+              <div class="dialog__header-logo">
+                {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+                {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
+                {%- capture sizes -%}(min-width: 76em) {{ settings.logo_width }}px, {{ settings.logo_width_mobile }}px{%- endcapture -%}
+                {%- assign widths = '100, 150, 200, 250, 300, 400, 600, 800, 1000' -%}
+                {{ logo | image_url: width: 600 | image_tag:
+                  class: 'dialog__header-logo-image',
+                  widths: widths,
+                  height: logo_height,
+                  width: settings.logo_width,
+                  alt: logo_alt,
+                  sizes: sizes,
+                  preload: true
+                }}
+              </div>
+            {%- else -%}
+              <span class="h4">{{ shop.name }}</span>
+            {%- endif -%}
+          </a>
+          {% render 'close-button' %}
+        </header>
+        <h1 class="visually-hidden" id="search-modal-heading">{{  'search.search' | t }}</h1>
+        {%- if settings.predictive_search_enabled -%}
+          <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+        {%- else -%}
+          <search-form class="search-modal__form">
+        {%- endif -%}
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form" aria-labelledby="SearchModalLabel">
+          <div class="field">
+            <label class="field__label visually-hidden" for="SearchModalInput" id="SearchModalLabel">{{ 'search.search' | t }}</label>
+            <div class="field__input-wrapper">
+              <input
+                autofocus
+                class="search-modal__input field__input"
+                id="SearchModalInput"
+                type="search"
+                name="q"
+                value="{{ search.terms | escape }}"
+                {%- if settings.predictive_search_enabled -%}
+                  role="combobox"
+                  aria-expanded="false"
+                  aria-owns="predictive-search-results"
+                  aria-controls="predictive-search-results"
+                  aria-haspopup="listbox"
+                  aria-autocomplete="list"
+                  autocorrect="off"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                {%- endif -%}
+            >
+              <button
+                type="reset"
+                class="search-modal__field-button search-modal__field-button--clear field__button field__button--secondary caption"
+                data-reset
+                aria-hidden="true"
+              >
+                <span>{{ 'search.reset' | t }}</span>
+              </button>
+              <button class="search-modal__field-button search__button field__button" aria-label="{{ 'search.search' | t }}">
+                {%- render 'icon' with 'search' -%}
+              </button>
+            </div>
+            <input type="hidden" name="options[prefix]" value="last">
+          </div>
+
+          {%- if settings.predictive_search_enabled -%}
+            <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+              {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
+            </div>
+
+            <span class="predictive-search-status visually-hidden h5" role="status" aria-hidden="true"></span>
+          {%- endif -%}
+        </form>
+        <div data-default-suggestions class="search-suggestions">
+          {%- if section.settings.popular_search != blank -%}
+            <div class="search-suggestions__suggestions">
+              <h2 class="search-suggestions__heading h5">
+                {{  'search.popular' | t }}
+              </h2>
+              <ul class="search-suggestions__list list-unstyled">
+                {%- for link in section.settings.popular_search.links -%}
+                  <li class="search-suggestions__item">
+                    <a href="{{  link.url }}" class="search-suggestions__link link-hover-underline">
+                      <span>{{- link.title | escape -}}</span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.collection_list != blank -%}
+            <div class="search-suggestions__image-list">
+              <h2 class="search-suggestions__heading h5">
+                {{  'search.popular_collections' | t }}
+              </h2>
+              <ul class="search-suggestions__collections list-unstyled">
+                {%- for collection in section.settings.collection_list -%}
+                  <li class="search-suggestions__collections-item image-card expand-link faded-out" data-animate-fade>
+                    {% assign widths = "240, 480, 640, 960" %}
+                    {%-  if collection.featured_image -%}
+                      {%- liquid
+                        assign image_ratio = collection.featured_image.aspect_ratio | default: 1
+                        if settings.card_collection_image_ratio != 'default'
+                          assign image_ratio = settings.card_collection_image_ratio
+                        endif
+                      -%}
+                      <div class="image-card__image-wrapper image-ratio" style="--image-ratio: {{ image_ratio }}">
+                        {{
+                          collection.featured_image
+                          | image_url: width: 240
+                          | image_tag: sizes: '15rem', widths: widths, class: 'header__promo-image', loading: 'lazy'
+                        }}
+                      </div>
+                    {%- endif -%}
+
+                    <a href="{{ collection.url }}" class="expand-link__link">
+                      <div class="image-card__text">
+                        <span class="button button--text">
+                          <span class="button-text__label">
+                            {{- collection.title | escape -}}
+                          </span>
+                        </span>
+                      </div>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        </div>
+        {%- if settings.predictive_search_enabled -%}
+          </predictive-search>
+        {%- else -%}
+          </search-form>
+        {%- endif -%}
+      </div>
+    </div>
+  </dialog>
+</custom-dialog>
+
+
+{% schema %}
+{
+  "name": "t:search-modal",
+  "class": "dialog-section",
+  "enabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "popular_search",
+      "label": "t:popular-search-terms"
+    },
+    {
+      "type": "collection_list",
+      "id": "collection_list",
+      "label": "t:collections",
+      "limit": 4
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_alt_logo",
+      "label": "t:use-alternate-logo",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

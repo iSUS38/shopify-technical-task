@@ -1,0 +1,437 @@
+{%- unless settings.cart_type == 'drawer' -%}
+  <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+{%- endunless -%}
+
+{%- capture blocks -%}
+  {%- if cart != empty -%}
+    <div class="cart__blocks">
+      {%- content_for 'blocks' -%}
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+  <div class="container container--xl">
+    <div class="cart cart-page padding--section" style="{% render 'padding-override' with settings: section.settings %}">
+      <cart-items
+        id="cart-page-items"
+        data-id="{{ section.id }}"
+      >
+        <div class="cart__inner cart-page__inner gap--section {% if cart == empty %}items-{{ section.settings.horizontal_alignment }}{% endif %}" id="Cart">
+          {%- if cart == empty -%}
+            <h1 class="{{ section.settings.heading_size }}">
+              {{- 'cart.empty' | t -}}
+            </h1>
+            {% # theme-check-disable UnusedAssign %}
+            {%- assign button_label = 'general.continue_shopping' | t -%}
+            {% # theme-check-enable UnusedAssign %}
+            {%- if settings.continue_shopping_link != blank -%}
+              {%- render 'button' with button_label: button_label, button_link: settings.continue_shopping_link, button_style: 'primary' -%}
+            {%- endif -%}
+          {%- else -%}
+            <h1 class="{{ section.settings.heading_size }}">
+              {{ 'sections.cart.title' | t }}
+              {%- if settings.enable_heading_accents -%}
+                <span class="heading__count">
+                  <span>({{ cart.item_count }})</span>
+                  <span class="visually-hidden">{{ 'cart.items' | t }}</span>
+                </span>
+              {%- endif -%}
+            </h1>
+          {%- endif -%}
+          {%- render 'cart', position: 'cart-page', blocks: blocks -%}
+        </div>
+      </cart-items>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:cart",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:heading-1"
+        },
+        {
+          "value": "h2",
+          "label": "t:heading-2"
+        },
+        {
+          "value": "h3",
+          "label": "t:heading-3"
+        },
+        {
+          "value": "h4",
+          "label": "t:heading-4"
+        },
+        {
+          "value": "h5",
+          "label": "t:heading-5"
+        },
+        {
+          "value": "h6",
+          "label": "t:heading-6"
+        }
+      ],
+      "default": "h1",
+      "label": "t:heading-size"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "center",
+      "label": "t:empty-cart-alignment"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:show-dynamic-checkout",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:products"
+    },
+    {
+      "type": "range",
+      "id": "product_image_width",
+      "label": "t:image-width",
+      "min": 70,
+      "max": 200,
+      "step": 10,
+      "default": 120,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "font_style_title",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "heading h6",
+      "label": "t:product-title-font"
+    },
+    {
+      "type": "select",
+      "id": "font_style_price",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "caption",
+      "label": "t:price-font"
+    },
+    {
+      "type": "header",
+      "content": "t:color-scheme"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_cart-upsell"
+    }
+  ]
+}
+{% endschema %}

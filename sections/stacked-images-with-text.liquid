@@ -1,0 +1,166 @@
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'eager'
+  if section.index == 1 and section.location != 'footer'
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+-%}
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+  <div class="container container--xl">
+    <stacked-images-with-text class="stacked-images-with-text">
+      <div class="stacked-images-with-text__text-wrapper {{ section.settings.horizontal_alignment }}">
+        <div class="rte rte--loose justify-{{ section.settings.horizontal_alignment }}">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+      {%- if section.blocks.size > 0 -%}
+        <div class="stacked-images-with-text__list-wrapper">
+          {% content_for "block", type: "_stacked-images", id: "stacked-images" %}
+        </div>
+      {%- endif -%}
+    </stacked-images-with-text>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:stacked-images-with-text",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "center",
+      "label": "t:horizontal-alignment"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:stacked-images-with-text",
+      "settings": {
+        "horizontal_alignment": "center"
+      },
+      "blocks": [
+        {
+          "type": "heading-group",
+          "blocks": [
+            {
+              "type": "_subheading"
+            },
+            {
+              "type": "_heading",
+              "settings": {
+                "heading": "Stacked images with text"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button-group",
+          "blocks": [
+            {
+              "type": "_button"
+            }
+          ]
+        },
+        {
+          "type": "_stacked-images",
+          "id": "stacked-images",
+          "static": true,
+          "blocks": [
+            {
+              "type": "_stacked-image",
+              "settings": {
+                "image_ratio": "1",
+                "max_width": 90
+              }
+            },
+            {
+              "type": "_stacked-image",
+              "settings": {
+                "image_ratio": "2 / 3",
+                "max_width": 80
+              }
+            },
+            {
+              "type": "_stacked-image",
+              "settings": {
+                "image_ratio": "3 / 2",
+                "max_width": 100
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

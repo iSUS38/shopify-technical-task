@@ -1,0 +1,77 @@
+{% assign element = 'deferred-media' %}
+{% if media.media_type == 'external_video' %}
+  {% assign element = 'external-media' %}
+{% endif %}
+{%- assign alt = 'sections.video.load_video' | t: description: media.alt | escape -%}
+{%- assign loop = true -%}
+{%- assign alignment = alignment | default: 'middle-center' -%}
+{%- assign controls = controls | default: false -%}
+{%- assign sizes = sizes | default: '100vw' -%}
+{%- assign description_class = 'button button--' | append: button_style -%}
+
+<{{ element }}
+  class="deferred-media card-border-radius{% if class %} {{ class }}{% endif %}"
+  style="--aspect-ratio: {{ media.aspect_ratio }};"
+  data-autoplay="{{ autoplay }}"
+  {% if media.media_type == 'external_video' %}
+    data-host="{{ media.host }}"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  {%- if media.preview_image != null -%}
+    {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+    {% assign media_class = class | append: ' deferred-media__poster' %}
+    {{
+      media.preview_image
+      | image_url: width: 2200
+      | image_tag: sizes: sizes, widths: widths, fetchpriority: fetch_priority, alt: "", class: media_class, loading: loading
+    }}
+  {%- endif -%}
+
+  <template>
+    {% if media.media_type == 'external_video' %}
+      {% assign video_class = 'iframe-video' %}
+      {%- if media.host == 'youtube' -%}
+        {{
+          media
+          | external_video_url: playlist: media.external_id, loop: loop, muted: autoplay
+          | external_video_tag: class: video_class, loading: 'lazy'
+        }}
+      {%- else -%}
+        {{
+          media
+          | external_video_url: loop: loop, muted: autoplay
+          | external_video_tag: class: video_class, loading: 'lazy'
+        }}
+      {%- endif -%}
+    {% else %}
+      {{ media | video_tag: image_size: '1100x', autoplay: autoplay, controls: controls, muted: autoplay, loop: loop, playsinline: true, poster: media.preview_image }}
+    {% endif %}
+  </template>
+
+  <div class="deferred-media__controls deferred-media__button-wrapper alignment--{{ alignment }}">
+    {% # theme-check-disable UnusedAssign %}
+    {%- assign pause_text = 'sections.video.pause_video' | t: description: media.alt | escape -%}
+    {%- assign play_text = 'sections.video.play_video' | t: description: media.alt | escape -%}
+    {%- assign class = 'deferred-media__button deferred-media__play-pause button button--' | append: button_style -%}
+    {% # theme-check-enable UnusedAssign %}
+    {%- render 'play-pause-button' with pause_text: pause_text, play_text: play_text, class: class -%}
+    <button
+      class="deferred-media__button button button--square button--{{ button_style }} deferred-media__loader"
+      id="Deferred-Media-Poster-{{ media.id }}"
+      type="button"
+      aria-label="{{ alt }}"
+    >
+      {%- render 'icon' with 'play', class: 'deferred-media__icon icon-m' -%}
+    </button>
+
+    {% if alignment != 'middle-center' %}
+      {%- render 'video-description', class: description_class, media: media -%}
+    {% endif %}
+  </div>
+  {% if alignment == 'middle-center' and settings.enable_video_descriptions %}
+    <div class="deferred-media__controls deferred-media__button-wrapper alignment--bottom-left">
+      {%- render 'video-description', class: description_class, media: media -%}
+    </div>
+  {% endif %}
+</{{ element }}>

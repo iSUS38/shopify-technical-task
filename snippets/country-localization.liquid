@@ -1,0 +1,114 @@
+{%- comment -%}
+  Renders the country picker for the localization form
+
+  Accepts:
+    - localPosition: pass in the position in which the form is coming up to create specific IDs
+    - alignment: string to align the disclosure list field
+
+{%- endcomment -%}
+
+{%- liquid
+  assign currencies = localization.available_countries | map: 'currency' | map: 'iso_code' | uniq
+  assign popular_countries = localization.available_countries | where: 'popular?' | sort: 'name'
+
+  assign show_country_filter = false
+  if localization.available_countries.size > 9
+    assign show_country_filter = true
+  endif
+
+  assign show_popular_countries = false
+  if localization.available_countries.size > 9 and popular_countries.size > 1
+    assign show_popular_countries = true
+  endif
+
+  assign show_currencies = false
+  if currencies.size > 1
+    assign show_currencies = true
+  endif
+%}
+
+<div class="disclosure disclosure--{{ vertical_alignment }}">
+  <button
+    type="button"
+    class="disclosure__button disclosure__button--{{ alignment }} localization-form__select localization-selector"
+    aria-expanded="false"
+    aria-controls="{{ localPosition }}-country-results"
+    aria-describedby="{{ localPosition }}Label"
+    tabindex="0"
+  >
+    <span class="caption {{ button_class }}">
+      {% if full_name == true %}
+        {{ localization.country.name }}
+      {% else %}
+      {{- localization.country.iso_code }}
+      {% endif %} /
+      {{ localization.country.currency.iso_code }}
+    </span>
+    {%- render 'icon' with 'caret-down', class: 'icon--xs' -%}
+  </button>
+  <div class="disclosure__list-wrapper disclosure__list-wrapper--{{ alignment }} localization-form__list-wrapper localization-form__list-wrapper--country country-selector">
+    {%- if show_country_filter -%}
+      <div class="localization-form__country">
+        <div class="localization-form__field field">
+          <label class="field__label" for="{{ localPosition }}-country-filter-input">{{ 'localization.search' | t }}</label>
+          <div class="field__input-wrapper">
+            <input
+              class="field__input"
+              id="{{ localPosition }}-country-filter-input"
+              type="search"
+              name="country_filter"
+              value=""
+              placeholder=" "
+              role="combobox"
+              aria-owns="country-results"
+              aria-controls="country-results"
+              aria-haspopup="listbox"
+              aria-autocomplete="list"
+              autocorrect="off"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            >
+            <button
+              type="reset"
+              class="country-filter__reset-button field__button"
+              aria-label="{{ 'search.reset' | t }}"
+              data-reset
+              aria-hidden="true"
+            >
+              {%- render 'icon' with 'close' -%}
+            </button>
+            <div class="field__button" data-search-icon>
+              {%- render 'icon' with 'search' -%}
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+    {%- render 'loading-spinner', class: 'opacity localization-form__loading-spinner' -%}
+    <div id="{{ localPosition }}-country-search-results" class="visually-hidden" aria-live="polite" data-live-region></div>
+    <div
+      class="localization-form__list disclosure__list country-selector__list{% if show_currencies %} country-selector__list--with-multiple-currencies{% endif %}"
+      id="{{ localPosition }}-country-results"
+    >
+      {% if show_popular_countries %}
+        <ul
+          role="list"
+          class="list-unstyled localization-form__popular popular-countries"
+          aria-label="{{ 'localization.popular_countries_regions' | t }}"
+        >
+          {%- for country in popular_countries -%}
+            {% render 'country-localization-country' with country: country, localization: localization %}
+          {%- endfor -%}
+        </ul>
+      {% endif %}
+      <ul role="list" class="list-unstyled countries">
+        {%- for country in localization.available_countries -%}
+          {% render 'country-localization-country' with country: country, localization: localization %}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  <div class="localization-form__overlay" data-overlay="true"></div>
+</div>
+<input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">

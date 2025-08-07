@@ -1,0 +1,26 @@
+<span
+  class="rich-text__subheading subheading"
+  {{ block.shopify_attributes }}
+>
+  {{- block.settings.subheading -}}
+</span>
+
+{% schema %}
+{
+  "name": "t:subheading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "default": "t:subheading",
+      "label": "t:subheading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:subheading"
+    }
+  ]
+}
+{% endschema %}

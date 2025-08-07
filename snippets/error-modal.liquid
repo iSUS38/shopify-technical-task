@@ -1,0 +1,20 @@
+<error-modal data-modal="true" data-overlay="false" data-name="error" data-display="flex">
+  <dialog class="dialog dialog--notification" aria-labelledby="error-heading">
+    <div class="dialog__window dialog__animateable dialog__window--custom-alignment" data-color-scheme="{{ settings.overlay_color_scheme }}">
+      <header class="dialog__header dialog__header--border">
+        <h2 id="error-heading" class="h5">
+          {{ 'accessibility.error' | t }}
+        </h2>
+        {% render 'close-button' %}
+      </header>
+      <div class="rte">
+        <div data-body></div>
+        <div>
+          <button data-close class="button button--primary button--full">
+            {{ 'accessibility.close' | t }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</error-modal>

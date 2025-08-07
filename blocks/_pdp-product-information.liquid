@@ -1,0 +1,258 @@
+<div class="pdp__content flex alignment--{{ block.settings.vertical_alignment }}-{{ block.settings.horizontal_alignment }}" {{ block.shopify_attributes }}>
+  <div class="pdp__content-wrapper flex alignment--{{ block.settings.vertical_alignment }}-{{ block.settings.horizontal_alignment }} justify-{{ block.settings.horizontal_alignment }}">
+    <section class="product-info padding--section-block" style="{% render 'padding-override' with settings: block.settings, scope: 'block' %}">
+      <div class="product-info__container container container--{{ block.settings.container_width }}">
+        <div class="product-info__blocks">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:product-information",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_pdp-title"
+    },
+    {
+      "type": "_pdp-subtitle"
+    },
+    {
+      "type": "_pdp-price"
+    },
+    {
+      "type": "_pdp-description"
+    },
+    {
+      "type": "_pdp-buy-buttons"
+    },
+    {
+      "type": "_pdp-variant-picker"
+    },
+    {
+      "type": "_pdp-quantity"
+    },
+    {
+      "type": "_pdp-badges"
+    },
+    {
+      "type": "_pdp-separator"
+    },
+    {
+      "type": "_pdp-collapsible"
+    },
+    {
+      "type": "_pdp-sku"
+    },
+    {
+      "type": "_pdp-pickup-availability"
+    },
+    {
+      "type": "_pdp-line-item"
+    },
+    {
+      "type": "_pdp-rating"
+    },
+    {
+      "type": "_pdp-icon-with-text"
+    },
+    {
+      "type": "_pdp-inventory"
+    },
+    {
+      "type": "_pdp-breadcrumbs"
+    },
+    {
+      "type": "_pdp-complementary"
+    },
+    {
+      "type": "_pdp-custom-liquid"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "center",
+      "label": "t:horizontal-alignment"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:top"
+        },
+        {
+          "value": "middle",
+          "label": "t:middle"
+        },
+        {
+          "value": "bottom",
+          "label": "t:bottom"
+        }
+      ],
+      "default": "middle",
+      "label": "t:vertical-alignment"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "options": [
+        {
+          "value": "xxs",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "xs",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "sm",
+          "label": "t:small"
+        },
+        {
+          "value": "md",
+          "label": "t:medium"
+        },
+        {
+          "value": "lg",
+          "label": "t:large"
+        },
+        {
+          "value": "xl",
+          "label": "t:xlarge"
+        }
+      ],
+      "default": "xxs",
+      "label": "t:container-width"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    }
+  ]
+}
+{% endschema %}

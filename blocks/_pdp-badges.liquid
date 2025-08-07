@@ -1,0 +1,52 @@
+{% assign product = section.settings.product | default: product %}
+
+{%- capture product_badges -%}
+  {%- if product.available == false -%}
+    <li class="list-separator__item">Sold out</li>
+  {%- elsif product.compare_at_price > product.price and product.available -%}
+    <li class="exception list-separator__item">Sale</li>
+  {%- endif -%}
+  {%- assign custom_badges = product.metafields.theme.badges.value -%}
+  {%- for badge in custom_badges -%}
+    <li class="list-separator__item">{{ badge }}</li>
+  {%- endfor -%}
+{%- endcapture -%}
+{%- unless product_badges == empty -%}
+  <ul class="product-info__badges list-separator list-separator--{{ block.settings.button_style }} justify-inherit caption-xs " {{ block.shopify_attributes }}>
+    {{ product_badges }}
+  </ul>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "t:badges",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:secondary"
+        },
+        {
+          "value": "text",
+          "label": "t:text"
+        }
+      ],
+      "default": "text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:badges"
+    }
+  ]
+}
+{% endschema %}

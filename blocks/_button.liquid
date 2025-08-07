@@ -1,0 +1,46 @@
+{%- render 'button' with settings: block.settings, block: block -%}
+
+{% schema %}
+{
+  "name": "t:button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "button_style",
+      "default": "primary",
+      "label": "t:style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:secondary"
+        },
+        {
+          "value": "text",
+          "label": "t:text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:button-label",
+      "default": "t:button-label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:button-link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:button"
+    }
+  ]
+}
+{% endschema %}

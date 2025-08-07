@@ -1,0 +1,271 @@
+{% liquid
+  # theme-check-disable UndefinedObject
+  if count == nil
+    assign count = section.settings.count
+  endif
+  # theme-check-enable UndefinedObject
+%}
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+  <div class="padding--section" style="{% render 'padding-override' with settings: section.settings %}">
+    {% render 'content-header', count: count, heading_level: 'h2', heading_size: section.settings.heading_size, section_id: section.id, is_section: true, scoped_settings: section.settings %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:section-header",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout_header",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left-aligned"
+        },
+        {
+          "value": "center",
+          "label": "t:centered"
+        }
+      ],
+      "default": "left",
+      "label": "t:layout"
+    },
+    {
+      "type": "header",
+      "content": "t:text-content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "default": "t:subheading",
+      "label": "t:subheading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:heading",
+      "default": "t:section-header"
+    },
+    {
+      "type": "checkbox",
+      "id": "page_title",
+      "label": "t:set-as-page-title",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:heading-1"
+        },
+        {
+          "value": "h2",
+          "label": "t:heading-2"
+        },
+        {
+          "value": "h3",
+          "label": "t:heading-3"
+        },
+        {
+          "value": "h4",
+          "label": "t:heading-4"
+        },
+        {
+          "value": "h5",
+          "label": "t:heading-5"
+        },
+        {
+          "value": "h6",
+          "label": "t:heading-6"
+        }
+      ],
+      "default": "h2",
+      "label": "t:heading-size"
+    },
+    {
+      "type": "text",
+      "id": "count",
+      "label": "t:count-optional",
+      "info": "t:displays-if-heading-accents-are-enabled"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "t:this-is-an-optional-description-use-this-text-to-provide",
+      "label": "t:text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:button-label",
+      "default": "t:button-label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:button-link"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:section-header"
+    }
+  ]
+}
+{% endschema %}

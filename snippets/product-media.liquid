@@ -1,0 +1,116 @@
+{% comment %}
+  Renders product media
+
+  Accepts:
+  - media: {Object} Product Media object
+  - loop: {Boolean} Enable video looping (optional)
+  - variant_image: {Boolean} Whether or not media is associated with a variant
+
+  Usage:
+  {% render 'product-media',
+    media: media,
+    loop: section.settings.enable_video_looping,
+    variant_image: true
+  %}
+{% endcomment %}
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'eager'
+  if index == 1
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+-%}
+
+
+{%- if media.media_type == 'image' -%}
+  {%- if settings.enable_zoom -%}
+    <zoom-image class="media-gallery__image zoom expand-link">
+  {%- endif -%}
+  <img
+    class="media-gallery__image zoom__image {% if variant_image %} product__media-item--variant{% endif %}"
+    srcset="
+      {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+      {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+      {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
+      {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
+      {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
+      {%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}
+      {%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}
+      {%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}
+      {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
+    "
+    sizes="(min-width: 48em) 50vw, 1100px"
+    src="{{ media.preview_image | image_url: width: 1445 }}"
+    alt="{{ media.alt | escape }}"
+    loading="{{ loading }}"
+    fetchpriority="{{ fetch_priority }}"
+    width="{{ media.preview_image.width }}"
+    height="{{ media.preview_image.height }}"
+    data-media-id="{{ media.id }}"
+    style="--object-position: {{ media.presentation.focal_point }};"
+  >
+  {%- if settings.enable_zoom -%}
+      <button class="zoom__button expand-link__link expand-link__link--media" data-zoom-button>
+        <span class="visually-hidden">{{ 'products.product.media.open_media' | t: index: index, alt: media.alt }}</span>
+      </button>
+      {%- render 'loading-spinner', class: 'zoom__loading opacity hidden' -%}
+    </zoom-image>
+  {%- endif -%}
+{%- elsif media.media_type == 'model' -%}
+  <div>
+    <product-model
+      class="deferred-media buttons--{{ settings.button_style }}{% if class %}{{ class }}{% endif %}"
+      style="--aspect-ratio: {{ media.preview_image.aspect_ratio }};"
+    >
+      {%- if media.preview_image != null -%}
+        {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+        {{
+          media.preview_image
+          | image_url: width: 2200
+          | image_tag: sizes: sizes, widths: widths, fetchpriority: fetch_priority, alt: "", class: 'deferred-media__poster', loading: loading
+        }}
+      {%- endif -%}
+      <div
+        class="deferred-media__button-wrapper--loader deferred-media__button-wrapper alignment--middle-center"
+        >
+        <button
+          class="deferred-media__button deferred-media-button--model button--square button button--{{ settings.button_style }}"
+          id="Deferred-Media-Poster-{{ media.id }}"
+          type="button"
+          aria-label="{{ 'products.product.media.play_model' | t }}"
+        >
+          {{- 'icon-3d-model.svg' | inline_asset_content -}}
+        </button>
+      </div>
+
+      <template>
+        {{ media | media_tag: image_size: '2048x', toggleable: true }}
+      </template>
+    </product-model>
+    <div class="product-info__xr-wrapper">
+      <button
+        class="button button--text product-info__xr-button"
+        type="button"
+        aria-label="{{ 'products.product.xr_button_label' | t }}"
+        data-shopify-xr
+        data-shopify-model3d-id="{{ media.id }}"
+        data-shopify-title="{{ product.title }}"
+        data-shopify-xr-hidden
+      >
+        <span class="icon icon--s">{{- 'icon-3d-model.svg' | inline_asset_content -}}</span>
+        <span class="button-text__label">{{ 'products.product.xr_button' | t }}</span>
+      </button>
+    </div>
+  </div>
+{% else %}
+  {%- render 'deferred-media',
+    media: media,
+    fetchpriority: fetch_priority,
+    class: 'play-pause--hover-focus',
+    autoplay: settings.enable_autoplay,
+    button_style: settings.button_style
+    sizes: '(min-width: 48em) 50vw, 100vw',
+    loading: loading
+  -%}
+{%- endif -%}

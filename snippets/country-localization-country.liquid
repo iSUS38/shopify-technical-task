@@ -1,0 +1,23 @@
+<li class="disclosure__item" tabindex="-1">
+  <a
+    class="disclosure__link disclosure__selectable caption"
+    href="#"
+    {% if country.iso_code == localization.country.iso_code %}
+      aria-current="true"
+    {% endif %}
+    data-value="{{ country.iso_code }}"
+    id="{{ country.name }}"
+    data-search="{{ country.name }} {{ country.iso_code }}"
+    data-display="{{ country.name }} / {{ country.currency.iso_code }}"
+  >
+    <span>
+      <span class="country">{{- country.name }}</span>
+      /
+      <span class="localization-form__currency">
+        {{ country.currency.iso_code }}
+        {{ country.currency.symbol -}}
+      </span>
+    </span>
+    {%- render 'icon' with 'check', class: 'icon--xs' -%}
+  </a>
+</li>

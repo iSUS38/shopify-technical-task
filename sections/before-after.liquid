@@ -1,0 +1,284 @@
+<script src="{{ 'before-after.js' | asset_url }}" defer="defer"></script>
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+  <div class="gap--section padding--section" style="{% render 'padding-override' with settings: section.settings %}">
+    {% content_for "block", type: "_section-header", id: "section-header" %}
+    <before-after class="before-after container container--{{ section.settings.container_type }}" style="--position: 50%;">
+      {% content_for "block", type: "_before", id: "before" %}
+      {% content_for "block", type: "_after", id: "after" %}
+      <div tabindex="0" aria-valuemin="0" aria-valuemax="100" class="before-after__divider" role="slider" aria-label="{{ 'accessibility.drag' | t }}">
+        <span class="before-after__button button button--square button--primary">
+          {%- render 'icon' with 'drag', class: 'icon--l' -%}
+        </span>
+      </div>
+    </before-after>
+    <div class="section-button-group container container--xl">
+      {% content_for "block", type: "button-group", id: "button-group" %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:beforeafter-image",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "badges_style",
+      "label": "t:label-style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:secondary"
+        },
+        {
+          "value": "text",
+          "label": "t:text"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:bottom"
+        }
+      ],
+      "default": "top",
+      "label": "t:label-position"
+    },
+    {
+      "type": "select",
+      "id": "container_type",
+      "options": [
+        {
+          "value": "max",
+          "label": "t:page-width"
+        },
+        {
+          "value": "full",
+          "label": "t:full-width"
+        },
+        {
+          "value": "padded",
+          "label": "t:full-width-padded"
+        }
+      ],
+      "default": "max",
+      "label": "t:container-type"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_section-header"
+    },
+    {
+      "type": "_before"
+    },
+    {
+      "type": "_after"
+    },
+    {
+      "type": "button-group"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:beforeafter-image",
+      "blocks": [
+        {
+          "type": "_section-header",
+          "id": "section-header",
+          "static": true,
+          "settings": {
+            "subheading": "",
+            "heading": "Before/after image",
+            "button_label": "",
+            "layout_header": "center"
+          }
+        },
+        {
+          "type": "button-group",
+          "id": "button-group",
+          "static": true,
+          "settings": {
+            "horizontal_alignment": "center"
+          },
+          "blocks": [
+            {
+              "type": "_button",
+              "settings": {
+                "button_label": ""
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

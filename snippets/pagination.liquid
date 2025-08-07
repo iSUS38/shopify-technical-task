@@ -1,0 +1,62 @@
+{%- if paginate.parts.size > 0 -%}
+  <nav class="pagination" role="navigation" aria-label="{{ 'pagination.label' | t }}">
+    <a
+      role="link"
+      class="pagination__item pagination__item--padding-left link-unstyled pagination__first"
+      aria-label="{{ 'pagination.page' | t: number: paginate.parts.first.title, count: paginate.pages }}"
+      {%- if paginate.parts.first.title == paginate.current_page -%}
+        aria-disabled="true"
+      {%- else -%}
+        href="{{ paginate.parts.first.url | remove: '?page=1' }}"
+      {%- endif -%}
+    >
+      {%- render 'icon' with 'double-caret-left', class: 'pagination__icon pagination__icon--double-caret' -%}
+    </a>
+    {% assign previous_url = paginate.previous.url %}
+    {%  if paginate.current_page == 2 %}
+      {% assign previous_url = paginate.parts.first.url | remove: '?page=1' %}
+    {% endif %}
+    <a
+      role="link"
+      class="pagination__item pagination__item--padding-right pagination__previous link-unstyled"
+      aria-label="{{ 'pagination.previous' | t }}"
+      {%- if paginate.previous == null -%}
+        aria-disabled="true"
+      {%- else -%}
+        href="{{ previous_url }}"
+      {%- endif -%}
+    >
+      {%- render 'icon' with 'caret-left', class: 'pagination__icon icon--m' -%}
+    </a>
+    <div class="pagination__count text-xs">
+      <span class="">{{ paginate.current_page }}</span>
+      <span aria-hidden="true"> / </span>
+      <span class="visually-hidden">{{ 'pagination.of' | t }}</span>
+      <span class="">{{ paginate.pages }}</span>
+    </div>
+    <a
+      role="link"
+      class="pagination__item pagination__item--padding-left pagination__next link-unstyled"
+      {%- if paginate.next == null -%}
+        aria-disabled="true"
+      {%- else -%}
+        href="{{ paginate.next.url }}"
+        aria-label="{{ 'pagination.next' | t }}"
+      {%- endif -%}
+    >
+      {%- render 'icon' with 'caret-right', class: 'pagination__icon icon--m' -%}
+    </a>
+    <a
+      role="link"
+      class="pagination__item pagination__item--padding-right pagination__last link-unstyled"
+      {%- if paginate.parts.last.title == paginate.current_page -%}
+        aria-disabled="true"
+      {%- else -%}
+        href="{{ paginate.parts.last.url }}"
+        aria-label="{{ 'pagination.page' | t: number: paginate.parts.last.title, count: paginate.pages }}"
+      {%- endif -%}
+    >
+      {%- render 'icon' with 'double-caret-right', class: 'pagination__icon pagination__icon--double-caret' -%}
+    </a>
+  </nav>
+{%- endif -%}

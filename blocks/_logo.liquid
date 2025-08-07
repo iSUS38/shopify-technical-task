@@ -1,0 +1,58 @@
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'lazy'
+  if section.index == 1 and section.location != 'footer'
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+-%}
+
+<li class="logo-list__item" {{ block.shopify_attributes }} style="--width: {{ block.settings.image.width }}; --height: {{ block.settings.image.height }};" data-block-id="{{ block.id }}">
+  {%- if block.settings.link -%}
+    <a href="{{ block.settings.link }}" class="logo-list__link">
+  {%- endif -%}
+  {%- if block.settings.image != blank -%}
+    {%- assign widths = '100, 200, 300, 400, 600, 800, 1200' -%}
+    {{
+      block.settings.image
+      | image_url: width: 2200
+      | image_tag:
+        sizes: '15rem',
+        widths: widths,
+        fetchpriority: fetch_priority,
+        loading: loading,
+        class: 'logo-list__logo'
+    }}
+  {%- else -%}
+    <div style="display: block; block-size: 5rem; inline-size: 10rem; background-color: rgba(var(--color-foreground), 0.2);">
+      {{- 'image' | placeholder_svg_tag: 'placeholder-svg' -}}
+    </div>
+  {%- endif -%}
+  {%- if block.settings.link -%}
+    </a>
+  {%- endif -%}
+</li>
+
+{% schema %}
+{
+  "name": "t:logo",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:image"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:logo"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,54 @@
+
+<div class="rich-text__mini-product flex justify-inherit media-banner__pointer mini-product__wrapper mini-product__wrapper--{{ block.settings.style }}" {{  block.shopify_attributes }}>
+  {%- case block.settings.style -%}
+    {%- when 'card' -%}
+      {% render 'mini-product-card' with scoped_settings: block.settings %}
+    {%- when 'list' -%}
+      {% render 'mini-product-list' with scoped_settings: block.settings %}
+  {%- endcase -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:mini-product",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:product"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "default": "card",
+      "options": [
+        {
+          "label": "t:card",
+          "value": "card"
+        },
+        {
+          "label": "t:list",
+          "value": "list"
+        }
+      ],
+      "label": "t:style"
+    },
+    {
+      "type": "header",
+      "content": "t:card-style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:mini-product"
+    }
+  ]
+}
+{% endschema %}

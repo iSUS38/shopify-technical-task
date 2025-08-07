@@ -1,0 +1,60 @@
+{%- capture form_class -%}newsletter__form rte {% if class %} {{ class }}{% endif %}{% endcapture %}
+{%- form 'customer', id: form_id, class: form_class -%}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  <div class="field">
+    <label class="field__label" for="NewsletterForm--{{ form_id }}">
+      {{ 'newsletter.label' | t }}
+    </label>
+    <input
+      id="NewsletterForm--{{ form_id }}"
+      type="email"
+      placeholder=" "
+      name="contact[email]"
+      class="field__input"
+      value="{{ form.email }}"
+      aria-required="true"
+      autocorrect="off"
+      autocapitalize="off"
+      autocomplete="email"
+      pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+      {% if autofocus == true %}
+        autofocus
+      {% endif %}
+      {% if form.errors %}
+        autofocus
+        aria-invalid="true"
+        aria-describedby="{{ form_id }}-error"
+      {% elsif form.posted_successfully? %}
+        aria-describedby="{{ form_id }}-success"
+      {% endif %}
+      required
+    >
+  </div>
+  <button
+    type="submit"
+    class="newsletter__button button button--{{ settings.button_style | default: 'primary'}} {% if settings.button_width == 'full' %}button--full{% endif %}"
+    name="commit"
+  >
+    {{- 'newsletter.button_label' | t -}}
+  </button>
+  {%- if form.errors -%}
+    <div class="form__errors text-s exception justify-inherit" id="{{ form_id }}-error">
+      {%- render 'icon' with 'warning' -%}
+      {{ form.errors.translated_fields.email | capitalize }}
+      {{ form.errors.messages.email -}}
+    </div>
+  {%- endif -%}
+  {%- if form.posted_successfully? -%}
+    <div class="form__success justify-inherit">
+      {%- render 'icon' with 'check', class: 'icon--m' -%}
+      <h3
+        class="body text-s"
+        id="{{ form_id }}-success"
+        tabindex="-1"
+        autofocus
+      >
+        {{- 'newsletter.success' | t -}}
+      </h3>
+    </div>
+  {%- endif -%}
+  {%- endform -%}

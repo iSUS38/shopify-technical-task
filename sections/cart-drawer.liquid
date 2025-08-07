@@ -1,0 +1,313 @@
+{%- if settings.cart_type == 'drawer' -%}
+  <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+
+  {%- capture blocks -%}
+    {%- if cart != empty -%}
+      <div class="cart__blocks">
+        {%- content_for 'blocks' -%}
+      </div>
+    {%- endif -%}
+  {%- endcapture -%}
+
+  <custom-dialog data-modal="true" data-overlay="true" data-name="cart-drawer" data-section="{{ section.id }}" class="cart cart-drawer cart-drawer--{{ section.settings.layout_desktop }}">
+    <dialog class="dialog" aria-labelledby="cart-drawer-heading">
+      <div class="dialog__window dialog__animateable dialog__window--drawer cart-drawer__dialog-window" data-color-scheme="{{ section.settings.color_scheme }}">
+        <cart-items
+          id="cart-drawer-items"
+          data-id="{{ section.id }}"
+        >
+          <div class="cart__inner cart-drawer__inner" id="CartDrawer">
+            <div class="cart-drawer__header dialog__header" data-color-scheme="{{ section.settings.color_scheme }}">
+              {%- if cart == empty -%}
+                <h2 id="cart-drawer-heading" class="{{ section.settings.heading_size }}">
+                  {{- 'cart.empty' | t -}}
+                </h2>
+              {%- else -%}
+                <h2 id="cart-drawer-heading" class="{{ section.settings.heading_size }}">
+                  {{ 'sections.cart.title' | t }}
+                  {%- if settings.enable_heading_accents -%}
+                    <span class="heading__count">
+                      <span>({{ cart.item_count }})</span>
+                      <span class="visually-hidden">{{ 'cart.items' | t }}</span>
+                    </span>
+                  {%- endif -%}
+                </h2>
+              {%- endif -%}
+              {% render 'close-button' %}
+            </div>
+            {% if section.settings.layout_desktop == 'horizontal' %}
+              <cart-sticky-observer class="cart-drawer__body" data-scroll-to-top>
+            {% endif %}
+            {%- render 'cart', position: 'cart-drawer', blocks: blocks -%}
+            {% if section.settings.layout_desktop == 'horizontal' %}
+              </cart-sticky-observer>
+            {% endif %}
+            <span class="visually-hidden" aria-live="polite" data-live-region></span>
+          </div>
+        </cart-items>
+      </div>
+    </dialog>
+  </custom-dialog>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:cart-drawer",
+  "class": "dialog-section",
+  "enabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:heading-1"
+        },
+        {
+          "value": "h2",
+          "label": "t:heading-2"
+        },
+        {
+          "value": "h3",
+          "label": "t:heading-3"
+        },
+        {
+          "value": "h4",
+          "label": "t:heading-4"
+        },
+        {
+          "value": "h5",
+          "label": "t:heading-5"
+        },
+        {
+          "value": "h6",
+          "label": "t:heading-6"
+        }
+      ],
+      "default": "h3",
+      "label": "t:heading-size"
+    },
+    {
+      "type": "select",
+      "id": "layout_desktop",
+      "label": "t:layout-desktop",
+      "default": "vertical",
+      "options": [
+        {
+          "value": "horizontal",
+          "label": "t:horizontal"
+        },
+        {
+          "value": "vertical",
+          "label": "t:vertical"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:show-dynamic-checkout",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_cart",
+      "label": "t:show-view-cart-button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:products"
+    },
+    {
+      "type": "range",
+      "id": "product_image_width",
+      "label": "t:image-width",
+      "min": 70,
+      "max": 200,
+      "step": 10,
+      "default": 120,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "font_style_title",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "heading h6",
+      "label": "t:product-title-font"
+    },
+    {
+      "type": "select",
+      "id": "font_style_price",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "caption",
+      "label": "t:price-font"
+    },
+    {
+      "type": "header",
+      "content": "t:color-scheme"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_cart-upsell"
+    }
+  ]
+}
+{% endschema %}

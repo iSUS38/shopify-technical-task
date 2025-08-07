@@ -1,0 +1,138 @@
+{% comment %}
+  Renders a product media gallery. Should be used with 'media-gallery.js'
+  Also see 'product-media-modal'
+
+  Accepts:
+  - product: {Object} Product liquid object
+  - variant_images: {Array} Product images associated with a variant
+  - limit: {Number} (optional) When passed, limits the number of media items to render
+
+  Usage:
+  {% render 'product-media-gallery' %}
+{% endcomment %}
+
+{%- liquid
+  assign animation_style = settings.animation_style
+  assign count = 1
+
+  if product.selected_or_first_available_variant.featured_media != null
+    assign featured_media = product.selected_or_first_available_variant.featured_media
+  endif
+-%}
+
+{% if settings.enable_zoom %}
+  <script src="{{ 'zoom-image.js' | asset_url }}" defer="defer"></script>
+{% endif %}
+{% if settings.media_style == 'thumbnails' %}
+  <script src="{{ 'thumbnail-gallery.js' | asset_url }}" defer="defer"></script>
+{% endif %}
+<script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
+
+<media-gallery
+  data-section="{{ id }}"
+  id="MediaGallery-{{ id }}"
+  role="region"
+  aria-label="{{ 'products.product.media.gallery_viewer' | t }}"
+  class="media-gallery media-gallery--{{ settings.media_style }} media-gallery--{{ settings.image_aspect_ratio }} media-gallery--transparent-header-{{ settings.enable_transparent_header }} {%- if product.media.size == 0 -%}media-gallery--single{% endif %} {% if section.settings.spacing == '0px' %}media-gallery--flush{% endif %} {% if section.settings.mobile_max_width != '100%' %}media-gallery--mobile-max {% if section.settings.mobile_max_width == '92%' %}media-gallery--mobile-page-width{% endif %}{% endif %}"
+  data-style="{{ settings.media_style }}"
+  style="--image-padding: {{ section.settings.spacing }}; {% if section.settings.mobile_max_width != '100%' %}--mobile-max-width: {{ section.settings.mobile_max_width }};{% endif %}"
+  data-active-media="{{ featured_media.id }}"
+  data-size="{{ product.media.size }}"
+>
+  {%- if product.media.size > 0 -%}
+    {% if settings.media_style == 'thumbnails' %}
+      <thumbnail-gallery class="pdp-thumbnails" >
+        <ul class="pdp-thumbnails__list">
+          {%- for media in product.media -%}
+            {%- assign is_active = false -%}
+            {%- if featured_media != blank and featured_media.id == media.id -%}
+              {%- assign is_active = true -%}
+            {%- elsif featured_media.id == blank and forloop.index == 1 -%}
+              {%- assign is_active = true -%}
+            {%- endif -%}
+            {%- render 'product-media-thumbnail', with media: media, settings:settings, index: count, featured_media: featured_media, product: product, is_active: is_active-%}
+          {%- endfor -%}
+        </ul>
+        <div class="pdp-thumbnails__main-wrapper">
+          {%- for media in product.media -%}
+            {%- assign is_active = false -%}
+            {%- if featured_media != blank and featured_media.id == media.id -%}
+              {%- assign is_active = true -%}
+            {%- elsif featured_media.id == blank and forloop.index == 1 -%}
+              {%- assign is_active = true -%}
+            {%- endif -%}
+            <div
+              class="pdp-thumbnails__main"
+              {{ block.shopify_attributes }}
+              data-media-id="{{ media.id }}"
+              data-aspect-ratio="{% if ratio == 1%}square{% elsif ratio < 1 %}portrait{% else %}landscape{% endif %}"
+              {% if is_active %}data-active{% endif %}
+            >
+              {% render 'product-media', media: media, settings: settings, index: forloop.index %}
+            </div>
+          {%- endfor -%}
+        </div>
+      </thumbnail-gallery>
+    {% else %}
+      <slideshow-component
+        class="slideshow slideshow--arrow-overlay"
+        id="GalleryViewer-{{ id }}"
+        data-animation-style="{{ animation_style }}"
+        {% if settings.media_style == 'scroll' %}
+          data-destroy="(min-width: 48em)"
+        {% endif %}
+      >
+        <a class="skip-to-content-link button button--primary" href="#ProductInfo-{{ id }}">
+          {{ 'accessibility.skip_to_product_info' | t }}
+        </a>
+        <div
+          id="Slider-{{ section.id }}"
+          class="slider--generic"
+          data-label="{{ 'products.product.media.gallery_viewer' | t }}"
+          data-looping="{{ settings.enable_looping }}"
+        >
+          {%- for media in product.media -%}
+            {%- assign ratio = media.preview_image.aspect_ratio -%}
+            {%- assign hidden = false -%}
+            {%- if animation_style == 'fade' -%}
+              {%- if featured_media != blank and featured_media.id != media.id -%}
+                {%- assign hidden = true -%}
+              {%- elsif featured_media.id == blank and forloop.index > 1 -%}
+                {%- assign hidden = true -%}
+              {%- endif -%}
+            {%- endif -%}
+            <div
+              id="Slide-{{ section.id }}-{{ count }}"
+              class="slideshow__slide"
+              role="group"
+              aria-label="{{ count }} of {{ product.media.size }} slides"
+              tabindex="-1"
+              {{ block.shopify_attributes }}
+              data-media-id="{{ media.id }}"
+              data-index="{{  forloop.index0 }}"
+              {% if hidden %}aria-hidden="true"{% endif %}
+              style="--aspect-ratio: {{ ratio }}"
+              data-aspect-ratio="{% if ratio == 1%}square{% elsif ratio < 1 %}portrait{% else %}landscape{% endif %}"
+            >
+              {% render 'product-media', media: media, settings: settings, index: forloop.index %}
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="slideshow__pagination slideshow__pagination--overlay">
+          {%- render 'pagination-slideshow' with button_style: settings.button_style, arrow_style: 'overlay', counter_style: section.settings.counter_style -%}
+        </div>
+      </slideshow-component>
+    {% endif %}
+  {%- endif -%}
+</media-gallery>
+<custom-dialog data-modal="true" data-name="zoom" data-display="block">
+  <dialog class="dialog" aria-label="{{ 'products.product.media.zoom' | t }}">
+    <div class="dialog__window dialog__animateable zoom__dialog-window" data-color-scheme="{{ settings.color_scheme }}">
+      {% capture button_class %}button--{{ settings.button_style }} zoom__close{% endcapture %}
+      {% render 'close-button', with class: button_class %}
+      {%- render 'loading-spinner', class: 'opacity zoom__spinner', visible: true -%}
+      <div data-content class="zoom__content" tabindex="0" aria-label="{{ 'products.product.media.zoom' | t }}">
+      </div>
+    </div>
+  </dialog>
+</custom-dialog>

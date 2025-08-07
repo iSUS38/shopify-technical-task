@@ -1,0 +1,100 @@
+{%- assign product = section.settings.product | default: product -%}
+{%- assign product_form_id = 'product-form-' | append: section.id | append: product.id -%}
+
+<div {{ block.shopify_attributes }}>
+  {%- render 'line-item-property', block: block, product_form_id: product_form_id -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:line-item-property",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "type",
+      "label": "t:type",
+      "options": [
+        {
+          "value": "text",
+          "label": "t:option-1-text"
+        },
+        {
+          "value": "checkbox",
+          "label": "t:option-2-checkbox"
+        },
+        {
+          "value": "select",
+          "label": "t:option-3-dropdown"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "field_label",
+      "label": "t:label",
+      "default": "t:label",
+      "info": "t:all-line-item-property-labels-on-a-given-page-must"
+    },
+    {
+      "type": "checkbox",
+      "id": "required",
+      "label": "t:required",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:option-1-text"
+    },
+    {
+      "type": "select",
+      "id": "text_type",
+      "label": "t:input-type",
+      "default": "text",
+      "options": [
+        {
+          "value": "text",
+          "label": "t:single-line-text"
+        },
+        {
+          "value": "textarea",
+          "label": "t:multi-line-text"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:option-2-checkbox"
+    },
+    {
+      "type": "text",
+      "id": "checkbox_checked",
+      "label": "t:checked-value",
+      "default": "t:yes"
+    },
+    {
+      "type": "text",
+      "id": "checkbox_unchecked",
+      "label": "t:unchecked-value",
+      "default": "t:no",
+      "info": "t:only-applies-if-checkbox-is-not-required"
+    },
+    {
+      "type": "header",
+      "content": "t:option-3-dropdown"
+    },
+    {
+      "type": "text",
+      "id": "options",
+      "label": "t:options",
+      "default": "t:option-1-option-2",
+      "info": "t:comma-separated-list-of-options-accepts-any-text-except-for"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:line-item-property"
+    }
+  ]
+}
+{% endschema %}

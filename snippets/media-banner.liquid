@@ -1,0 +1,119 @@
+{%- liquid
+  assign image = image | default: settings.image
+  assign stack = stack | default: settings.stack
+
+  if show_placeholder == null
+    assign show_placeholder = true
+  endif
+
+  if container == null
+    assign container = 'container container--xl'
+  endif
+
+  if height == null
+    assign height = settings.height
+  endif
+
+  unless mobile_height
+    assign mobile_height = settings.mobile_height | default: height | default: 'adapt'
+  endunless
+
+  if section.id contains 'split_banner' or section.id contains 'split_card'
+    assign sizes = '(min-width:48em) 50vw, 100vw'
+  endif
+
+  assign sizes = sizes | default: '100vw'
+  assign loading = loading | default: 'lazy'
+-%}
+
+{%- if settings.color_scheme -%}
+  {% # theme-check-disable UnusedAssign %}
+  {% capture color_scheme_class %}media-banner__color-scheme card-border-radius{% endcapture %}
+  {% # theme-check-enable UnusedAssign %}
+  <div
+    {% render 'color-scheme-attributes' with scoped_settings: settings, class: color_scheme_class %}
+  >
+{%- endif -%}
+
+<div
+  class="media-banner {{ class }} height--{{ height | default: 'adapt' }} media-banner--stack-{{ stack }} mobile-height--{{ mobile_height }} {% if enable_banner_click %}media-banner--banner-click{% endif %} {% if settings.play_button_display == 'hover_focus' %}play-pause--hover-focus{% endif %} expand-link {% if settings.spacing == '0px' %}media-banner--no-frame{% endif %} {% if section.settings.color_scheme != settings.color_scheme %}media-banner--color-scheme-different{% endif %}"
+  style="--image-padding: {{ settings.spacing | default: '0px'}}; {% if settings.media_content_padding and settings.media_content_padding != 'default' %}--media-content-padding: {{ settings.media_content_padding }}{% endif %}"
+>
+  <div class="media-banner__padding">
+    <div class="media-banner__inner padding-{{ id }} card-inner-border-radius">
+      {%- if settings.video != blank -%}
+        <div class="media-wrapper  {% if settings.mobile_video != blank or settings.mobile_image != blank %}hidden md:block{% endif %}">
+          {%- render 'deferred-media',
+            media: settings.video,
+            fetchpriority: fetch_priority,
+            class: 'media',
+            autoplay: settings.enable_autoplay,
+            alignment: settings.button_alignment,
+            button_style: settings.button_style
+          -%}
+        </div>
+      {%- endif -%}
+      {%- if settings.mobile_video != blank -%}
+        <div class="media-wrapper md:hidden">
+          {%- render 'deferred-media',
+            media: settings.mobile_video,
+            fetchpriority: fetch_priority,
+            class: 'media',
+            autoplay: settings.enable_autoplay,
+            alignment: settings.button_alignment,
+            button_style: settings.button_style
+          -%}
+        </div>
+      {%- endif -%}
+      {%- if image != blank -%}
+        <div class="media-wrapper {% if settings.mobile_image != blank or section.settings.mobile_video != blank %}hidden md:block{% endif %}">
+          {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+          {{
+            image
+            | image_url: width: 2200
+            | image_tag: sizes: sizes, widths: widths, fetchpriority: fetch_priority, class: 'media', loading: loading
+          }}
+        </div>
+      {%- endif -%}
+      {%- if settings.mobile_image != blank -%}
+        <div class="media-wrapper md:hidden">
+          {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+          {{
+            settings.mobile_image
+            | image_url: width: 2200
+            | image_tag: sizes: sizes, widths: widths, fetchpriority: fetch_priority, class: 'media', loading: loading
+          }}
+        </div>
+      {%- endif -%}
+      {%- if image == blank and settings.video == blank and hide_image != true -%}
+        {%- if show_placeholder -%}
+          <div class="media-wrapper media-wrapper--placeholder">
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {%- else -%}
+          <div class="media-wrapper"></div>
+        {%- endif -%}
+      {%- endif -%}
+      {%- if settings.enable_overlay %}
+        <div class="media-banner__overlay" style="--overlay: {{ settings.overlay }}"></div>
+      {%- endif -%}
+      {%- if stack == 'none' or stack == 'mobile' or stack == blank -%}
+        <div class="media-banner__content alignment--{{ settings.vertical_alignment }}-{{ settings.horizontal_alignment }} {% if container %} {{ container }}{% endif %} {% if stack %}media-banner__content--desktop{% endif %}">
+          {{ content }}
+        </div>
+      {%- endif -%}
+      {{ image_content }}
+    </div>
+  </div>
+  {%- if stack == 'mobile' or stack == 'always' -%}
+    {% if content != blank %}
+      <div class="media-banner__content media-banner__content--stack {% if stack == 'mobile' %}media-banner__content--mobile-only {% endif %} alignment--{{ settings.vertical_alignment }}-{{ settings.horizontal_alignment }} container container--xl">
+        {{ content }}
+      </div>
+    {% endif %}
+  {%- endif -%}
+</div>
+
+{%- if settings.color_scheme -%}
+  </div>
+{%- endif -%}

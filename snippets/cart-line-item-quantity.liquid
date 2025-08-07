@@ -1,0 +1,51 @@
+<div class="cart-item__quantity">
+  <label 
+    for="quantity-{{ position }}-{{ item.index | plus: 1 }}" 
+    class="visually-hidden"
+    data-quantity-label
+  >
+    {{- 'products.product.quantity.label' | t -}}
+  </label>
+  <quantity-input class="quantity-input">
+    <button class="quantity-input__button" name="minus" id="quantity-{{ position }}-{{ item.index | plus: 1 }}-minus">
+      <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
+      {%- render 'icon' with 'minus', class: 'icon--s' -%}
+    </button>
+    <input
+      class="quantity-input__input text-s"
+      data-quantity-variant-id="{{ item.variant.id }}"
+      type="number"
+      name="updates[]"
+      value="{{ item.quantity }}"
+      {% # theme-check-disable %}
+      data-cart-line-item-quantity="{{ item.index | plus: 1 }}"
+      data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+      min="0"
+      data-min="{{ item.variant.quantity_rule.min }}"
+      {% if item.variant.quantity_rule.max != null %}
+        max="{{ item.variant.quantity_rule.max }}"
+      {% endif %}
+      step="{{ item.variant.quantity_rule.increment }}"
+      {% # theme-check-enable %}
+      aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+      id="quantity-{{ position }}-{{ item.index | plus: 1 }}"
+      data-index="{{ item.index | plus: 1 }}"
+    >
+    <button class="quantity-input__button" name="plus" id="quantity-{{ position }}-{{ item.index | plus: 1 }}-plus">
+      <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
+      {%- render 'icon' with 'plus', class: 'icon--s' -%}
+    </button>
+  </quantity-input>
+
+  <cart-remove-button
+    data-index="{{ item.index | plus: 1 }}"
+  >
+    <a
+      href="{{ item.url_to_remove }}"
+      class="button button--text"
+    >
+      <span class="button-text__label">{{ 'cart.remove' | t }}</span>
+      <span class="visually-hidden">{{ item.title }}</span>
+    </a>
+  </cart-remove-button>
+</div>

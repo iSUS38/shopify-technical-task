@@ -1,0 +1,121 @@
+{% # theme-check-disable UnusedAssign%}
+{%- capture class -%}
+  media-grid__item media-grid__item--text slider-component__item alignment--{{ block.settings.vertical_alignment }}-{{ block.settings.horizontal_alignment }} card-border-radius {{ block.settings.horizontal_alignment }}
+{%- endcapture -%}
+{% # theme-check-enable UnusedAssign%}
+<li
+  {% render 'color-scheme-attributes' with scoped_settings: block.settings, class: class %}
+  class=""
+  id="Slide-{{ section.id }}-{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="media-grid__text rte justify-{{ block.settings.horizontal_alignment }}">
+    {% content_for 'blocks' %}
+  </div>
+</li>
+
+
+{% schema %}
+{
+  "name": "t:rich-text",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:top"
+        },
+        {
+          "value": "middle",
+          "label": "t:middle"
+        },
+        {
+          "value": "bottom",
+          "label": "t:bottom"
+        }
+      ],
+      "default": "middle",
+      "label": "t:vertical-alignment"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "center",
+      "label": "t:text-alignment"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:rich-text",
+      "blocks": [
+        {
+          "type": "heading-group",
+          "blocks": [
+            {
+              "type": "_subheading"
+            },
+            {
+              "type": "_heading"
+            }
+          ]
+        },
+        {
+          "type": "button-group",
+          "blocks": [
+            {
+              "type": "_button",
+              "settings": {
+                "button_style": "text"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

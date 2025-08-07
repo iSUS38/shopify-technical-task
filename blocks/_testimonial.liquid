@@ -1,0 +1,62 @@
+<li
+  class="slider-component__item"
+  id="Slide-{{ section.id }}-{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="scroll-trigger animate--slide-up testimonials__item {{ section.settings.alignment_columns }} justify-{{ section.settings.alignment_columns }}">
+    {% content_for "block", type: "image", id: "image" %}
+    <div class="padding--text">
+      <blockquote class="testimonials__quote">
+        {% content_for "block", type: "_rating", id: "rating" %}
+        {% content_for "block", type: "_single-heading", id: "single-heading" %}
+      </blockquote>
+      <div class="testimonials__author">
+        {% content_for "block", type: "text", id: "author" %}
+        <div class="secondary">
+          {% content_for "block", type: "text", id: "author-secondary" %}
+        </div>
+      </div>
+    </div>
+  </div>
+</li>
+
+{% schema %}
+{
+  "name": "t:testimonial",
+  "tag": null,
+  "presets": [
+    {
+      "name": "t:testimonial",
+      "blocks": [
+        {
+          "type": "_single-heading",
+          "id": "single-heading",
+          "static": true,
+          "settings": {
+            "heading_size": "h5",
+            "heading": "“Showcase a customer review.”"
+          }
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "static": true,
+          "settings": {
+            "text": "<p>Author</p>",
+            "font_style": "caption"
+          }
+        },
+        {
+          "type": "text",
+          "id": "author-secondary",
+          "static": true,
+          "settings": {
+            "text": "<p>Author title</p>",
+            "font_style": "caption"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

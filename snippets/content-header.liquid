@@ -1,0 +1,45 @@
+{%- unless heading_level -%}
+  {%- assign heading_level = 'h2' -%}
+{%- endunless -%}
+{% if scoped_settings.page_title == true %}{% assign heading_level = 'h1' %}{% endif %}
+
+{% capture button %}
+  {%- render 'text-button', label: scoped_settings.button_label, url: scoped_settings.button_link -%}
+{% endcapture %}
+
+{%- if scoped_settings.heading != blank or scoped_settings.subheading != blank or scoped_settings.text != blank or button != blank -%}
+  <div class="container container--xl" {{ block.shopify_attributes }}>
+    <div class="content-header content-header--{{ scoped_settings.layout_header }}">
+      <div class="content-header__heading-wrapper rte">
+        {%- if scoped_settings.heading != blank or scoped_settings.subheading != blank  -%}
+          <{{ heading_level }} class="content-header__heading heading" id="{{ section.id }}-Section-Heading">
+            {%- if scoped_settings.subheading != blank -%}
+              <p class="subheading">{{  scoped_settings.subheading  }}</p>
+            {%- endif -%}
+            <p class="heading {{ scoped_settings.heading_size }}">
+              {%- # theme-check-disable UndefinedObject -%}
+              <span>{{- scoped_settings.heading -}}</span>
+              {%- if settings.enable_heading_accents -%}
+                <span class="heading__count">(<span class="heading__count-text"></span>)</span>
+              {%- endif -%}
+              {%- # theme-check-enable UndefinedObject -%}
+            </p>
+          </{{ heading_level}}>
+        {%- endif -%}
+        {%- if scoped_settings.layout_header == 'left' -%}
+          {{ button }}
+        {%- endif -%}
+      </div>
+      {%- if scoped_settings.text != blank or button != blank -%}
+        <div class="content-header__text rte">
+          <div class="rich-text__text">
+            {{- scoped_settings.text -}}
+          </div>
+          {%- if scoped_settings.layout_header == 'center' -%}
+            {{ button }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

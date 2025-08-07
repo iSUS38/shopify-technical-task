@@ -1,0 +1,148 @@
+{%- assign product = section.settings.product | default: product -%}
+{%- assign product_form_id = 'product-form-' | append: section.id | append: product.id -%}
+
+{%- render 'variant-picker',
+  product: product,
+  block: block,
+  product_form_id: product_form_id
+-%}
+
+{% schema %}
+{
+  "name": "t:variant-picker",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "variant_picker_style",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "t:dropdown"
+        },
+        {
+          "value": "buttons",
+          "label": "t:buttons"
+        }
+      ],
+      "default": "buttons",
+      "label": "t:style"
+    },
+    {
+      "type": "select",
+      "id": "swatch_style",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "none",
+          "label": "t:none"
+        }
+      ],
+      "default": "default",
+      "label": "t:swatch",
+      "info": "t:set-the-default-swatch-style-in-settings-learn-more"
+    },
+    {
+      "type": "header",
+      "content": "t:modal"
+    },
+    {
+      "type": "text",
+      "id": "option_1",
+      "label": "t:option-name",
+      "info": "t:must-match-the-exact-option-name-eg-size-case-sensitive"
+    },
+    {
+      "type": "page",
+      "id": "option_1_page",
+      "label": "t:page"
+    },
+    {
+      "type": "select",
+      "id": "option_1_label",
+      "label": "t:label",
+      "default": "icon",
+      "options": [
+        {
+          "value": "icon",
+          "label": "t:icon"
+        },
+        {
+          "value": "text",
+          "label": "t:page-title"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:modal"
+    },
+    {
+      "type": "text",
+      "id": "option_2",
+      "label": "t:option-name",
+      "info": "t:must-match-the-exact-option-name-eg-size-case-sensitive"
+    },
+    {
+      "type": "page",
+      "id": "option_2_page",
+      "label": "t:page"
+    },
+    {
+      "type": "select",
+      "id": "option_2_label",
+      "label": "t:label",
+      "default": "icon",
+      "options": [
+        {
+          "value": "icon",
+          "label": "t:icon"
+        },
+        {
+          "value": "text",
+          "label": "t:page-title"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:modal"
+    },
+    {
+      "type": "text",
+      "id": "option_3",
+      "label": "t:option-name",
+      "info": "t:must-match-the-exact-option-name-eg-size-case-sensitive"
+    },
+    {
+      "type": "page",
+      "id": "option_3_page",
+      "label": "t:page"
+    },
+    {
+      "type": "select",
+      "id": "option_3_label",
+      "label": "t:label",
+      "default": "icon",
+      "options": [
+        {
+          "value": "icon",
+          "label": "t:icon"
+        },
+        {
+          "value": "text",
+          "label": "t:page-title"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:variant-picker"
+    }
+  ]
+}
+{% endschema %}

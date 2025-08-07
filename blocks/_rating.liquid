@@ -1,0 +1,19 @@
+{%- render 'product-rating', rating: block.settings.rating -%}
+
+{% schema %}
+{
+  "name": "t:rating",
+  "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "rating",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "label": "t:star-rating",
+      "default": 5
+    }
+  ]
+}
+{% endschema %}

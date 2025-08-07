@@ -1,0 +1,18 @@
+<div class="hotspots__wrapper" {{  block.shopify_attributes }}>
+  {% content_for "blocks" %}
+</div>
+
+{% schema %}
+{
+  "name": "t:hotspots",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_hotspot-product"
+    },
+    {
+      "type": "_hotspot-content"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,359 @@
+.account__or {
+  margin-block-end: var(--space-2xs);
+}
+
+.account__forgot {
+  margin-block-start: var(--space-2xs);
+}
+
+.account__header {
+  margin-block-end: var(--gap-section);
+}
+
+.account__title {
+  margin-block-end: var(--space-s);
+}
+
+.account__block > * + * {
+  margin-block-start: var(--space-2xs);
+}
+
+.account__details--desktop {
+  display: none;
+}
+
+.account__right {
+  display: grid;
+  gap: var(--gap-section) 0;
+  grid-template-columns:
+    [full-start] var(--container-margin) [content-start] 1fr
+    [content-end] var(--container-margin) [full-end];
+}
+
+.account__right > * {
+  grid-column: content-start / content-end;
+}
+
+.account__details-heading {
+  padding-block-start: var(--space-2xs);
+}
+
+.account__nav {
+  grid-column: content-start / full-end;
+  border-block-end: var(--border);
+}
+
+.account__nav .tab-nav__list {
+  border-block-end: 0;
+  min-inline-size: 0;
+}
+
+.account__main {
+  margin-block-end: var(--padding-section);
+  container-type: inline-size;
+}
+
+.account__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+}
+
+.account__table th {
+  text-align: start;
+  font-weight: inherit;
+}
+
+.account__table :where(td, th):last-child {
+  text-align: end;
+}
+
+.account__table :where(th, td) {
+  padding-block: var(--space-2xs);
+}
+
+.account__table tbody tr:not(:last-child) td {
+  border-block-end: var(--border);
+}
+
+.account :where(.pagination__first, .pagination__last) {
+  display: none;
+}
+
+.account__logout--desktop {
+  display: none;
+}
+
+.order__main > * + * {
+  margin-block-start: var(--space-l);
+}
+
+.order__heading {
+  padding-block-end: var(--space-2xs);
+  font-size: var(--font-heading-h5-size);
+  border-block-end: var(--border);
+}
+
+.order__details {
+  display: grid;
+  margin-block-start: max(var(--gap-section), var(--space-s));
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-m) var(--gap-section);
+}
+
+.order__details-block {
+  min-width: 0;
+}
+.order__details-content {
+  margin-block-start: var(--space-2xs);
+}
+
+.order__details-content p + p {
+  margin-block-start: 0;
+}
+
+.order__details-block--full {
+  grid-column: 1 / -1;
+}
+
+.address__collapsible {
+  --gap: var(--space-m);
+  display: none;
+  transition: opacity 0.3s allow-discrete;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+[aria-expanded='true'] ~ .address__collapsible {
+  display: block;
+}
+
+.address__block > *:not(:empty) + * {
+  margin-block-start: var(--gap, var(--space-xs));
+}
+
+.address__block:not(:last-child) {
+  padding-block-end: var(--gap-section);
+  border-block-end: var(--border);
+  margin-block-end: var(--gap-section);
+}
+
+.order__product-wrapper {
+  gap: var(--space-xs);
+}
+
+.order__fulfillment {
+  --gap: var(--space-xs);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-xs);
+}
+
+.order__total-wrapper {
+  padding-inline-start: calc(var(--space-2xl) + var(--space-xs));
+}
+
+.order__quantity {
+  display: none;
+}
+
+.order__table-header th {
+  border-block-end: var(--border);
+  padding-block-end: var(--space-2xs);
+}
+
+.order__table .cart-item {
+  --clamp: clamp(var(--space-2xs), var(--gap-vertical), var(--space-xs));
+  padding-block: calc(var(--clamp) + var(--border-thickness));
+}
+
+.order__table .cart-item:last-child {
+  padding-block-end: 0;
+}
+
+.order__table .cart-item__price {
+  margin: 0;
+}
+
+.order__footer {
+  display: grid;
+  margin-block-start: 0;
+  grid-template-columns: 2fr 1fr;
+}
+
+.order__footer :where(dt, dd) {
+  padding-block-start: var(--space-3xs);
+}
+
+.order__footer dd {
+  margin-inline-start: 0;
+  padding-inline-start: var(--space-2xs);
+  text-align: end;
+}
+
+.order__divider {
+  margin-block-end: 0;
+}
+
+@media (min-width: 64em) {
+  .account__header {
+    display: none;
+  }
+
+  .account__body {
+    display: grid;
+    grid-template-columns: 1fr minmax(40rem, 2fr);
+    gap: var(--space-l);
+    max-width: var(--container-width);
+    margin-inline: max(50% - var(--container-width) / 2, var(--container-margin));
+  }
+
+  .account__details {
+    grid-column: 1 / 2;
+    grid-row: 1 / -3;
+  }
+
+  .account__right {
+    display: block;
+  }
+
+  .account__nav {
+    grid-column: 2 / 3;
+  }
+
+  .account__main {
+    grid-column: 2 / 3;
+    margin-block-end: 0;
+    margin-block-start: var(--space-l);
+  }
+
+  .account__details--desktop {
+    display: block;
+  }
+
+  .account__details--mobile {
+    display: none;
+  }
+
+  .account__details-heading {
+    font-size: var(--font-heading-h4-size);
+  }
+
+  .account__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+
+  .account__logout--desktop {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .account__details {
+    margin: 0;
+  }
+
+  .order__heading {
+    font-size: var(--font-heading-h4-size);
+  }
+
+  .order__table {
+    border-block-end: var(--border);
+  }
+
+  .order__table .cart-item__product {
+    padding-block: calc(var(--clamp) + var(--border-thickness));
+  }
+
+  .order__table .cart-item__product:last-child {
+    padding-block-end: 0;
+  }
+
+  .order__item {
+    display: table-row;
+  }
+
+  .order__item-detail > * + * {
+    margin-block-start: var(--gap, var(--space-3xs));
+  }
+
+  .cart-item__options {
+    --gap: var(--space-xs);
+  }
+
+  .order__quantity {
+    display: table-cell;
+  }
+
+  .order__total-text {
+    display: none;
+  }
+
+  .order__total-wrapper {
+    padding-inline-start: 0;
+  }
+
+  .order__table tbody tr:not(:last-child) td {
+    --clamp: clamp(var(--space-2xs), var(--gap-vertical), var(--space-m));
+    padding-block: calc(var(--clamp) / 2 + var(--border-thickness));
+  }
+
+  .order__total-wrapper .cart-item__price {
+    justify-content: end;
+  }
+
+  .order__footer {
+    margin-block-start: var(--gap-section);
+    margin-inline-start: auto;
+    inline-size: 50%;
+  }
+}
+
+@container (max-width: 40rem) {
+  .account__table :where(tbody, tr, td) {
+    display: block;
+  }
+
+  .account__table thead {
+    display: none;
+  }
+
+  .account__table tr:not(:last-child) {
+    border-block-end: var(--border);
+    padding-block-end: var(--space-xs);
+  }
+
+  .account__table tr:not(:first-child) {
+    padding-block-start: var(--space-xs);
+  }
+
+  .account__table td {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: var(--space-xs);
+    padding-block: var(--space-3xs);
+    border: none !important;
+    text-align: start !important;
+  }
+
+  .account__table td::before {
+    content: attr(data-label);
+    color: rgb(var(--color-text-secondary));
+  }
+}
+
+@container (min-width: 32em) {
+  .order__details {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .order__details-block--full {
+    grid-column: 1;
+  }
+}

@@ -1,0 +1,10 @@
+<play-pause-button
+  data-pause="{{ pause_text }}"
+  data-play="{{ play_text }}"
+>
+  <button class="{{ class }} button--square">
+    <span data-label class="visually-hidden">{{ play_text }}</span>
+    {%- render 'icon' with 'play', class: 'play-pause__play icon--s' -%}
+    {%- render 'icon' with 'pause', class: 'play-pause__pause icon--s' -%}
+  </button>
+</play-pause-button>

@@ -1,0 +1,152 @@
+{%- if product != blank -%}
+  {%- liquid
+    assign gift_card_recipient_feature_active = false
+    if block.settings.show_gift_card_recipient and product.gift_card?
+      assign gift_card_recipient_feature_active = true
+    endif
+
+    assign show_dynamic_checkout = false
+    if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+      assign show_dynamic_checkout = true
+    endif
+  -%}
+
+  <div class="buy-buttons" {{ block.shopify_attributes }}>
+    <product-form
+      class="product-form"
+      data-section-id="{{ section.id }}"
+      data-hide-errors="true"
+      data-product-form-id="{{ product_form_id }}"
+    >
+
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'buy-buttons__form',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          {% if product.selected_or_first_available_variant.available == false %}
+            disabled
+          {% endif %}
+        >
+
+
+                            {% if product.selling_plan_groups.size > 0 %}
+                      <script src="{{ 'custom-subscription-widget.js' | asset_url }}" defer="defer"></script>
+
+                      {{ 'custom-subscription-widget.css' | asset_url | stylesheet_tag }}
+              
+                      {% style %}
+                        #appstle_subscription_widget0 {
+                          display: none;
+                        }
+                      {% endstyle %}
+
+                      <div class="custom-product-subscription-widget selling-plans">
+                        {% comment %}  <h3>{{ 'products.product.custom_selling_plan_block.title' | t }}</h3> {% endcomment %}
+
+                        <div class="product-main__purchase-type">
+                          <label data-id="1">
+                            <input name="selling_plan" checked="true" type="radio" value />
+                            <span>{{ 'products.product.custom_selling_plan_block.one_time_order' | t }}</span>
+                          </label>
+                          <label data-id="2">
+                            <input name="selling_plan" type="radio" value="{{ product.selling_plan_groups[0].selling_plans[0].id }}" />
+                            <span>{{ 'products.product.custom_selling_plan_block.subscribe_and_save' | t }}</span>
+                          </label>
+                        </div
+                      </div>
+                      <div class="product-main__sticky-wrapper">
+                        <div class="subscribe-note">
+                          <div class="subscribe-note__icons">
+                            <div class="subscribe-note__icon-box">
+                              <div class="subscribe-note__icon">
+                                <img src="https://cdn.shopify.com/s/files/1/0553/4829/7865/files/icon-usp_small_6c4bbf5e-33f4-4f94-b0bc-3b376c83877f.svg?v=1749060918" alt="delivery icon" />
+                              </div>
+                              <p>{{ 'products.product.custom_selling_plan_block.free_shipping' | t }}</p>
+                            </div>
+                            <div class="subscribe-note__icon-box">
+                              <div class="subscribe-note__icon">
+                                <img src="https://cdn.shopify.com/s/files/1/0553/4829/7865/files/icon-gift_small_3e04a8e8-f36a-4e9a-b253-7933e6a9f58f.svg?v=1749060918" alt="gift icon" />
+                              </div>
+                              <p>{{ 'products.product.custom_selling_plan_block.bonus_points' | t }}</p>
+                            </div>
+                            <div class="subscribe-note__icon-box">
+                              <div class="subscribe-note__icon">
+                                <img src="https://cdn.shopify.com/s/files/1/0553/4829/7865/files/icon-box_small_259fc235-5fef-4add-9318-9e32d66b869e.svg?v=1749060918" alt="icon" />
+                              </div>
+                              <p>{{ 'products.product.custom_selling_plan_block.pause_in_any_time' | t }}</p>
+                            </div>
+                          </div>
+                          <ul class="subscribe-note__points">
+                            <li>{{ 'products.product.custom_selling_plan_block.benefit_1' | t }}</li>
+                            <li>{{ 'products.product.custom_selling_plan_block.benefit_2' | t }}</li>
+                            <li>{{ 'products.product.custom_selling_plan_block.benefit_3' | t }}</li>
+                          </ul>
+                        </div>
+
+                        <div class="nice-select custom-select">
+                          {% assign sorted_selling_plans = product.selling_plan_groups[0].selling_plans | sort: 'name' | reverse %}
+                          {% assign firstSellingPlanGroupFrequency = sorted_selling_plans[0] %}
+  
+                          <span class="current">{{ firstSellingPlanGroupFrequency.name }}</span>
+                          <ul class="list">
+                            {% for selling_plan in sorted_selling_plans %}
+                                <li data-value="{{ selling_plan.id }}" class="option">{{ selling_plan.name }}</li>
+                            {% endfor %}
+                        </div>
+                      </div>
+                    {% endif %}
+          
+
+        {%- if gift_card_recipient_feature_active -%}
+          {%- render 'gift-card-recipient-form', form: form -%}
+        {%- endif -%}
+
+        <div class="buy-buttons__buttons">
+          {% # theme-check-disable UnclosedHTMLElement %}
+          {%- if block.settings.show_quantity_selector -%}
+            <div class="buy-buttons__button-group button button--full {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}" style="">
+            {%- render 'quantity-input', product_form_id: product_form_id, product: product  -%}
+          {%- endif -%}
+
+          <button
+            tabindex="0"
+            id="{{ product_form_id }}-submit"
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+            aria-describedby="title-{{ section.id }}-{{ product.id }}"
+            aria-live="polite"
+            {% if product.selected_or_first_available_variant.available == false
+              or product.selected_or_first_available_variant == null
+            %}
+              aria-disabled="true"
+            {% endif %}
+          >
+            {%- if product.selected_or_first_available_variant.available -%}
+              <span>{{ 'products.product.add_to_cart' | t }}</span>
+            {%- else -%}
+              <span>{{ 'products.product.sold_out' | t }}</span>
+            {%- endif -%}
+
+            {%- render 'loading-spinner', class: 'opacity', visible: true -%}
+          </button>
+
+          {%- if block.settings.show_quantity_selector -%}
+            </div>
+          {%- endif -%}
+          {% # theme-check-enable UnclosedHTMLElement %}
+
+          {%- if show_dynamic_checkout -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+      {%- endform -%}
+    </product-form>
+  </div>
+{%- endif -%}

@@ -1,0 +1,409 @@
+<div
+  class="product-info__icon-with-text icon-with-text {% if block.settings.layout == 'row' %}alignment--{{block.settings.vertical_alignment }}-{{ block.settings.horizontal_alignment }}{% else %}icon-with-text--column items-{{ block.settings.horizontal_alignment }} {{ block.settings.horizontal_alignment }}{% endif %} {{ block.settings.font_style }}"
+  data-color-scheme="{{ block.settings.color_scheme }}"
+  style="--padding: {{ block.settings.padding }}; --gap: {{ block.settings.gap }};"
+  {{ block.shopify_attributes }}
+>
+  {%- render 'icon' with block.settings.icon, class: block.settings.icon_size -%}
+  {%- if block.settings.image != blank -%}
+    {%- capture sizes -%}
+      {{ block.settings.max_width | times: 1.0 | divided_by: 16 }}rem
+    {%- endcapture -%}
+    {%- assign widths = '100, 200, 300, 400, 600, 800, 1200' -%}
+    <div class="icon-with-text__image-wrapper" style="--image-max-width: {{ sizes }}">
+      {{
+        block.settings.image
+        | image_url: width: 2200
+        | image_tag:
+          sizes: sizes,
+          widths: widths
+      }}
+    </div>
+  {%- endif -%}
+  {%- if block.settings.text != blank -%}
+    {{- block.settings.text -}}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:icon-with-text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:none"
+        },
+        {
+          "value": "info",
+          "label": "t:info"
+        },
+        {
+          "value": "warning",
+          "label": "t:warning"
+        },
+        {
+          "value": "check",
+          "label": "t:check"
+        },
+        {
+          "value": "chat",
+          "label": "t:chat"
+        },
+        {
+          "value": "email",
+          "label": "t:email"
+        },
+        {
+          "value": "phone",
+          "label": "t:phone"
+        },
+        {
+          "value": "heart",
+          "label": "t:heart"
+        },
+        {
+          "value": "star-full",
+          "label": "t:star"
+        },
+        {
+          "value": "box",
+          "label": "t:box"
+        },
+        {
+          "value": "globe",
+          "label": "t:globe"
+        },
+        {
+          "value": "pin",
+          "label": "t:pin"
+        },
+        {
+          "value": "ruler",
+          "label": "t:ruler"
+        },
+        {
+          "value": "smile",
+          "label": "t:smile"
+        },
+        {
+          "value": "stopwatch",
+          "label": "t:stopwatch"
+        },
+        {
+          "value": "lightning",
+          "label": "t:lightning"
+        }
+      ],
+      "default": "info",
+      "label": "t:icon"
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "options": [
+        {
+          "value": "icon--xs",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "icon--s",
+          "label": "t:small"
+        },
+        {
+          "value": "icon--m",
+          "label": "t:medium"
+        },
+        {
+          "value": "icon--l",
+          "label": "t:large"
+        },
+        {
+          "value": "icon--xl",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "icon--xxl",
+          "label": "t:xxlarge"
+        }
+      ],
+      "default": "icon--s",
+      "label": "t:icon-size"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:image-optional"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "t:image-maximum-width",
+      "min": 0,
+      "max": 400,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "t:use-this-text-to-share-information-about-your-brand-collections",
+      "label": "t:text"
+    },
+    {
+      "type": "select",
+      "id": "font_style",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "body",
+      "label": "t:font-style"
+    },
+    {
+      "type": "header",
+      "content": "t:layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:layout",
+      "default": "row",
+      "options": [
+        {
+          "value": "row",
+          "label": "t:row"
+        },
+        {
+          "value": "column",
+          "label": "t:column"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "left",
+      "label": "t:horizontal-alignment"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:top"
+        },
+        {
+          "value": "middle",
+          "label": "t:middle"
+        },
+        {
+          "value": "bottom",
+          "label": "t:bottom"
+        }
+      ],
+      "default": "middle",
+      "label": "t:vertical-alignment"
+    },
+    {
+      "type": "select",
+      "id": "padding",
+      "options": [
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "0px",
+      "label": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "gap",
+      "options": [
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-2xs)",
+      "label": "t:gap"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:icon-with-text"
+    }
+  ]
+}
+{% endschema %}

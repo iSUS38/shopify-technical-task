@@ -1,0 +1,536 @@
+
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings %}>
+  <div class="bottom-bar{% if section.settings.show_borders %} border--top{% endif %} padding--section"  style="{% render 'padding-override' with settings: section.settings %}">
+    <div class="container container--xl">
+      <div class="bottom-bar__grid" style="--gap-vertical: {{ section.settings.vertical_spacing }}">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {% when 'localization' %}
+              <div
+                class="bottom-bar__item bottom-bar__item--localization bottom-bar__item--{{ block.settings.block_size }} bottom-bar__item--{{ block.settings.horizontal_alignment }}"
+                {{ block.shopify_attributes }}
+              >
+                {%- if localization.available_countries.size > 1 and block.settings.enable_country_selector -%}
+                  <div>
+                    <h2 class="visually-hidden" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                    <localization-form>
+                      {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
+                        {%- render 'country-localization', localPosition: 'FooterCountry', alignment: section.settings.horizontal_alignment, vertical_alignment: 'bottom', button_class: 'caption-xs' -%}
+                      {%- endform -%}
+                    </localization-form>
+                  </div>
+                {%- endif -%}
+                {%- if localization.available_languages.size > 1 and block.settings.enable_language_selector  -%}
+                  <div>
+                    <h2 class="visually-hidden" id="FooterLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+                    <localization-form>
+                      {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
+                        {%- render 'language-localization', localPosition: 'FooterLanguage', alignment: section.settings.horizontal_alignment, vertical_alignment: 'bottom', button_class: 'caption-xs' -%}
+                      {%- endform -%}
+                    </localization-form>
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- when 'link_list' -%}
+              {%- if block.settings.menu != blank -%}
+                <ul class="bottom-bar__item bottom-bar__item--{{ block.settings.block_size }} bottom-bar__item--menu bottom-bar__item--{{ block.settings.horizontal_alignment }} list-unstyled" {{ block.shopify_attributes }}>
+                  {%- for link in block.settings.menu.links -%}
+                    <li>
+                      <a href="{{ link.url }}" class="bottom-bar__menu-item footer__menu-item caption justify-{{ block.settings.horizontal_alignment }} link-hover-underline">
+                        <span class="bottom-bar__item-text">{{ link.title }}</span>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            {%- when 'payment_types' -%}
+              {%- if shop.enabled_payment_types.size > 0 -%}
+                <div
+                  class="bottom-bar__item bottom-bar__item--{{ block.settings.block_size }} bottom-bar__item--payment-types bottom-bar__item--{{ block.settings.horizontal_alignment }} "
+                  style="--horizontal-alignment: {{ block.settings.horizontal_alignment }};"
+                  {{ block.shopify_attributes }}
+                >
+                  {%- for type in shop.enabled_payment_types -%}
+                    {{- type | payment_type_svg_tag -}}
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            {%- when 'policy_links' -%}
+              <ul class="bottom-bar__item bottom-bar__item--{{ block.settings.block_size }} bottom-bar__item--menu bottom-bar__item--{{ block.settings.horizontal_alignment }} list-unstyled" {{ block.shopify_attributes }}>
+                {%- for policy in shop.policies -%}
+                  <li>
+                    <a href="{{ policy.url }}" class="bottom-bar__menu-item footer__menu-item caption justify-{{ block.settings.horizontal_alignment }} link-hover-underline">
+                      <span class="bottom-bar__item-text">{{ policy.title | escape }}</span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- when 'copyright' -%}
+              <div
+                class="bottom-bar__item bottom-bar__item--{{ block.settings.block_size }} bottom-bar__item--{{ block.settings.horizontal_alignment }} caption list-separator list-separator--text"
+                {{ block.shopify_attributes }}
+              >
+                <span class="bottom-bar__item-text list-separator__item">© {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+                <span class="bottom-bar__item-text list-separator__item powered-by-shopify">{{ powered_by_link }}</span>
+              </div>
+            {%- when 'spacer' -%}
+              <div aria-hidden="true" class="hidden md:block"></div>
+           {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:bottom-bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "t:show-borders",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "vertical_spacing",
+      "options": [
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-xs)",
+      "label": "t:gap-between-rows"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-xs)",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-xs)",
+      "label": "t:bottom-padding"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "localization",
+      "name": "t:countryregion-selector",
+      "settings": [
+        {
+          "type": "select",
+          "id": "block_size",
+          "label": "t:block-size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:small"
+            },
+            {
+              "value": "large",
+              "label": "t:large"
+            },
+            {
+              "value": "full-width",
+              "label": "t:full-width"
+            }
+          ],
+          "default": "small"
+        },
+        {
+          "type": "select",
+          "id": "horizontal_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:left"
+            },
+            {
+              "value": "center",
+              "label": "t:center"
+            },
+            {
+              "value": "right",
+              "label": "t:right"
+            }
+          ],
+          "default": "left",
+          "label": "t:horizontal-alignment"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_country_selector",
+          "default": true,
+          "label": "t:enable-country-selector"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_language_selector",
+          "default": true,
+          "label": "t:enable-language-selector"
+        }
+      ]
+    },
+    {
+      "type": "payment_types",
+      "name": "t:payment-types",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "block_size",
+          "label": "t:block-size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:small"
+            },
+            {
+              "value": "large",
+              "label": "t:large"
+            },
+            {
+              "value": "full-width",
+              "label": "t:full-width"
+            }
+          ],
+          "default": "small"
+        },
+        {
+          "type": "select",
+          "id": "horizontal_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:left"
+            },
+            {
+              "value": "center",
+              "label": "t:center"
+            },
+            {
+              "value": "right",
+              "label": "t:right"
+            }
+          ],
+          "default": "left",
+          "label": "t:horizontal-alignment"
+        }
+      ]
+    },
+    {
+      "type": "policy_links",
+      "name": "t:policy-links",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "block_size",
+          "label": "t:block-size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:small"
+            },
+            {
+              "value": "large",
+              "label": "t:large"
+            },
+            {
+              "value": "full-width",
+              "label": "t:full-width"
+            }
+          ],
+          "default": "small"
+        },
+        {
+          "type": "select",
+          "id": "horizontal_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:left"
+            },
+            {
+              "value": "center",
+              "label": "t:center"
+            },
+            {
+              "value": "right",
+              "label": "t:right"
+            }
+          ],
+          "default": "left",
+          "label": "t:horizontal-alignment"
+        }
+      ]
+    },
+    {
+      "type": "copyright",
+      "name": "t:copyright",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "block_size",
+          "label": "t:block-size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:small"
+            },
+            {
+              "value": "large",
+              "label": "t:large"
+            },
+            {
+              "value": "full-width",
+              "label": "t:full-width"
+            }
+          ],
+          "default": "small"
+        },
+        {
+          "type": "select",
+          "id": "horizontal_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:left"
+            },
+            {
+              "value": "center",
+              "label": "t:center"
+            },
+            {
+              "value": "right",
+              "label": "t:right"
+            }
+          ],
+          "default": "left",
+          "label": "t:horizontal-alignment"
+        }
+      ]
+    },
+    {
+      "type": "link_list",
+      "name": "t:menu",
+      "settings": [
+        {
+          "type": "select",
+          "id": "block_size",
+          "label": "t:block-size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:small"
+            },
+            {
+              "value": "large",
+              "label": "t:large"
+            },
+            {
+              "value": "full-width",
+              "label": "t:full-width"
+            }
+          ],
+          "default": "small"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "t:menu",
+          "default": "footer"
+        },
+        {
+          "type": "select",
+          "id": "horizontal_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:left"
+            },
+            {
+              "value": "center",
+              "label": "t:center"
+            },
+            {
+              "value": "right",
+              "label": "t:right"
+            }
+          ],
+          "default": "left",
+          "label": "t:horizontal-alignment"
+        }
+      ]
+    },
+    {
+      "type": "spacer",
+      "name": "t:spacer"
+    }
+  ]
+}
+{% endschema %}

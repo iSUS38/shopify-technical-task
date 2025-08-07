@@ -1,0 +1,78 @@
+
+<quick-add-button class="hotspots__hotspot {% if block.settings.horizontal_position > 50 %}hotspots__wrapper--left{% else %}hotspots__wrapper--right{% endif %} {% if section.settings.mobile_image%}{% if block.settings.mobile_horizontal_position > 50 %}hotspots__wrapper--mobile-left{% else %}hotspots__wrapper--mobile-right{% endif %}{% endif %}" data-url="{{ block.settings.product.url }}"  style="--horizontal-position: {{ block.settings.horizontal_position }}%; --vertical-position: {{ block.settings.vertical_position }}%; {% if section.settings.mobile_image %}--mobile-horizontal-position: {{ block.settings.mobile_horizontal_position }}%; --mobile-vertical-position: {{ block.settings.mobile_vertical_position }}%;{% endif %}" {{ block.shopify_attributes }}>
+  <button class="hotspots__button">
+    <span class="hotspots__hotspot-circle toggletip__button"></span>
+    {% if block.settings.product.title %}
+      <span class="hotspots__label caption caption-xs">
+        {{ block.settings.product.title }}
+      </span>
+    {% endif %}
+  </button>
+</quick-add-button>
+
+{% schema %}
+{
+  "name": "t:product-hotspot",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:product"
+    },
+    {
+      "type": "header",
+      "content": "t:desktop"
+    },
+    {
+      "type": "range",
+      "id": "horizontal_position",
+      "label": "t:horizontal-position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "vertical_position",
+      "label": "t:vertical-position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "t:mobile"
+    },
+    {
+      "type": "range",
+      "id": "mobile_horizontal_position",
+      "label": "t:horizontal-position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "mobile_vertical_position",
+      "label": "t:vertical-position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "%"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:product-hotspot"
+    }
+  ]
+}
+{% endschema %}

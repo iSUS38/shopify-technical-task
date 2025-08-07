@@ -1,0 +1,46 @@
+{% liquid
+assign heading_level = 'h2'
+if block.settings.page_title == true
+  assign heading_level = 'h1'
+endif
+-%}
+
+<{{ heading_level }} {{ block.shopify_attributes }} class="rich-text__heading-group heading-group media-banner__pointer">
+  {% content_for 'blocks' %}
+</{{  heading_level }}>
+
+{% schema %}
+{
+  "name": "t:heading",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_heading"
+    },
+    {
+      "type": "_subheading"
+    }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "page_title",
+      "label": "t:set-as-page-title",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:heading",
+      "blocks": [
+        {
+          "type": "_subheading"
+        },
+        {
+          "type": "_heading"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,28 @@
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'lazy'
+  if section.index == 1 and section.location != 'footer'
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+-%}
+<div class="before-after__{{ position }}" {{ block.shopify_attributes }}>
+  {%- if block.settings.image -%}
+    <div>
+      {%- assign sizes = '100vw' -%}
+      {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+      {{
+        block.settings.image
+        | image_url: width: 2200
+        | image_tag: sizes: sizes, widths: widths, fetchpriority: fetch_priority, class: 'before-after__media', loading: loading
+      }}
+    </div>
+  {%- else -%}
+    <div class="media-wrapper--placeholder before-after__media">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {%- endif -%}
+  <span class="before-after__label before-after__label--{{ position }}  before-after__label--{{ section.settings.vertical_alignment }} list-separator--{{ section.settings.badges_style }} caption-xs">
+    <span class="list-separator__item">{{  block.settings.label }}</span>
+  </span>
+</div>

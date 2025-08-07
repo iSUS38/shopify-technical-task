@@ -1,0 +1,23 @@
+{%- liquid
+  assign color_scheme = settings.color_schemes[scoped_settings.color_scheme.id]
+  assign color_scheme_transition = settings.color_schemes[scoped_settings.color_scheme_transition.id]
+
+  assign color_scheme_background = color_scheme.settings.background
+  if color_scheme.settings.background_gradient != empty
+    assign color_scheme_background = color_scheme.settings.background_gradient
+  endif
+
+  assign color_scheme_transition_background = color_scheme_transition.settings.background
+  if color_scheme_transition.settings.background_gradient != empty
+    assign color_scheme_transition_background = color_scheme_transition.settings.background_gradient
+  endif
+-%}
+
+
+class="{{ class }} {% if scoped_settings.enable_color_scheme_transition %} scroll-trigger animate--color-scheme{% endif %} {% if borders %}{% if scoped_settings.show_top_border %}border--top{% endif %} {% if scoped_settings.show_bottom_border%}border--bottom{% endif %}{% endif %}"
+data-color-scheme="{{ scoped_settings.color_scheme }}"
+{% if scoped_settings.enable_color_scheme_transition %}
+  data-color-scheme-original="{{ scoped_settings.color_scheme }}"
+  data-color-scheme-transition="{{ color_scheme_transition }}"
+  style="--color-background-transition: {{ color_scheme_transition_background }};--color-background: {{ color_scheme_background }};"
+{% endif %}

@@ -1,0 +1,32 @@
+{%- liquid
+  if button_link == nil
+    assign button_link = settings.button_link
+  endif
+
+  if button_style == nil
+    assign button_style = settings.button_style
+  endif
+
+  if button_label == nil
+    assign button_label = settings.button_label
+  endif
+-%}
+
+{%  if button_label != blank %}
+  {%- if button_style == 'text' -%}
+    {%- render 'text-button', label: button_label, url: button_link, block: block -%}
+  {%- else -%}
+    <a
+      {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+      {% if button_link == blank %}
+        role="link" aria-disabled="true"
+      {% else %}
+        href="{{ button_link }}"
+      {% endif %}
+      class="button button--{{ button_style }}"
+      {{ block.shopify_attributes }}
+    >
+      {{- button_label | escape -}}
+    </a>
+  {%- endif -%}
+{% endif %}

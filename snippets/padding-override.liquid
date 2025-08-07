@@ -1,0 +1,1 @@
+{% if settings.padding_top != 'default' %}--padding-top-{% if scope %}{{ scope }}-{%endif %}override: {{ settings.padding_top }};{% endif %}{% if settings.padding_bottom != 'default' %}--padding-bottom-{% if scope %}{{ scope }}-{%endif %}override: {{ settings.padding_bottom }}{% endif %}

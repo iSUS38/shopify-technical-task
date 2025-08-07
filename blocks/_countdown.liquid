@@ -1,0 +1,145 @@
+{% liquid
+  render 'countdown' with settings: block.settings, horizontal_alignment: 'center', global_settings: settings
+%}
+
+{% schema %}
+{
+  "name": "t:countdown-timer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "date",
+      "label": "t:end-date-and-time",
+      "info": "t:format-yyyy-mm-dd-hhmm-uses-store-time-zone-defined"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_section",
+      "label": "t:hide-section-when-timer-ends",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:visual"
+    },
+    {
+      "type": "select",
+      "id": "font_style",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "heading h1",
+      "label": "t:font-style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:background-opacity",
+      "default": 45,
+      "info": "t:applies-to-solid-background-colors-only-for-gradients-apply-opacity"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_blur",
+      "label": "t:enable-background-blur",
+      "default": true,
+      "info": "t:applies-to-background-gradients-with-transparency"
+    },
+    {
+      "type": "header",
+      "content": "t:accessibility"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_description",
+      "label": "t:description",
+      "info": "t:brief-description-of-countdown-event-eg-sample-sale-10percent-off",
+      "default": "t:countdown-timer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:countdown-timer"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,104 @@
+{%- liquid
+  assign title_tag = 'h1'
+  assign product = section.settings.product | default: product
+
+  if section.settings.product
+    assign title_tag = 'h2'
+  endif
+-%}
+
+{%- case block.settings.heading_size -%}
+  {%- when 'h1', 'h2', 'h3' -%}
+    {%- assign icon_class = 'icon--l' -%}
+  {%- when 'h4', 'h5', 'h6' -%}
+    {%- assign icon_class = 'icon--m' -%}
+{%- endcase %}
+
+{%- capture share -%}
+  {%- if block.settings.enable_share -%}
+    <script src="{{ 'share.js' | asset_url }}" defer="defer"></script>
+    <share-button class="share-button" data-share-url="{{ product.selected_variant.url | default: product.url | prepend: request.origin }}">
+      <button tabindex="0" type="button" class="button product-info__share-button share-button__button" data-copied>
+        <span class="visually-hidden">{{ 'share.copy_to_clipboard' | t }}</span>
+        {%- render 'icon' with 'link', class: icon_class -%}
+      </button>
+      <div class="share-button__tooltip" data-color-scheme="{{ block.settings.share_color_scheme }}">
+        {{ 'share.success_message' | t }}
+        {%- render 'icon' with 'check', class: 'icon--xs' -%}
+      </div>
+    </share-button>
+  {%- endif -%}
+{% endcapture %}
+
+<div data-share class="product-info__heading-wrapper product-info__heading-wrapper--{{ section.settings.horizontal_alignment }}" {{ block.shopify_attributes }} id="title-{{ section.id }}-{{ product.id }}">
+
+  <{{ title_tag }} class="product-info__heading heading {{ block.settings.heading_size }}">
+    {{- product.title | escape -}}
+  </{{ title_tag }}>
+
+  <a href="{{ product.url }}" class="product-info__heading-link">
+    <{{ title_tag }} class="heading {{ block.settings.heading_size }}">
+      {{- product.title | escape -}}
+    </{{ title_tag }}>
+  </a>
+
+  {{ share }}
+</div>
+
+{% schema %}
+{
+  "name": "t:title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:heading-1"
+        },
+        {
+          "value": "h2",
+          "label": "t:heading-2"
+        },
+        {
+          "value": "h3",
+          "label": "t:heading-3"
+        },
+        {
+          "value": "h4",
+          "label": "t:heading-4"
+        },
+        {
+          "value": "h5",
+          "label": "t:heading-5"
+        },
+        {
+          "value": "h6",
+          "label": "t:heading-6"
+        }
+      ],
+      "default": "h2",
+      "label": "t:heading-size"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_share",
+      "label": "t:enable-share-icon",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "share_color_scheme",
+      "label": "t:share-color-scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:title"
+    }
+  ]
+}
+{% endschema %}

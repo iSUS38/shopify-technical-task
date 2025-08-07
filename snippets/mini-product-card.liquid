@@ -1,0 +1,63 @@
+{% liquid
+  assign product = card_product | default: scoped_settings.product
+  assign color_scheme = scoped_settings.color_scheme
+  assign image_size = override_settings.product_image_width | default: settings.product_block_card_image_width | times: 1.0 | divided_by: 16 | append: 'rem'
+
+  assign image_ratio_setting = settings.product_block_card_image_ratio
+  if image_ratio_setting == nil or image_ratio_setting == 'default'
+    assign image_ratio = product.featured_media.aspect_ratio | default: 1
+  else
+    assign image_ratio = settings.product_block_card_image_ratio | default: 1
+  endif
+
+  assign title_style =  override_settings.font_style_title | default: settings.product_block_title_font_style
+  assign price_style =  override_settings.font_style_price | default: settings.product_block_price_font_style
+%}
+
+<div
+  class="
+    mini-product mini-product--card alignment--middle left expand-link
+    {% if settings.product_block_card_show_borders %}mini-product--border{% endif %}
+    {% if scoped_settings.color_scheme != section.settings.color_scheme %}mini-product--highlighted{% endif %}
+    {% if settings.product_block_card_enable_blur %}blur{% endif %}
+  "
+  {% if color_scheme %}data-color-scheme="{{ color_scheme }}"{% endif %}
+>
+  {%- if product != blank -%}
+    {%- if product.featured_media != blank -%}
+      {%- assign widths = '100, 150, 200, 250, 300, 400, 600, 800' -%}
+      <div
+        class="mini-product__image-wrapper image-ratio self-stretch"
+        style="--image-ratio: {{ image_ratio }}; --image-max-width: {{ image_size }};
+      ">
+        {{ product.featured_media | image_url: width: 800 | image_tag: class: 'mini-product__image', sizes: image_size, width: widths }}
+      </div>
+    {%- endif -%}
+    <div class="mini-product__content">
+      <h3 class="mini-product__title {{ title_style }}" id="title-{{ section.id }}-{{ product.id }}">
+        <a href="{{ product.url }}" class="expand-link__link link-unstyled">
+          {{- product.title -}}
+        </a>
+      </h3>
+      {%- render 'price', product: product, font_style: price_style, horizontal_alignment: 'left' -%}
+      {% if scoped_settings.text %}
+        <div class="mini-product__text {{ scoped_settings.font_style_text }}">
+          {{ scoped_settings.text }}
+        </div>
+      {% endif %}
+    </div>
+    {% render 'quick-add', product: product, section_id: section_id, button_style: settings.product_block_card_button_style, classes: 'mini-product__quick-add' %}
+  {%- else -%}
+    <div class="mini-product__image-wrapper image-ratio self-stretch"
+    style="background-color: rgba(var(--color-foreground), 0.2); --image-ratio: {{ image_ratio }}; --image-max-width: {{ image_size }};
+    ">
+      {{- 'product-1' | placeholder_svg_tag: 'mini-product__placeholder' -}}
+    </div>
+    <div class="mini-product__content">
+      <h3 class="{{ title_style }}" id="title-{{ section.id }}-{{ product.id }}">
+        <span>Mini product</span>
+      </h3>
+      {%- render 'price', product: product, font_style: price_style, horizontal_alignment: 'left' -%}
+    </div>
+  {%- endif -%}
+</div>

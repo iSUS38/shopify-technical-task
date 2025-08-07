@@ -1,0 +1,57 @@
+<li
+  class="slider-component__item"
+  id="Slide-{{ section.id }}-{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="rte rich-text__padding-text {{ section.settings.alignment_columns }} justify-{{ section.settings.alignment_columns }}">
+    {%- content_for 'blocks' -%}
+  </div>
+</li>
+
+{% schema %}
+{
+  "name": "t:column",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_icon"
+    },
+    {
+      "type": "image"
+    },
+    {
+      "type": "_single-heading"
+    },
+    {
+      "type": "text"
+    },
+    {
+      "type": "button-group"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:column",
+      "blocks": [
+        {
+          "type": "_single-heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button-group",
+          "blocks": [
+            {
+              "type": "_button",
+              "settings": {
+                "button_style": "text"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

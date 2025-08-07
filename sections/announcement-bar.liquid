@@ -1,0 +1,400 @@
+<script src="{{ 'announcement-bar.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign has_locales = false
+  if section.blocks.size > 0
+    assign show_announcement_bar = true
+  endif
+  if section.settings.enable_country_selector and localization.available_countries.size > 1
+    assign show_announcement_bar = true
+    assign has_locales = true
+  endif
+  if section.settings.enable_language_selector and localization.available_languages.size > 1
+    assign show_announcement_bar = true
+    assign has_locales = true
+  endif
+
+  assign animation_style = section.settings.animation_style
+-%}
+
+
+{% if show_announcement_bar %}
+  <div {% render 'color-scheme-attributes' with scoped_settings: section.settings %}>
+    <announcement-bar class="announcement-bar {% if section.settings.show_borders %}border--bottom{% endif %} {% if has_locales %}announcement-bar--locales{% endif %}" style="{% render 'padding-override' with settings: section.settings %}">
+      <div class="announcement-bar__grid items-center container container--xl">
+        {%- if section.blocks.size > 1 -%}
+          <div class="announcement-bar__announcements announcement-bar__announcements--multiple">
+            <slideshow-component class="slideshow announcement-bar__slideshow" data-animation-style="{{ animation_style }}">
+              <div class="announcement-bar__slider-wrapper">
+                <button
+                  type="button"
+                  class="pagination__item pagination__item--prev button button--text button--square"
+                  name="previous"
+                  aria-controls="Slider-{{ section.id }}"
+                  data-direction="previous"
+                >
+                  <span class="visually-hidden">{{ 'sections.slider.previous_slide' | t }}</span>
+                  {%- render 'icon' with 'caret-left', class: 'icon--s' -%}
+                </button>
+                <div
+                  id="Slider-{{ section.id }}"
+                  class="announcement-bar__slider padding--section slider--generic"
+                  data-looping="true"
+                  data-slider-autoplay="{{ section.settings.enable_autoplay }}"
+                  data-speed="{{ section.settings.autoplay_speed }}"
+                >
+                  {%- for block in section.blocks -%}
+                    <div
+                      id="Slide-{{ section.id }}-{{ forloop.index }}"
+                      class="slideshow__slide"
+                      role="group"
+                      aria-label="{{ forloop.index }} of {{ section.blocks.size }} slides"
+                      tabindex="-1"
+                      {%  if animation_style == "fade" and forloop.index > 1 %}aria-hidden="true"{% endif %}
+                      {{ block.shopify_attributes }}
+                    >
+                      <div class="announcement-bar__text {{ block.settings.font_style }}">{{ block.settings.text }}</div>
+                    </div>
+                  {%- endfor -%}
+                </div>
+                <button
+                  type="button"
+                  class="pagination__item pagination__item--next button button--text button--square"
+                  name="next"
+                  data-direction="next"
+                  aria-controls="Slider-{{ section.id }}"
+                >
+                  <span class="visually-hidden">{{ 'sections.slider.next_slide' | t }}</span>
+                  {%- render 'icon' with 'caret-right', class: 'icon--s' -%}
+                </button>
+                <div class="visually-hidden slider-counter">
+                  <span class="slider-counter--current">1</span>
+                  <span aria-hidden="true"> / </span>
+                  <span class="visually-hidden">{{ 'sections.slider.of' | t }}</span>
+                  <span class="slider-counter--total">{{ section.blocks.size}}</span>
+                </div>
+              </div>
+            </slideshow-component>
+          </div>
+        {%- elsif section.blocks.size == 1 -%}
+          <div class="announcement-bar__announcements announcement-bar__announcements--single padding--section">
+            <div class="announcement-bar__text {{section.blocks.first.settings.font_style }}">{{ section.blocks.first.settings.text }}</div>
+          </div>
+        {%- endif -%}
+        {% if has_locales %}
+          <div class="announcement-bar__localization-wrapper padding--section">
+            {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+              <localization-form>
+                {%- form 'localization', id: 'AnnouncementCountryForm', class: 'localization-form' -%}
+                  <div>
+                    <h2 class="visually-hidden" id="AnnouncementCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                    {%- render 'country-localization', localPosition: 'AnnouncementCountry', alignment: 'right' -%}
+                  </div>
+                {%- endform -%}
+              </localization-form>
+            {%- endif -%}
+            {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+              <localization-form>
+                {%- form 'localization', id: 'AnnouncementLanguageForm', class: 'localization-form' -%}
+                  <div>
+                    <h2 class="visually-hidden" id="AnnouncementLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+                    {%- render 'language-localization', localPosition: 'AnnouncementLanguage', alignment: 'right' -%}
+                  </div>
+                {%- endform -%}
+              </localization-form>
+            {%- endif -%}
+          </div>
+        {% endif %}
+      </div>
+    </announcement-bar>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:announcement-bar",
+  "max_blocks": 12,
+  "class": "announcement-bar-section",
+  "enabled_on": {
+    "groups": [
+      "header"
+    ]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "t:enable-autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 4,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s",
+      "label": "t:autoplay-speed"
+    },
+    {
+      "type": "select",
+      "id": "animation_style",
+      "label": "t:animation-style",
+      "options": [
+        {
+          "value": "fade",
+          "label": "t:fade"
+        },
+        {
+          "value": "slide",
+          "label": "t:slide"
+        }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "default": false,
+      "label": "t:enable-country-selector"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "default": false,
+      "label": "t:enable-language-selector"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "t:show-borders",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "t:text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "t:use-this-text-to-share-information-about-your-brand-collections",
+          "label": "t:text"
+        },
+        {
+          "type": "select",
+          "id": "font_style",
+          "options": [
+            {
+              "value": "heading h1",
+              "label": "t:heading-1",
+              "group": "Heading"
+            },
+            {
+              "value": "heading h2",
+              "label": "t:heading-2",
+              "group": "Heading"
+            },
+            {
+              "value": "heading h3",
+              "label": "t:heading-3",
+              "group": "Heading"
+            },
+            {
+              "value": "heading h4",
+              "label": "t:heading-4",
+              "group": "Heading"
+            },
+            {
+              "value": "heading h5",
+              "label": "t:heading-5",
+              "group": "Heading"
+            },
+            {
+              "value": "heading h6",
+              "label": "t:heading-6",
+              "group": "Heading"
+            },
+            {
+              "value": "subheading",
+              "label": "t:subheading",
+              "group": "Heading"
+            },
+            {
+              "value": "caption",
+              "label": "t:caption",
+              "group": "Caption"
+            },
+            {
+              "value": "caption-xs",
+              "label": "t:xsmall-caption",
+              "group": "Caption"
+            },
+            {
+              "value": "body text-xl",
+              "label": "t:xlarge-body",
+              "group": "Body"
+            },
+            {
+              "value": "body text-l",
+              "label": "t:large-body",
+              "group": "Body"
+            },
+            {
+              "value": "body",
+              "label": "t:body",
+              "group": "Body"
+            },
+            {
+              "value": "body text-s",
+              "label": "t:small-body",
+              "group": "Body"
+            },
+            {
+              "value": "body text-xs",
+              "label": "t:xsmall-body",
+              "group": "Body"
+            }
+          ],
+          "default": "body",
+          "label": "t:font-style"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:announcement-bar",
+      "settings": {
+        "padding_top": "var(--space-3xs)",
+        "padding_bottom": "var(--space-3xs)"
+      },
+      "blocks": [
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

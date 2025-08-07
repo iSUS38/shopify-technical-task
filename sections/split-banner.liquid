@@ -1,0 +1,93 @@
+<div class="content-blocks container--full {% if section.settings.show_top_border %}border--top{% endif %} {% if section.settings.show_bottom_border %}border--bottom{% endif %} {% if section.settings.show_block_borders %}content-blocks--border{% endif %}" {% if section.settings.enable_transparent_header %}data-support-transparent-header{% endif %}>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "t:split-banner",
+  "tag": "section",
+  "max_blocks": 2,
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "_block-rich-text"
+    },
+    {
+      "type": "_image-banner"
+    },
+    {
+      "type": "_shoppable-banner"
+    },
+    {
+      "type": "_video-banner"
+    },
+    {
+      "type": "_product-banner"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_block_borders",
+      "label": "t:show-divider-border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:transparent-header"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent_header",
+      "label": "t:enable-transparent-header",
+      "default": false,
+      "info": "t:only-applies-when-transparent-header-is-also-enabled-in-the"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:split-banner",
+      "blocks": [
+        {
+          "type": "_video-banner",
+          "settings": {
+            "color_scheme": "scheme-2"
+          }
+        },
+        {
+          "type": "_shoppable-banner",
+          "blocks": [
+            {
+              "type": "mini-product"
+            },
+            {
+              "type": "mini-product"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,51 @@
+<div class="rich-text__buttons button-group justify-{{ block.settings.horizontal_alignment }} media-banner__pointer" {{  block.shopify_attributes }}>
+  {%- content_for 'blocks' -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:buttons",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_button"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "t:default"
+        },
+        {
+          "value": "left",
+          "label": "t:left"
+        },
+        {
+          "value": "center",
+          "label": "t:center"
+        },
+        {
+          "value": "right",
+          "label": "t:right"
+        }
+      ],
+      "default": "inherit",
+      "label": "t:horizontal-alignment"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:buttons",
+      "blocks": [
+        {
+          "type": "_button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

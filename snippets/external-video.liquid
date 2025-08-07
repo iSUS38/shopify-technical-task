@@ -1,0 +1,68 @@
+{%- assign alt = 'sections.video.load_video' | t: description: media.alt | escape -%}
+{%- assign muted = muted | default: true -%}
+{%- assign alignment = alignment | default: 'middle-center' -%}
+{%- assign controls = controls | default: false -%}
+{%- assign sizes = sizes | default: '100vw' -%}
+{%- assign description_class = 'button button--' | append: button_style -%}
+{%- assign host = 'youtube' -%}
+{% if media contains 'vimeo.com' %}
+  {%- assign host = 'vimeo' -%}
+{% endif %}
+
+<div class="external-video">
+  <external-media
+    class="deferred-media card-border-radius {% if class %} {{ class }}{% endif %}"
+    style="--aspect-ratio: {{ poster.aspect_ratio | default: 1.7778 }};"
+    data-autoplay="{{ autoplay }}"
+    data-host="{{ host }}"
+    {{ block.shopify_attributes }}
+  >
+    {% assign media_class = class | append: ' deferred-media__poster' %}
+    {%- if poster != null -%}
+      {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+      {{
+        poster
+        | image_url: width: 2200
+        | image_tag: sizes: sizes, widths: widths, fetchpriority: fetch_priority, alt: "", class: media_class
+      }}
+    {% else %}
+      <div class="flex items-center {{ media_class }}" style="background-color: rgb(var(--color-foreground), 0.2)">
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {%- endif -%}
+
+    <template>
+      {% assign video_class = 'iframe-video' %}
+      {%- if host == 'youtube' -%}
+        <iframe class="{{ video_class }}" src="https://www.youtube.com/embed/{{ media.id }}?playsinline=1&{% if autoplay %}&mute=1&loop=1&{% endif %}playlist={{ media.id }}&enablejsapi=1&rel=0&modestbranding=1&origin={{ 'https://' | append: request.host | url_encode }}&controls=1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen"></iframe>
+      {%- else -%}
+        <iframe class="{{ video_class }}" src="https://player.vimeo.com/video/{{ media.id }}?autopause=1&{% if autoplay %}&loop=1&muted=1&{% endif %}transparent=0&responsive=1&portrait=0&title=0&byline=0" allow="autoplay; encrypted-media;" allowfullscreen="allowfullscreen"></iframe>
+      {%- endif -%}
+    </template>
+
+    <div class="deferred-media__controls deferred-media__button-wrapper alignment--{{ alignment }}">
+      {% # theme-check-disable UnusedAssign %}
+      {%- assign pause_text = 'sections.video.pause_video' | t: description: description | escape -%}
+      {%- assign play_text = 'sections.video.play_video' | t: description: description | escape -%}
+      {%- assign class = 'deferred-media__button deferred-media__play-pause button button--' | append: button_style -%}
+      {% # theme-check-enable UnusedAssign %}
+      {%- render 'play-pause-button' with pause_text: pause_text, play_text: play_text, class: class -%}
+      <button
+        class="deferred-media__button button button--square button--{{ button_style }} deferred-media__loader"
+        id="Deferred-Media-Poster-{{ media.id }}"
+        type="button"
+        aria-label="{{ alt }}"
+      >
+        {%- render 'icon' with 'play', class: 'deferred-media__icon icon-m' -%}
+      </button>
+      {% if alignment != 'middle-center' %}
+        {%- render 'video-description', class: description_class, media: media, description: description -%}
+      {% endif %}
+    </div>
+    {% if alignment == 'middle-center' and settings.enable_video_descriptions %}
+      <div class="deferred-media__controls deferred-media__button-wrapper alignment--bottom-left">
+        {%- render 'video-description', class: description_class, media: media, description: description -%}
+      </div>
+    {% endif %}
+  </external-media>
+</div>

@@ -1,0 +1,54 @@
+{%- comment -%}
+  Renders the language picker for the localization form
+
+  Accepts:
+    - localPosition: pass in the position in which the form is coming up to create specific IDs
+    - alignment: string to align the disclosure list field
+{%- endcomment -%}
+
+<div class="disclosure disclosure--{{ vertical_alignment }}">
+  <button
+    type="button"
+    class="disclosure__button disclosure__button--{{ alignment }}  localization-form__select localization-selector"
+    aria-expanded="false"
+    aria-controls="{{ localPosition }}-language-results"
+    aria-describedby="{{ localPosition }}Label"
+    tabindex="0"
+  >
+    <span class="caption {{ button_class }}">{{ localization.language.endonym_name | capitalize }}</span>
+    {%- render 'icon' with 'caret-down', class: 'icon--xs' -%}
+  </button>
+  <div class="disclosure__list-wrapper disclosure__list-wrapper--{{ alignment }} localization-form__list-wrapper localization-form__list-wrapper--language">
+    {%- render 'loading-spinner', class: 'opacity localization-form__loading-spinner' -%}
+    <div id="{{ localPosition }}-language-search-results" class="visually-hidden" aria-live="polite" data-live-region></div>
+    <div
+      class="localization-form__list disclosure__list"
+      id="{{ localPosition }}-language-results"
+    >
+      <ul role="list" class="list-unstyled">
+        {%- for language in localization.available_languages -%}
+          <li class="disclosure__item" tabindex="-1">
+            <a
+              class="disclosure__link disclosure__selectable caption"
+              href="#"
+              hreflang="{{ language.iso_code }}"
+              lang="{{ language.iso_code }}"
+              {% if language.iso_code == localization.language.iso_code %}
+                aria-current="true"
+              {% endif %}
+              data-value="{{ language.iso_code }}"
+              data-display="{{ language.endonym_name | capitalize }}"
+            >
+              <span>
+                {{ language.endonym_name | capitalize }}
+              </span>
+              {%- render 'icon' with 'check', class: 'icon--xs' -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  <div class="localization-form__overlay" data-overlay="true"></div>
+</div>
+<input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">

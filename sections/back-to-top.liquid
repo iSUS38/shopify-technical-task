@@ -1,0 +1,61 @@
+<script src="{{ 'back-to-top.js' | asset_url }}" defer="defer"></script>
+
+<back-to-top class="back-to-top back-to-top--{{ section.settings.position }}" data-color-scheme="{{  section.settings.color_scheme }}">
+  <a href="#PageBody" class="back-to-top__button button button--square button--{{ section.settings.button_style }}">
+    {%- render 'icon' with 'caret-down', class: 'icon--l' -%}
+    <span class="visually-hidden">{{ 'accessibility.back_to_top' | t }}</span>
+  </a>
+</back-to-top>
+
+
+{% schema %}
+{
+  "name": "t:back-to-top",
+  "class": "back-to-top-section",
+  "enabled_on": {
+    "groups": [
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "position",
+      "label": "t:position",
+      "default": "right",
+      "options": [
+        {
+          "value": "right",
+          "label": "t:bottom-right"
+        },
+        {
+          "value": "left",
+          "label": "t:bottom-left"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:button-style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:secondary"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

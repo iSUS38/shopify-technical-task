@@ -1,0 +1,258 @@
+{{ 'giftcard.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+  <div class="container container--xs gap--section padding--section" style="{% render 'padding-override' with settings: section.settings %}">
+    {% if section.settings.image %}
+      <div class="gift-card__image-wrapper card-border-radius">
+        {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+        {%- capture sizes -%}45ch{%- endcapture -%}
+        {{
+          section.settings.image
+          | image_url: width: 2200
+          | image_tag: sizes: sizes, widths: widths, loading: 'eager'
+        }}
+      </div>
+    {% endif %}
+
+    <div class="rte rte--loose">
+      <h1>
+        {{ 'gift_cards.issued.title' | t }}
+      </h1>
+      <p class="secondary caption">
+        {% if settings.currency_code_enabled %}
+          {{ gift_card.balance | money_with_currency }}
+        {% else %}
+          {{ gift_card.balance | money }}
+        {% endif %}
+      </p>
+      {%- if gift_card.enabled == false or gift_card.expired -%}
+        <p class="badge badge--expired">{{ 'gift_cards.issued.expired' | t }}</p>
+      {%- endif -%}
+      {% if gift_card.expires_on %}
+        {%- assign gift_card_expiration_date = gift_card.expires_on | date: '%B %e, %Y' -%}
+        <p class="gift-card__text">
+          {{ 'gift_cards.issued.expiration_date' | t: expires_on: gift_card_expiration_date }}
+        </p>
+      {% endif %}
+      <p class="gift-card__text">{{ 'gift_cards.issued.how_to_use_gift_card' | t }}</p>
+
+      <div class="gift-card__qr-code" data-identifier="{{ gift_card.qr_identifier }}"></div>
+      {%- if gift_card.pass_url -%}
+        <div>
+          <a href="{{ gift_card.pass_url }}" class="gift_card__apple-wallet no-print">
+            <img
+              src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
+              width="120"
+              height="40"
+              alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}"
+              loading="lazy"
+            >
+          </a>
+        </div>
+      {%- endif -%}
+      <div class="field">
+        <label for="gift-card-code" class="visually-hidden">{{ 'gift_cards.issued.gift_card_code' | t }}</label>
+        <input id="gift-card-code" class="gift-card__field field__input" type="text" value="{{ gift_card.code | format_code }}">
+        <div class="gift-card__copy-wrapper share__button">
+          <button class="gift-card__copy-button share-button__button no-print" data-copy="{{ gift_card.code | format_code }}">
+            {% render 'icon' with 'copy', class: 'icon--s' %}
+            <span class="visually-hidden">{{ 'gift_cards.issued.copy_code' | t }}</span>
+          </button>
+          <div class="share-button__tooltip text-s" data-color-scheme="{{ section.settings.color_scheme }}">
+            {{ 'share.success_message' | t }}
+            {%- render 'icon' with 'check', class: 'icon--xs' -%}
+          </div>
+        </div>
+      </div>
+      <div class="gift-card__buttons no-print">
+        <button
+          class="button button--primary"
+          onclick="window.print()"
+        >
+          {{ 'gift_cards.issued.print' | t }}
+        </button>
+        <a
+          href="{{ shop.url }}"
+          class="button button--secondary"
+          target="_blank"
+          rel="noopener"
+          aria-describedby="a11y-new-window-message"
+        >
+          {{ 'gift_cards.issued.shop_link' | t }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let string = { qrImageAlt: {{ 'gift_cards.issued.qr_image_alt' | t | json }} };
+  document.addEventListener('DOMContentLoaded', function() {
+   new QRCode( document.querySelector('.gift-card__qr-code'), {
+    text: document.querySelector('.gift-card__qr-code').dataset.identifier,
+    width: 120,
+    height: 120,
+    imageAltText: string.qrImageAlt
+    });
+  });
+
+  let copyButton = document.querySelector('[data-copy]')
+  copyButton.addEventListener('click', () => {
+    navigator.clipboard.writeText(copyButton.dataset.copy).then(() => {
+      copyButton.setAttribute('data-copied', true);
+      window.utils.announce(window.accessibilityStrings.shareSuccessMessage);
+
+      setTimeout(() => {
+        copyButton.setAttribute('data-copied', false);
+      }, 2000);
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "t:gift-card",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:image"
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "default",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

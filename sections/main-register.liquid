@@ -1,0 +1,153 @@
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings %}>
+  <div class="gap--section container container--xs padding--section v-stack">
+    <h1 id="RegisterHeading">
+      {{ 'customer.register.title' | t }}
+    </h1>
+    <p>
+      {{ 'customer.register.already_registered' | t }}
+      <a href="{{ routes.account_login_url }}">
+        {{ 'customer.login_page.title' | t }}
+      </a>
+    </p>
+    {%- form 'create_customer', novalidate: 'novalidate', class: 'form', data-arialabelledby: 'RegisterHeading' -%}
+      {%- if form.errors -%}
+        <div class="text-s exception">
+          <h2 class="form__errors text-s exception" tabindex="-1" autofocus>
+            {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+            {{ 'accessibility.error' | t }}
+          </h2>
+          <ul class="text-s exception list-unstyled" role="list">
+            {%- for field in form.errors -%}
+              <li>
+                {%- if field == 'form' -%}
+                  {{ form.errors.messages[field] }}
+                {%- else -%}
+                  <a href="#RegisterForm-{{ field }}">
+                    {{ form.errors.translated_fields[field] | capitalize }}
+                    {{ form.errors.messages[field] }}
+                  </a>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      <div>
+        <div class="field">
+          <label for="RegisterForm-FirstName" class="field__label">
+            {{ 'customer.register.first_name' | t }}
+          </label>
+          <input
+            class="field__input"
+            type="text"
+            name="customer[first_name]"
+            id="RegisterForm-FirstName"
+            placeholder=" "
+            {% if form.first_name %}
+              value="{{ form.first_name }}"
+            {% endif %}
+            autocomplete="given-name"
+            dir="auto"
+          >
+        </div>
+      </div>
+      <div>
+        <div class="field">
+          <label for="RegisterForm-LastName" class="field__label">
+            {{ 'customer.register.last_name' | t }}
+          </label>
+          <input
+            class="field__input"
+            type="text"
+            name="customer[last_name]"
+            id="RegisterForm-LastName"
+            placeholder=" "
+            {% if form.last_name %}
+              value="{{ form.last_name }}"
+            {% endif %}
+            autocomplete="family-name"
+            dir="auto"
+          >
+        </div>
+      </div>
+      <div>
+        {%- if form.errors contains 'email' -%}
+          <p id="RegisterForm-email-error" class="form__errors text-s exception">
+            {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+          {{ form.errors.translated_fields.email | capitalize }}
+          {{ form.errors.messages.email }}
+          </p>
+        {%- endif -%}
+        <div class="field">
+          <label class="field__label" for="RegisterForm-email">
+            {{ 'customer.register.email' | t }}
+          </label>
+          <input
+            class="field__input"
+            type="email"
+            name="customer[email]"
+            id="RegisterForm-email"
+            placeholder=" "
+            {% if form.email %}
+              value="{{ form.email }}"
+            {% endif %}
+            spellcheck="false"
+            autocapitalize="off"
+            autocomplete="email"
+            aria-required="true"
+            {% if form.errors contains 'email' %}
+              aria-invalid="true"
+              aria-describedby="RegisterForm-email-error"
+            {% endif %}
+          >
+        </div>
+      </div>
+      <div>
+        {%- if form.errors contains 'password' -%}
+          <p id="RegisterForm-password-error" class="form__errors text-s exception">
+            {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+            {{ form.errors.translated_fields.password | capitalize }}
+            {{ form.errors.messages.password }}
+          </p>
+        {%- endif -%}
+        <div class="field">
+          <label for="RegisterForm-password" class="field__label">
+            {{ 'customer.register.password' | t }}
+          </label>
+          <input
+            class="field__input"
+            type="password"
+            name="customer[password]"
+            id="RegisterForm-password"
+            aria-required="true"
+            placeholder=" "
+            {% if form.errors contains 'password' %}
+              aria-invalid="true"
+              aria-describedby="RegisterForm-password-error"
+            {% endif %}
+          >
+        </div>
+      </div>
+      <div>
+        <button class="button button--primary">
+          {{ 'customer.register.submit' | t }}
+        </button>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:register",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

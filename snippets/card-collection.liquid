@@ -1,0 +1,57 @@
+{%- unless heading_level -%}
+  {%- assign heading_level = 'h2' -%}
+{%- endunless -%}
+
+{% liquid
+  assign image = card_collection.featured_image
+  if image == nil
+    assign image = card_collection.products[0].featured_media
+  endif
+
+  assign image_ratio = image.aspect_ratio | default: 1
+  if settings.card_collection_image_ratio != 'default'
+    assign image_ratio = settings.card_collection_image_ratio
+  endif
+%}
+
+<div class="card-collection card expand-link">
+  {% if card_collection != blank %}
+    {%- if image == nil -%}
+      <div class="card-collection__media-wrapper card__media-wrapper card__media-wrapper--placeholder media-wrapper--placeholder" style="--image-ratio: {{ image_ratio }};"></div>
+    {%- else -%}
+      {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+      {%- capture sizes -%}
+        {%- if section.settings.container_type == 'full' or section.settings.container_type == 'padded' -%}
+          (min-width: 64em) calc(100vw / {{ section.settings.columns_desktop }}), calc(100vw / {{ section.settings.columns_mobile }})
+        {%- else -%}
+          (min-width: 64em) min(calc(100vw / {{ section.settings.columns_desktop }}), calc(1400px / {{ section.settings.columns_desktop }})), min(calc(100vw / {{ section.settings.columns_mobile }}), calc(1400px / {{ section.settings.columns_mobile }}))
+        {%- endif -%}
+      {%- endcapture -%}
+
+      <div class="card-collection__media-wrapper card__media-wrapper" style="--image-ratio: {{ image_ratio }};">
+        {{
+          image
+          | image_url: width: image.width
+          | image_tag: sizes: sizes, widths: widths, loading: loading, fetchpriority: 'low'
+        }}
+      </div>
+    {%- endif -%}
+  {% else  %}
+    <div class="card__media-wrapper" style="--image-ratio: {{ image_ratio }};">
+      {%- assign id = 'collection-' | append: i -%}
+      {{- id | placeholder_svg_tag: 'placeholder-svg' -}}
+    </div>
+  {% endif %}
+
+  <div class="padding--text">
+    <{{ heading_level}} class="card-collection__heading {{ settings.card_collection_title_font_style }}">
+      {%- if card_collection != blank -%}
+        <a href="{{ card_collection.url }}" class="card-collection__link expand-link__link">
+          {{- card_collection.title -}}
+        </a>
+      {%- else -%}
+        {{ 'onboarding.collection_title' | t }}
+      {%- endif -%}
+    </{{ heading_level}}>
+  </div>
+</div>

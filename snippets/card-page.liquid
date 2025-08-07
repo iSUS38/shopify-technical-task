@@ -1,0 +1,20 @@
+
+<div class="card expand-link flex">
+  <div class="padding--text card__content card-content">
+    <div class="card-content__main rte">
+      <h3 class="heading {{ settings.card_title_font_style }}">
+        <a
+          class="expand-link__link link-hover-underline"
+          href="{{ page.url }}"
+        >
+          <span>{{ page.title | escape }}</span>
+        </a>
+      </h3>
+      {%- if page.content != blank -%}
+        <p class="text-s secondary">
+          {{ page.content | strip_html | truncatewords: 40}}
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

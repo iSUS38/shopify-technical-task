@@ -1,0 +1,58 @@
+<span
+  class="rich-text__heading heading {{ block.settings.heading_size }}"
+  {{ block.shopify_attributes }}
+>
+  {{- block.settings.heading -}}
+</span>
+
+{% schema %}
+{
+  "name": "t:heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:heading",
+      "default": "t:heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:heading-1"
+        },
+        {
+          "value": "h2",
+          "label": "t:heading-2"
+        },
+        {
+          "value": "h3",
+          "label": "t:heading-3"
+        },
+        {
+          "value": "h4",
+          "label": "t:heading-4"
+        },
+        {
+          "value": "h5",
+          "label": "t:heading-5"
+        },
+        {
+          "value": "h6",
+          "label": "t:heading-6"
+        }
+      ],
+      "default": "h2",
+      "label": "t:heading-size"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:heading"
+    }
+  ]
+}
+{% endschema %}

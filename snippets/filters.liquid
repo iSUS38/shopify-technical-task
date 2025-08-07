@@ -1,0 +1,147 @@
+{%- for filter in results.filters -%}
+  {% assign details_id = 'Details-' | append: layout | append: '-' | append: filter.param_name  %}
+  {% liquid assign presentation = filter.presentation | default: default_presentation %}
+  {%- case filter.type -%}
+    {%- when 'boolean', 'list' -%}
+      {% # theme-check-disable UnusedAssign %}
+      {%  capture content %}
+        <fieldset class="facets-filters-form__fieldset">
+          <legend class="visually-hidden">{{ filter.label }}</legend>
+          {%- liquid
+            assign sorted_values = filter.values
+            # Keep the selected values grouped together when operator is AND
+            if filter.operator == 'AND'
+              assign active_filter_values = filter.values | where: 'active', true
+              assign inactive_filter_values = filter.values | where: 'active', false
+              assign sorted_values = active_filter_values | concat: inactive_filter_values
+            endif
+          -%}
+          <div class="facets-filters-form__list">
+            {%- for value in sorted_values -%}
+              {% liquid
+                assign input_id = 'Filter-' | append: layout | append: '-' | append: filter.param_name | escape | append: forloop.index
+                assign is_disabled = false
+                if value.count == 0 and value.active == false
+                  assign is_disabled = true
+                endif
+              %}
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  name="{{ value.param_name }}"
+                  value="{{ value.value }}"
+                  id="{{ input_id }}"
+                  class="checkbox__input"
+                  {% if value.active %}
+                    checked
+                  {% endif %}
+                  {% if is_disabled %}
+                    disabled
+                  {% endif %}
+                >
+                <label for="{{ input_id }}" class="checkbox__label{% if is_disabled %} disabled{% endif %}">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="checkbox__icon" viewBox="0 0 16 16"><path fill="" d="m12.9 5.77-6 6a.56.56 0 0 1-.8 0L3.48 9.15a.56.56 0 0 1 .8-.8l2.22 2.23 5.6-5.6a.56.56 0 0 1 .8.8Z"/></svg>
+                  {%- if presentation == 'image' -%}
+                    <div class="facets__image-wrapper">
+                      {%- if value.image -%}
+                        {{
+                          value.image
+                          | image_url: width: 300
+                          | image_tag: class: 'facets__image', alt: value.alt, sizes: '48px', widths: '96'
+                        }}
+                      {%- endif -%}
+                    </div>
+                  {%- elsif presentation == 'swatch' -%}
+                    {% render 'swatch', swatch: value.swatch, size: 'small' %}
+                  {%- endif -%}
+                  <span class="checkbox__label-text">
+                    {{ value.label }} ({{  value.count }})
+                  </span>
+                </label>
+              </div>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endcapture -%}
+      {% # theme-check-enable UnusedAssign %}
+      {%- render 'collapsible-content' with heading: filter.label, heading_size: 'h6', text: content, open: open, id: details_id -%}
+    {%- when 'price_range' -%}
+      {% # theme-check-disable UnusedAssign %}
+      {% capture content %}
+        <price-range {% if filter.min_value.value == 0 and filter.range_max == filter.max_value.value %}data-default-price{% endif %}{% if filter.min_value.value == blank and filter.max_value.value == blank %}data-default-price{% endif %}>
+          {% liquid
+            assign input_id = 'PriceRange' | append: layout
+          %}
+          {%  assign max = filter.range_max | times: 1.0 | divided_by: 100 | ceil %}
+          <div class="price-range__sliders-wrapper">
+            <span class="visually-hidden">{{  'products.facets.price_minimum' | t }}</span>
+            <span class="price__from text-xs">{{ 0 | money_with_currency }}</span>
+            <span class="visually-hidden">{{  'products.facets.price_maximum' | t }}</span>
+            <span class="price__to text-xs">{{ filter.range_max  | money_with_currency }}</span>
+            <div class="price-range__sliders">
+              <input
+                class="price-range__slider price-range__from-slider"
+                id="{{ input_id }}-from"
+                type="range"
+                value="{{ filter.min_value.value | divided_by: 100 | default: 0}}"
+                min="0"
+                max="{{ max }}"
+                aria-labelledby="{{ input_id }}-from-label"
+                data-type="min"
+                step="1"
+                data-min="0"
+                data-max="{{ max }}" />
+              <input
+                class="price-range__slider price-range__to-slider"
+                id="{{ input_id }}-to"
+                type="range"
+                value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}"
+                min="0"
+                max="{{ max }}"
+                aria-labelledby="{{ input_id }}-to-label"
+                data-type="max"
+                step="1"
+                data-min="0"
+                data-max="{{ max }}"/>
+            </div>
+          </div>
+          <div class="price-range__field field">
+            <label class="field__label" for="{{ input_id }}-from-input" id="{{ input_id }}-from-label">
+              {{- 'products.facets.from' | t -}}
+            </label>
+            <input
+              class="field__input"
+              name="{{ filter.min_value.param_name }}"
+              id="{{ input_id }}-from-input"
+              value="{{ filter.min_value.value | divided_by: 100 | default: 0 }}"
+              type="text"
+              inputmode="numeric"
+              data-pattern="\d| |,|\."
+              data-type="min"
+              data-min="0"
+              data-max="{{ max }}"
+            >
+          </div>
+          <div class="price-range__field field">
+            <label class="field__label" for="{{ input_id }}-to-input" id="{{ input_id }}-to-label">
+              {{- 'products.facets.to' | t -}}
+            </label>
+            <input
+              class="field__input"
+              name="{{ filter.max_value.param_name }}"
+              id="{{ input_id }}-to-input"
+              value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100  }}"
+              type="text"
+              inputmode="numeric"
+              data-pattern="\d| |,|\."
+              data-type="max"
+              data-min="0"
+              data-max="{{ max }}"
+            >
+          </div>
+        </price-range>
+      {% endcapture %}
+      {%- render 'collapsible-content' with heading: filter.label, heading_size: 'h6', text: content, open: open, id: details_id -%}
+      {% # theme-check-enable UnusedAssign %}
+  {%- endcase -%}
+{%- endfor -%}

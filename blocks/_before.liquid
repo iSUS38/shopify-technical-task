@@ -1,0 +1,21 @@
+{% render 'before-after-media', position: 'before' %}
+
+{% schema %}
+{
+  "name": "t:before",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:image"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:label",
+      "default": "t:before"
+    }
+  ]
+}
+{% endschema %}

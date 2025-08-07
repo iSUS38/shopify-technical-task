@@ -1,0 +1,40 @@
+{%- assign product = section.settings.product | default: product -%}
+{%- assign product_form_id = 'product-form-' | append: section.id | append: product.id -%}
+{%- render 'buy-buttons',
+  product: product,
+  block: block,
+  product_form_id: product_form_id
+-%}
+
+{% schema %}
+{
+  "name": "t:buy-buttons",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:show-dynamic-checkout",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity_selector",
+      "label": "t:show-quantity-selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gift_card_recipient",
+      "default": true,
+      "label": "t:show-recipient-information-form-for-gift-cards",
+      "info": "t:allows-buyers-to-send-gift-cards-on-a-scheduled-date"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:buy-buttons"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,74 @@
+{%- liquid
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  if results.url
+    assign results_url = results.url
+  else
+    assign terms = results.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
+<facets-form class="facets-sidebar ui">
+  <a class="button button--primary skip-to-content-link" href="#ProductGridContainer">{{ 'accessibility.skip_to_products' | t }}</a>
+  <form class="facets-filters-form {% if enable_max_height %}facets-filters-form--max-height{% endif %}" id="FacetsFiltersSidebarForm" data-filter-form aria-label="{{ 'products.facets.filter_button' | t }}">
+    <div class="facets-filters-form__content">
+      <div class="facets-filters-form__header" data-sidebar-facets-header>
+        <h2 class="h4">
+          {{ 'products.facets.filter_button' | t }}
+          <span data-active-filter-count="" class="facets__filter-button-count">{% if count > 0 %}{{ count }}{% endif %}</span>
+        </h2>
+        {% if count > 0 %}
+          <facet-remove class="facets-filters-form__footer-remove">
+            {%- assign label = 'products.facets.clear_all' | t -%}
+            {%- render 'text-button', label: label, url: results_url, show_icon: false -%}
+          </facet-remove>
+        {% endif %}
+      </div>
+      {%- capture active_facets -%}
+        {%- for filter in results.filters -%}
+          {%- for value in filter.active_values -%}
+            <facet-remove class="list-separator__item list-separator--{{ active_filter_style }} expand-link caption-xs">
+              <a href="{{ value.url_to_remove }}" class="expand-link__link button--close">
+                <span class="caption caption-xs">
+                  {{ value.label | escape }}
+                  <span class="visually-hidden">{{ 'cart.remove' | t }}</span>
+                </span>
+                {%- render 'icon' with 'close', class: 'icon--xxs' -%}
+              </a>
+            </facet-remove>
+          {%- endfor -%}
+          {%- if filter.type == 'price_range' -%}
+            {% assign min = filter.min_value.value %}
+            {% assign max = filter.max_value.value %}
+            {%- if min != null or max != null -%}
+              <facet-remove class="list-separator__item list-separator--{{ active_filter_style }} expand-link caption-xs">
+                <a href="{{ filter.url_to_remove }}" class="expand-link__link button--close">
+                  <span class="caption caption-xs">
+                    {{ min | default: 0 | money }} - {{ max | default: filter.range_max | money }}
+                  <span class="visually-hidden">{{ 'cart.remove' | t }}</span>
+                  </span>
+                  {%- render 'icon' with 'close', class: 'icon--xxs' -%}
+                </a>
+              </facet-remove>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      <div class="list-separator facets__active" data-facets-active>
+        {{- active_facets | strip -}}
+      </div>
+      {% render 'filters' with results: results, layout: 'sidebar', open: open %}
+    </div>
+  </form>
+  <span class="visually-hidden" aria-live="polite" data-facets-filter-count>{{ 'search.results_with_count' | t: count: results_count }}</span>
+  {% assign count = 0 %}
+  {%- for filter in results.filters -%}
+    {% assign count = count | plus: filter.active_values.size %}
+  {%- endfor -%}
+  <span data-facets-active-filter-count class="hidden">
+    {{- count -}}
+  </span>
+  <span data-facets-filtered-product-count class="hidden">
+    {{ results_count }}
+  </span>
+</facets-form>

@@ -1,0 +1,294 @@
+{% assign product = section.settings.product %}
+{% capture content %}
+  {% content_for "block", type: "_pdp-product-information", id: "pdp-product-information" %}
+{% endcapture %}
+{% render 'product', product: product, content: content, class: 'featured-product' %}
+
+{% schema %}
+{
+  "name": "t:featured-product",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:product"
+    },
+    {
+      "type": "header",
+      "content": "t:product-media"
+    },
+    {
+      "type": "select",
+      "id": "media_style",
+      "label": "t:layout",
+      "default": "thumbnails",
+      "options": [
+        {
+          "value": "slideshow",
+          "label": "t:slideshow"
+        },
+        {
+          "value": "thumbnails",
+          "label": "t:thumbnails"
+        },
+        {
+          "value": "scroll",
+          "label": "t:vertical-scroll-mobile-slideshow"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_max_width",
+      "label": "t:mobile-maximum-width",
+      "options": [
+        {
+          "value": "100%",
+          "label": "t:full-width"
+        },
+        {
+          "value": "92%",
+          "label": "t:page-width"
+        },
+        {
+          "value": "75%",
+          "label": "t:compact"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "t:enable-zoom"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "t:enable-video-autoplay",
+      "default": true,
+      "info": "t:due-to-browser-policy-autoplaying-video-will-be-muted"
+    },
+    {
+      "type": "color_scheme",
+      "id": "media_color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "options": [
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-2xl)",
+      "label": "t:media-padding",
+      "info": "t:only-applies-to-thumbnail-and-slideshow-layouts"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:button-style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:secondary"
+        },
+        {
+          "value": "text",
+          "label": "t:text"
+        }
+      ],
+      "default": "primary",
+      "info": "t:applies-to-slideshow-zoom-and-quick-add-close-buttons"
+    },
+    {
+      "type": "header",
+      "content": "t:slideshow"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "t:media-size",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:adapt-to-media"
+        },
+        {
+          "value": "stretch",
+          "label": "t:stretch"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "animation_style",
+      "label": "t:animation-style",
+      "options": [
+        {
+          "value": "fade",
+          "label": "t:fade"
+        },
+        {
+          "value": "slide",
+          "label": "t:slide"
+        }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "select",
+      "id": "counter_style",
+      "label": "t:counter-style",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "t:hidden"
+        },
+        {
+          "value": "counter",
+          "label": "t:counter"
+        },
+        {
+          "value": "progress",
+          "label": "t:progress-bar"
+        }
+      ],
+      "default": "hidden"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_looping",
+      "label": "t:enable-looping",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:product-information"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_block_borders",
+      "label": "t:show-divider-border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:transparent-header"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent_header",
+      "label": "t:enable-transparent-header",
+      "default": false,
+      "info": "t:only-applies-when-transparent-header-is-also-enabled-in-the"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:featured-product",
+      "settings": {
+        "media_style": "thumbnails"
+      },
+      "blocks": [
+        {
+          "type": "_pdp-product-information",
+          "id": "pdp-product-information",
+          "static": true,
+          "blocks": [
+            {
+              "type": "_pdp-title",
+              "settings": {
+                "heading_size": "h2"
+              }
+            },
+            {
+              "type": "_pdp-price"
+            },
+            {
+              "type": "_pdp-description"
+            },
+            {
+              "type": "_pdp-variant-picker"
+            },
+            {
+              "type": "_pdp-buy-buttons"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

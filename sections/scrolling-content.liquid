@@ -1,0 +1,365 @@
+{% # theme-check-disable UnusedAssign %}
+{%- liquid
+  assign fetch_priority = 'auto'
+  assign loading = 'lazy'
+  if section.index == 1 and section.location != 'footer'
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  endif
+%}
+
+{%- capture alt -%}
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {% when 'text' %}
+        {{ block.settings.text }}.
+      {% when 'image' %}
+        {% if block.settings.image.alt != blank %} {{ block.settings.image.alt }}. {% endif %}
+    {%- endcase -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if section.blocks.size > 0 -%}
+  <script src="{{ 'scrolling-content.js' | asset_url }}" defer="defer"></script>
+  <div {% render 'color-scheme-attributes' with scoped_settings: section.settings, borders: true %}>
+    <div class="padding--section scrolling-content" style="{% render 'padding-override' with settings: section.settings %}">
+      <scrolling-content
+        class="play-pause--hover-focus"
+        data-speed="{{ section.settings.speed }}"
+        data-direction="{{ section.settings.scroll_direction }}"
+        style="--horizontal-gap: {{ section.settings.horizontal_gap | times: 1.0 | divided_by: 16 }}rem; --font-size: {{ section.settings.font_size | times: 1.0 | divided_by: 16 }}rem;"
+      >
+        {%- assign pause_text = 'accessibility.pause_animation' | t  -%}
+        {%- assign play_text = 'accessibility.play_animation' | t -%}
+        {%- assign class = 'scrolling-content__button button button--primary' -%}
+        {%- render 'play-pause-button' with pause_text: pause_text, play_text: play_text, class: class -%}
+        <div class="scrolling-content__content" role="region" {% unless alt contains '</a>' %}aria-label="{{ alt | strip_html }}"{% endunless %}>
+          <div class="scrolling-content__items list-unstyled" data-index="0">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'text' -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="scrolling-content__item" {{ block.shopify_attributes }}>
+                      <div class="{{ section.settings.font_type }}">{{ block.settings.text }}</div>
+                    </div>
+                  {%- endif -%}
+                {%- when 'image' -%}
+                  {%- if block.settings.image != blank -%}
+                    {%- capture style -%}
+                      max-width: {{  block.settings.max_width }}px
+                    {%- endcapture -%}
+                    {%- capture widths -%}
+                      {{ block.settings.max_width }}, {{ block.settings.max_width | times: 2 }}, {{ block.settings.max_width | times: 3 }}
+                    {%- endcapture -%}
+                    <div {{ block.shopify_attributes }} class="scrolling-content__item">
+                      {%- if block.settings.link != blank -%}
+                        <a href="{{ block.settings.link }}">
+                      {%- endif -%}
+                      {% assign sizes = block.settings.max_width | append: 'px' %}
+                      {{
+                        block.settings.image
+                        | image_url: width: block.settings.image.width
+                        | image_tag:
+                          sizes: sizes,
+                          widths: widths,
+                          fetchpriority: fetch_priority,
+                          loading: loading,
+                          style: style
+                      }}
+                      {%- if block.settings.link != blank -%}
+                        </a>
+                      {%- endif -%}
+                    </div>
+                  {%- else -%}
+                    <div class="scrolling-content__item" {{ block.shopify_attributes }}>
+                      <div class="image-ratio" style="--image-ratio: 1; inline-size: {{ block.settings.max_width }}px; background-color: rgba(var(--color-foreground), 0.2);">
+                        {{- 'image' | placeholder_svg_tag: 'placeholder-svg' -}}
+                      </div>
+                    </div>
+                  {%- endif -%}
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </scrolling-content>
+    </div>
+  </div>
+{%- endif -%}
+{% # theme-check-enable UnusedAssign %}
+
+{% schema %}
+{
+  "name": "t:scrolling-content",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 0.6,
+      "max": 8,
+      "step": 0.1,
+      "unit": "ms",
+      "label": "t:scrolling-speed",
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:to-left"
+        },
+        {
+          "value": "right",
+          "label": "t:to-right"
+        }
+      ],
+      "default": "left",
+      "label": "t:scroll-direction"
+    },
+    {
+      "type": "range",
+      "id": "horizontal_gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:gap-between-content",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "t:typography"
+    },
+    {
+      "type": "select",
+      "id": "font_type",
+      "options": [
+        {
+          "value": "heading",
+          "label": "t:heading"
+        },
+        {
+          "value": "body",
+          "label": "t:body"
+        }
+      ],
+      "default": "heading",
+      "label": "t:font-type"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:font-size",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "t:colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_scheme_transition",
+      "label": "t:use-color-scheme-transition",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_transition",
+      "label": "t:transition-color-scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "t:padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-2xs)",
+      "label": "t:top-padding"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "0px",
+          "label": "t:none"
+        },
+        {
+          "value": "var(--space-3xs)",
+          "label": "t:xxxsmall"
+        },
+        {
+          "value": "var(--space-2xs)",
+          "label": "t:xxsmall"
+        },
+        {
+          "value": "var(--space-xs)",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "var(--space-s)",
+          "label": "t:small"
+        },
+        {
+          "value": "var(--space-m)",
+          "label": "t:medium"
+        },
+        {
+          "value": "var(--space-l)",
+          "label": "t:large"
+        },
+        {
+          "value": "var(--space-xl)",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "var(--space-xl-2xl)",
+          "label": "t:xxlarge"
+        },
+        {
+          "value": "var(--space-2xl-3xl)",
+          "label": "t:xxxlarge"
+        }
+      ],
+      "default": "var(--space-2xs)",
+      "label": "t:bottom-padding"
+    },
+    {
+      "type": "header",
+      "content": "t:borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "t:show-top-border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:show-bottom-border",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "t:text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "t:use-this-text-to-share-information-about-your-brand-collections",
+          "label": "t:text"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "t:image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:image"
+        },
+        {
+          "type": "range",
+          "id": "max_width",
+          "label": "t:image-width",
+          "min": 0,
+          "max": 200,
+          "step": 4,
+          "default": 40,
+          "unit": "px"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:link-optional",
+          "info": "t:remember-to-add-alt-text-to-your-image-that-describes"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:scrolling-content",
+      "blocks": [
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

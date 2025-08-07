@@ -1,0 +1,34 @@
+{% assign width = block.settings.max_width | divided_by: 16  %}
+
+<div class="rich-text__block-width rich-text__product" style="--width: {{ width }}rem" {{  block.shopify_attributes }}>
+  {%- render 'card-product', product: block.settings.product -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:product-card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:product"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "t:width",
+      "min": 300,
+      "max": 600,
+      "step": 20,
+      "default": 300,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:product"
+    }
+  ]
+}
+{% endschema %}

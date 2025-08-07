@@ -1,0 +1,14 @@
+{%- assign product = section.settings.product | default: product -%}
+{%- render 'product-rating', product: product, classes: 'justify-inherit' -%}
+
+{% schema %}
+{
+  "name": "t:product-rating",
+  "tag": null,
+  "presets": [
+    {
+      "name": "t:product-rating"
+    }
+  ]
+}
+{% endschema %}

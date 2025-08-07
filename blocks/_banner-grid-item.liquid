@@ -1,0 +1,109 @@
+<div class="banner-grid__item" style="
+  --column-desktop: {{ block.settings.column_desktop }};
+  --column-mobile: {{ block.settings.column_mobile }};
+  --row-desktop: {{ block.settings.row_desktop }};
+  --row-mobile: {{ block.settings.row_mobile }};
+" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "t:banner-grid-item",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:desktop"
+    },
+    {
+      "type": "range",
+      "id": "column_desktop",
+      "label": "t:column",
+      "min": 1,
+      "max": 4,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "row_desktop",
+      "label": "t:row",
+      "min": 1,
+      "max": 4,
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "t:mobile"
+    },
+    {
+      "type": "select",
+      "id": "column_mobile",
+      "label": "t:column",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:1"
+        },
+        {
+          "value": "2",
+          "label": "t:2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "select",
+      "id": "row_mobile",
+      "label": "t:row",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:1"
+        },
+        {
+          "value": "2",
+          "label": "t:2"
+        }
+      ],
+      "default": "1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_grid-image-banner"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:image",
+      "blocks": [
+        {
+          "type": "_grid-image-banner",
+          "blocks": [
+            {
+              "type": "heading-group",
+              "blocks": [
+                {
+                  "type": "_heading",
+                  "settings": {
+                    "heading_size": "h6"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "button-group",
+              "blocks": [
+                {
+                  "type": "_button"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

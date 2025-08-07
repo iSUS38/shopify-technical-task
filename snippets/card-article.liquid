@@ -1,0 +1,119 @@
+{% assign heading_level = heading_level | default: 'h3' %}
+{%- if article and article != empty -%}
+  {%- assign loading = 'lazy' -%}
+  {%- if lazy_load == false -%}
+    {%- assign loading = nil -%}
+  {%- endif -%}
+
+  {%- capture tags -%}
+    {%- for tag in article.tags -%}
+      <li>
+        <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="list-separator__item">
+          {{- tag -}}
+        </a>
+      </li>
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  <div class="card card-product card-article expand-link {{ class }}">
+    <{{ heading_level }}>
+      <a
+        class="expand-link__link"
+        href="{{ article.url }}"
+      >
+        <span class="visually-hidden">{{ article.title | escape }}</span>
+      </a>
+    </{{ heading_level }}>
+    {%- if article.image -%}
+      {%- assign widths = '200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200' -%}
+      {%- capture sizes -%}
+        {%- if section.settings.container_type == 'full' or section.settings.container_type == 'padded' -%}
+          (min-width: 64em) calc(100vw / {{ section.settings.columns_desktop }}), calc(100vw / {{ section.settings.columns_mobile }})
+        {%- else -%}
+          (min-width: 64em) min(calc(100vw / {{ section.settings.columns_desktop }}), calc(1400px / {{ section.settings.columns_desktop }})), min(calc(100vw / {{ section.settings.columns_mobile }}), calc(1400px / {{ section.settings.columns_mobile }}))
+        {%- endif -%}
+      {%- endcapture -%}
+      <div class="card__media-adapt">
+        {{
+          article.image
+          | image_url: width: article.image.width
+          | image_tag: sizes: sizes, widths: widths, loading: loading, class: 'card-border-radius'
+        }}
+      </div>
+    {%- else -%}
+      <div class="card__media-wrapper media-wrapper--placeholder" style="--image-ratio: 1;">
+      </div>
+    {%- endif -%}
+    <div class="padding--text card__content card-content card-product-content">
+      <div class="card-content__main card-article-content__main">
+        {%- if settings.tags_position != 'none' -%}
+          {%- unless tags == empty -%}
+            <div class="card-article-content__badges card-product-content__badges {% if settings.tags_position == 'side' %} card-product-content__badges--mobile{% endif %}">
+              <ul class="list-separator list-separator--{{ settings.blog_card_tag_style }} caption-xs caption secondary card__interactive">
+                {{- tags -}}
+              </ul>
+            </div>
+          {%- endunless -%}
+        {%- endif -%}
+
+        <p class="card-article-content__title card-product-content__title {{ settings.blog_card_title_font_style }}" aria-hidden="true">
+          {{ article.title | escape }}
+        </p>
+
+        {% if settings.blog_card_show_excerpt %}
+          {%- assign excerpt = article.excerpt -%}
+          {%- if excerpt == blank -%}
+            {%- assign excerpt = article.content | strip_html | truncatewords: 20 -%}
+          {%- endif -%}
+
+          {%- if excerpt != blank -%}
+            <div class="card-product-content__text secondary">
+              {{- excerpt -}}
+            </div>
+          {%- endif -%}
+        {% endif %}
+        {% if settings.blog_card_show_read_more %}
+          {% assign text = 'blogs.article.read_more' | t %}
+          {%- render 'text-button-visual', label: text, url: article.url, block: block, class: 'card-product-content__read-more' -%}
+        {% endif %}
+      </div>
+      {%- if settings.tags_position == 'side' -%}
+        {%- unless tags == blank -%}
+          <div class="card-product-content__badges card-product-content__badges--desktop">
+            <ul class="list-separator list-separator--{{ settings.blog_card_tag_style }} caption-xs caption secondary card__interactive">
+              {{- tags -}}
+            </ul>
+          </div>
+        {%- endunless -%}
+      {%- endif -%}
+    </div>
+  </div>
+{%- else -%}
+  <div class="card card-product expand-link {{ class }}">
+    <div class="card__media-wrapper" style="--image-ratio: 2 / 3">
+      {{- 'collection-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+    </div>
+    <div class="padding--text card__content card-content">
+      <div class="card-content__main">
+        <{{ heading_level }} class="{{ settings.blog_card_title_font_style }}">
+          <a
+            class="expand-link__link link-unstyled"
+            role="link"
+            aria-disabled="true"
+          >
+            {{- 'onboarding.article_title' | t -}}
+          </a>
+        </{{ heading_level }}>
+        {% if settings.blog_card_show_excerpt %}
+          <p class="card-product-content__text secondary">
+            {{ 'onboarding.article_excerpt' | t }}
+          </p>
+        {% endif %}
+        {% if settings.blog_card_show_read_more %}
+          {% assign text = 'blogs.article.read_more' | t %}
+          {%- render 'text-button-visual', label: text, url: article.url, block: block, class: 'card-product-content__read-more' -%}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{%- endif -%}

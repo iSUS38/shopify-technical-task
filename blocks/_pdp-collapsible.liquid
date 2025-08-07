@@ -1,0 +1,141 @@
+{%- if block.settings.text != blank -%}
+  <div class="collapsible-items" {{ block.shopify_attributes }}>
+    {%- render 'collapsible-content' with heading: block.settings.heading, heading_size: block.settings.font_style, text: block.settings.text, block: block -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:collapsible",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:heading",
+      "default": "t:heading"
+    },
+    {
+      "type": "select",
+      "id": "font_style",
+      "options": [
+        {
+          "value": "heading h1",
+          "label": "t:heading-1",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h2",
+          "label": "t:heading-2",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h3",
+          "label": "t:heading-3",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h4",
+          "label": "t:heading-4",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h5",
+          "label": "t:heading-5",
+          "group": "Heading"
+        },
+        {
+          "value": "heading h6",
+          "label": "t:heading-6",
+          "group": "Heading"
+        },
+        {
+          "value": "subheading",
+          "label": "t:subheading",
+          "group": "Heading"
+        },
+        {
+          "value": "caption",
+          "label": "t:caption",
+          "group": "Caption"
+        },
+        {
+          "value": "caption-xs",
+          "label": "t:xsmall-caption",
+          "group": "Caption"
+        },
+        {
+          "value": "body text-xl",
+          "label": "t:xlarge-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-l",
+          "label": "t:large-body",
+          "group": "Body"
+        },
+        {
+          "value": "body",
+          "label": "t:body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-s",
+          "label": "t:small-body",
+          "group": "Body"
+        },
+        {
+          "value": "body text-xs",
+          "label": "t:xsmall-body",
+          "group": "Body"
+        }
+      ],
+      "default": "heading h6",
+      "label": "t:font-style"
+    },
+    {
+      "type": "select",
+      "id": "additional_icon",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__1.label"
+        },
+        {
+          "value": "chat_bubble",
+          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__7.label"
+        },
+        {
+          "value": "eye",
+          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__13.label"
+        },
+        {
+          "value": "leaf",
+          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__18.label"
+        },
+        {
+          "value": "return",
+          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__34.label"
+        },
+        {
+          "value": "truck",
+          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__43.label"
+        }
+      ],
+      "default": "none",
+      "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "t:use-this-text-to-share-information-about-your-brand-collections",
+      "label": "t:text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:collapsible"
+    }
+  ]
+}
+{% endschema %}

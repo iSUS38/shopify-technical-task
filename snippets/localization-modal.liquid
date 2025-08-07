@@ -1,0 +1,41 @@
+<custom-dialog data-modal="true" data-overlay="true" data-name="localization" data-display="flex">
+  <dialog class="dialog localization-modal" aria-labelledby="localization-modal-heading">
+    <div class="dialog__window dialog__animateable localization-modal__window v-stack" data-color-scheme="{{ settings.overlay_color_scheme }}">
+      <div>
+        <h2 id="localization-modal-heading">{{  'localization.welcome' | t }}</h2>
+        <p class="localization-modal__instruction">{{  'localization.instruction' | t }}</p>
+        </div>
+      <div>
+        {%- form 'localization', id: 'LocalizationModal', class: 'localization-modal__form v-stack' -%}
+          {%- if localization.available_countries.size > 1 -%}
+            <div class="select">
+              <label class="visually-hidden" for="Localization-Modal-Country"> {{ 'localization.country_label' | t }}</label>
+              <select class="select__field" name="country_code" id="Localization-Modal-Country">
+                {%- for country in localization.available_countries -%}
+                  <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
+                    {{- country.name }} / {{ country.currency.iso_code }}{{ country.currency.symbol -}}
+                  </option>
+                {%- endfor -%}
+              </select>
+              {%- render 'icon' with 'caret-down', class: 'icon--xs select__icon' -%}
+            </div>
+          {% endif %}
+          {%- if localization.available_languages.size > 1 -%}
+            <div class="select">
+              <label class="visually-hidden" for="Localization-Modal-Language">{{ 'localization.country_label' | t }}</label>
+              <select class="select__field" name="locale_code" for="Localization-Modal-Language">
+                {%- for language in localization.available_languages -%}
+                  <option value="{{ country.iso_code }}" lang="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}selected{% endif %}>
+                    {{ language.endonym_name | capitalize }}
+                  </option>
+                {%- endfor -%}
+              </select>
+              {%- render 'icon' with 'caret-down', class: 'icon--xs select__icon' -%}
+            </div>
+          {%- endif-%}
+          <button class="button button--primary button--full">{{  'localization.submit' | t }}</button>
+        {%- endform -%}
+      </div>
+    </div>
+  </dialog>
+</custom-dialog>

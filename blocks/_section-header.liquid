@@ -1,0 +1,98 @@
+{% render 'content-header', scoped_settings: block.settings %}
+
+{% schema %}
+{
+  "name": "t:section-header",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout_header",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:left-aligned"
+        },
+        {
+          "value": "center",
+          "label": "t:centered"
+        }
+      ],
+      "default": "left",
+      "label": "t:desktop-header-layout"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "default": "t:subheading",
+      "label": "t:subheading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:heading",
+      "default": "t:heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "page_title",
+      "label": "t:set-as-page-title",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:heading-1"
+        },
+        {
+          "value": "h2",
+          "label": "t:heading-2"
+        },
+        {
+          "value": "h3",
+          "label": "t:heading-3"
+        },
+        {
+          "value": "h4",
+          "label": "t:heading-4"
+        },
+        {
+          "value": "h5",
+          "label": "t:heading-5"
+        },
+        {
+          "value": "h6",
+          "label": "t:heading-6"
+        }
+      ],
+      "default": "h2",
+      "label": "t:heading-size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "t:this-is-an-optional-description-use-this-text-to-provide",
+      "label": "t:text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:button-label",
+      "default": "t:button-label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:button-link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:section-header"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,48 @@
+<div class="newsletter" {{ block.shopify_attributes }}>
+  {% render 'newsletter-form', with settings: block.settings, form_id: block.id  %}
+</div>
+
+{% schema %}
+{
+  "name": "t:newsletter",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:button-style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:secondary"
+        },
+        {
+          "value": "text",
+          "label": "t:text"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "select",
+      "id": "button_width",
+      "label": "t:button-width",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:default"
+        },
+        {
+          "value": "full",
+          "label": "t:full"
+        }
+      ],
+      "default": "default"
+    }
+  ]
+}
+{% endschema %}

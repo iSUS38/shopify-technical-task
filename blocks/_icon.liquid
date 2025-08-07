@@ -1,0 +1,118 @@
+{%- render 'icon' with block.settings.icon, class: block.settings.icon_size -%}
+
+{% schema %}
+{
+  "name": "t:icon",
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:none"
+        },
+        {
+          "value": "info",
+          "label": "t:info"
+        },
+        {
+          "value": "warning",
+          "label": "t:warning"
+        },
+        {
+          "value": "check",
+          "label": "t:check"
+        },
+        {
+          "value": "chat",
+          "label": "t:chat"
+        },
+        {
+          "value": "email",
+          "label": "t:email"
+        },
+        {
+          "value": "phone",
+          "label": "t:phone"
+        },
+        {
+          "value": "heart",
+          "label": "t:heart"
+        },
+        {
+          "value": "star-full",
+          "label": "t:star"
+        },
+        {
+          "value": "box",
+          "label": "t:box"
+        },
+        {
+          "value": "globe",
+          "label": "t:globe"
+        },
+        {
+          "value": "pin",
+          "label": "t:pin"
+        },
+        {
+          "value": "ruler",
+          "label": "t:ruler"
+        },
+        {
+          "value": "smile",
+          "label": "t:smile"
+        },
+        {
+          "value": "stopwatch",
+          "label": "t:stopwatch"
+        },
+        {
+          "value": "lightning",
+          "label": "t:lightning"
+        }
+      ],
+      "default": "info",
+      "label": "t:icon"
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "options": [
+        {
+          "value": "icon--xs",
+          "label": "t:xsmall"
+        },
+        {
+          "value": "icon--s",
+          "label": "t:small"
+        },
+        {
+          "value": "icon--m",
+          "label": "t:medium"
+        },
+        {
+          "value": "icon--l",
+          "label": "t:large"
+        },
+        {
+          "value": "icon--xl",
+          "label": "t:xlarge"
+        },
+        {
+          "value": "icon--xxl",
+          "label": "t:xxlarge"
+        }
+      ],
+      "default": "icon--xxl",
+      "label": "t:icon-size"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:icon"
+    }
+  ]
+}
+{% endschema %}

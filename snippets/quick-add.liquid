@@ -1,0 +1,62 @@
+{%- unless section_id -%}
+  {%- assign section_id = section.id -%}
+{%- endunless -%}
+
+{%- unless button_style -%}
+  {%- assign button_style = settings.quick_add_style -%}
+{%- endunless -%}
+
+{% assign product_form_id = 'quick-add-' | append: section_id | append: product.id %}
+
+{%- capture submit -%}
+  {%- if product.selected_or_first_available_variant.available -%}
+    <button
+      tabindex="0"
+      id="{{ product_form_id }}-submit"
+      type="submit"
+      name="add"
+      class="{{ classes }} quick-add__submit button button--{{ button_style }} button--square"
+      {% if product.selected_or_first_available_variant.available == false %}
+        disabled
+      {% endif %}
+    >
+      {%- render 'icon' with settings.quick_add_button_icon, class: 'quick-add__icon icon--s' -%}
+      <span class="visually-hidden">{{ 'products.product.add_to_cart' | t }}</span>
+
+      <span class="hidden text-xs exception" data-error-message>
+        {{ 'products.product.sold_out' | t }}
+      </span>
+
+      <span class="visually-hidden">{{ product.title }}</span>
+      {%- render 'loading-spinner', class: 'opacity', visible: true -%}
+    </button>
+  {%- endif -%}
+{%- endcapture -%}
+
+{% if product.available %}
+  {%- if product.variants.size > 1 -%}
+    <quick-add-button data-url="{{ product.url }}">
+      {{ submit | replace: 'type="submit"', 'type="button"'}}
+    </quick-add-button>
+  {%- else -%}
+    <product-form data-section-id="{{ section_id }}">
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          {% if product.selected_or_first_available_variant.available == false %}
+            disabled
+          {% endif %}
+        >
+        {{ submit }}
+      {%- endform -%}
+    </product-form>
+  {%- endif -%}
+{% endif %}

@@ -1,0 +1,210 @@
+{% style %}
+  .icon-library {
+    padding-block: var(--space-3xl);
+  }
+
+  .icon-library__heading {
+    margin-block-end: var(--gap, var(--space-xl));
+  }
+
+  .icon-library__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap, var(--space-xs));
+  }
+
+  .icon-library__grid {
+    gap: var(--gap, var(--space-xl));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media screen and (min-width: 48em) {
+    .icon-library__grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+{% endstyle %}
+
+<div class="icon-library center">
+  <div class="container container--lg">
+    <h2 class="icon-library__heading">Icon library</h2>
+    <ul class="icon-library__grid grid list-unstyled">
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'plus' -%}
+        <p class="text-xs">plus</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'minus' -%}
+        <p class="text-xs">minus</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'arrow-left' -%}
+        <p class="text-xs">arrow-left</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'arrow-right' -%}
+        <p class="text-xs">arrow-right</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'play' -%}
+        <p class="text-xs">play</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'pause' -%}
+        <p class="text-xs">pause</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'star-half' -%}
+        <p class="text-xs">star-half</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'star-full' -%}
+        <p class="text-xs">star-full</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'star-empty' -%}
+        <p class="text-xs">star-empty</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'caret-left' -%}
+        <p class="text-xs">caret-left</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'caret-right' -%}
+        <p class="text-xs">caret-right</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'caret-down' -%}
+        <p class="text-xs">caret-down</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'double-caret-left' -%}
+        <p class="text-xs">double-caret-left</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'double-caret-right' -%}
+        <p class="text-xs">double-caret-right</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'close' -%}
+        <p class="text-xs">close</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'warning' -%}
+        <p class="text-xs">warning</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'info' -%}
+        <p class="text-xs">info</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'search' -%}
+        <p class="text-xs">search</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'menu' -%}
+        <p class="text-xs">menu</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'bag' -%}
+        <p class="text-xs">bag</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'check' -%}
+        <p class="text-xs">check</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'copy' -%}
+        <p class="text-xs">copy</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'account' -%}
+        <p class="text-xs">account</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'link' -%}
+        <p class="text-xs">link</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'twitter' -%}
+        <p class="text-xs">twitter</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'tiktok' -%}
+        <p class="text-xs">tiktok</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'instagram' -%}
+        <p class="text-xs">instagram</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'pinterest' -%}
+        <p class="text-xs">pinterest</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'snapchat' -%}
+        <p class="text-xs">snapchat</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'tumblr' -%}
+        <p class="text-xs">tumblr</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'vimeo' -%}
+        <p class="text-xs">vimeo</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'youtube' -%}
+        <p class="text-xs">youtube</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'facebook' -%}
+        <p class="text-xs">facebook</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'chat' -%}
+        <p class="text-xs">chat</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'phone' -%}
+        <p class="text-xs">phone</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'email' -%}
+        <p class="text-xs">email</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'heart' -%}
+        <p class="text-xs">heart</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'box' -%}
+        <p class="text-xs">box</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'globe' -%}
+        <p class="text-xs">globe</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'pin' -%}
+        <p class="text-xs">pin</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'ruler' -%}
+        <p class="text-xs">ruler</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'smile' -%}
+        <p class="text-xs">smile</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'stopwatch' -%}
+        <p class="text-xs">stopwatch</p>
+      </li>
+      <li class="icon-library__item items-center">
+        {%- render 'icon' with 'lightning' -%}
+        <p class="text-xs">lightning</p>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,225 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.enable_shop_login_button == false -%}
+  {%- assign hide_shop_login_button = true -%}
+{%- endif -%}
+
+<custom-dialog data-modal="true" data-overlay="true" data-name="recover" data-display="flex">
+  <dialog class="dialog dialog--notification" aria-labelledby="recover-heading">
+    <div class="dialog__window dialog__animateable dialog__window--custom-alignment" data-color-scheme="{{ settings.overlay_color_scheme }}">
+      <header class="dialog__header dialog__header--border">
+        <h2 id="recover-heading" class="h5">
+          {{ 'customer.recover_password.title' | t }}
+        </h2>
+        {% render 'close-button' %}
+      </header>
+      <div class="form">
+        <p>
+          {{ 'customer.recover_password.subtext' | t }}
+        </p>
+        {%- form 'recover_customer_password', aria-labelledby: 'recover-heading' -%}
+          <div class="form">
+            {%- if form.errors -%}
+              <p class="form__errors text-s exception">
+                {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+                {{ form.errors.messages.form }}
+              </p>
+            {%- endif -%}
+            <div class="field">
+              <label class="field__label" for="RecoverEmail">
+                {{ 'customer.login_page.email' | t }}
+              </label>
+              <input
+                class="field__input"
+                type="email"
+                value=""
+                name="email"
+                placeholder=" "
+                id="RecoverEmail"
+                autocorrect="off"
+                autocapitalize="off"
+                autocomplete="email"
+                {% if form.errors %}
+                  aria-invalid="true"
+                  aria-describedby="RecoverEmail-email-error"
+                  autofocus
+                {% endif %}
+              >
+            </div>
+            <div>
+              <button class="button button--primary button--full">
+                {{ 'customer.login_page.submit' | t }}
+              </button>
+            </div>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </dialog>
+</custom-dialog>
+
+<div {% render 'color-scheme-attributes' with scoped_settings: section.settings %}>
+  <div class="gap--section container container--xs padding--section v-stack">
+
+    <h1 id="login" tabindex="-1">
+      {{ 'customer.login_page.title' | t }}
+    </h1>
+    <p>
+      {{ 'customer.login_page.not_registered' | t }}
+      <a href="{{ routes.account_register_url }}">
+        {{ 'customer.login_page.create_account' | t }}
+      </a>
+    </p>
+    <div class="gap--section">
+      {%- form 'customer_login', class: "form", novalidate: 'novalidate', aria-labelledby: 'login' -%}
+        {% assign recover_success = form.posted_successfully? %}
+        {%- if recover_success == true -%}
+          <div class="form__success">
+            {%- render 'icon' with 'check', class: 'icon--m' -%}
+            <h2
+              class="body text-s"
+              tabindex="-1"
+              autofocus
+            >
+              {{- 'customer.recover_password.success' | t -}}
+            </h2>
+          </div>
+        {%- endif -%}
+        {%- if form.errors -%}
+          <div class="text-s exception">
+            <h2 class="form__errors text-s exception" tabindex="-1" autofocus>
+              {%- render 'icon' with 'warning', class: 'icon--xs' -%}
+              {{ 'accessibility.error' | t }}
+            </h2>
+            <ul class="text-s exception list-unstyled" role="list">
+              {%- for field in form.errors -%}
+                <li>
+                  {%- if field == 'form' -%}
+                    {{ form.errors.messages[field] }}
+                  {%- else -%}
+                    <a href="#Customer{{ field }}">
+                      {{ form.errors.translated_fields[field] | capitalize }}
+                      {{ form.errors.messages[field] }}
+                    </a>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        <div>
+          <div class="field">
+            <label class="field__label" for="CustomerEmail">
+              {{ 'customer.login_page.email' | t }}<span aria-hidden="true">*</span>
+            </label>
+            <input
+              class="field__input"
+              type="email"
+              name="customer[email]"
+              id="CustomerEmail"
+              placeholder=" "
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              required
+              {% if form.errors contains 'form' %}
+                aria-invalid="true"
+              {% endif %}
+            >
+          </div>
+        </div>
+
+        {%- if form.password_needed -%}
+          <div>
+            <div class="field">
+              <label class="field__label" for="CustomerPassword">
+                {{ 'customer.login_page.password' | t }}<span aria-hidden="true">*</span>
+              </label>
+              <input
+                class="field__input"
+                type="password"
+                value=""
+                name="customer[password]"
+                id="CustomerPassword"
+                placeholder=" "
+                autocomplete="current-password"
+                required
+                {% if form.errors contains 'form' %}
+                  aria-invalid="true"
+                {% endif %}
+              >
+            </div>
+            <div class="account__forgot right">
+              <dialog-trigger data-name="recover">
+                <button tabindex="0" id="recover" class="button button--text" type="button">
+                  <span class="button-text__label text-s">{{ 'customer.login_page.forgot_password' | t }}</span>
+                </button>
+              </dialog-trigger>
+            </div>
+          </div>
+
+        {%- endif -%}
+
+        <div>
+          <button class="button button--primary">
+            {{ 'customer.login_page.sign_in' | t }}
+          </button>
+        </div>
+
+        {%- if shop.features.login_with_shop_classic_customer_accounts? -%}
+          <section name="sign-in-with-shop-provider" class="alignment--middle-center">
+            {%- unless hide_shop_login_button -%}
+              <p class="account__or">
+                {{ 'customer.login_page.alternate_provider_separator' | t }}
+              </p>
+            {%- endunless -%}
+            {{ shop | login_button: hide_button: hide_shop_login_button }}
+          </section>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    {%- if shop.checkout.guest_login -%}
+      <div class="form">
+        <hr>
+        <h2 id="GuestLogin">{{ 'customer.login_page.guest_title' | t }}</h2>
+
+        {%- form 'guest_login', aria-labelledby: 'GuestLogin' -%}
+          <button class="button button--primary">
+            {{ 'customer.login_page.guest_continue' | t }}
+          </button>
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% javascript %}
+window.document.onload = (event) => {
+  if (window.location.href.includes('#recover')) {
+    const event = new CustomEvent('dialog:trigger:recover');
+    document.dispatchEvent(event);
+  }
+}
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:login",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_shop_login_button",
+      "label": "t:enable-shop-login-button",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color-scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

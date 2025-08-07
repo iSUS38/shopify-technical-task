@@ -808,6 +808,14 @@
           }
         }
       }
+    },
+    "purchase_event_offer": {
+      "name": "Purchase event offer",
+      "settings": {
+        "title": {
+          "label": "Purchase event offer"
+        }
+      }
     }
   }
 }

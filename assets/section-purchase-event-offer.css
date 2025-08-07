@@ -1,0 +1,4 @@
+.purchase-product-offer-wrapper {
+    display: grid;
+    grid-template-columns: 1fr [media] min(calc(87.5rem / 2),calc(50% - 4vw)) 0px min(calc(87.5rem / 2),calc(50% - 4vw)) 1fr;
+}

@@ -1,3 +1,24 @@
+{{ 'section-purchase-event-offer.css' | asset_url | stylesheet_tag }}
+
+{% assign offer_product = all_products["exclsive-event-offer"] %}
+
+{% if offer_product %}
+    <div>
+        {% if section.settings.title %}
+            <h4>{{ section.settings.title | t }}</h4>
+        {% endif %}
+
+        <div class="purchase-product-offer-wrapper">
+            <div class="pdp__media">
+                {% render 'event-offer-product-media' with id: section.id, product: offer_product %}
+            </div>
+            <div>
+                {% content_for 'blocks' %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
 {% schema %}
 {
     "name": "t:sections.purchase_event_offer.name",
@@ -6,6 +27,23 @@
             "type": "inline_richtext",
             "label": "t:title",
             "id": "title"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "_pdp-title",
+        },
+        {
+            "type": "_pdp-price"
+        },
+        {
+            "type": "_pdp-description"
+        },
+        {
+            "type": "_pdp-variant-picker"
+        },
+        {
+            "type": "_pdp-buy-buttons"
         }
     ],
     "presets": [

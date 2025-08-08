@@ -1,8 +1,8 @@
 {{ 'section-purchase-event-offer.css' | asset_url | stylesheet_tag }}
 
-{% assign offer_product = all_products["exclsive-event-offer"] %}
+{% assign offered_product = section.settings.offered_product %}
 
-{% if offer_product %}
+{% if offered_product %}
     <div>
         {% if section.settings.title %}
             <h4>{{ section.settings.title | t }}</h4>
@@ -10,10 +10,12 @@
 
         <div class="purchase-product-offer-wrapper">
             <div class="pdp__media">
-                {% render 'event-offer-product-media' with id: section.id, product: offer_product %}
+                {% render 'event-offer-product-media' with id: section.id, product: offered_product %}
             </div>
             <div>
-                {% content_for 'blocks' %}
+                {% for block in section.blocks %}
+                    {% render block.type %}
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -27,6 +29,11 @@
             "type": "inline_richtext",
             "label": "t:title",
             "id": "title"
+        },
+        {
+            "type": "product",
+            "label": "t:product",
+            "id": "offered_product"
         }
     ],
     "blocks": [

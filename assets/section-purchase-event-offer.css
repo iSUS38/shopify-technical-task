@@ -1,4 +1,13 @@
 .purchase-product-offer-wrapper {
     display: grid;
-    grid-template-columns: 1fr [media] min(calc(87.5rem / 2),calc(50% - 4vw)) 0px min(calc(87.5rem / 2),calc(50% - 4vw)) 1fr;
+    grid-template-columns: 1fr 1fr;
+}
+
+.purchase-product-offer-wrapper .pdp__media {
+    grid-column: 1;
+}
+
+.purchase-product-offer-wrapper .pdp__media .pdp-thumbnails__main-wrapper img {
+    max-width: 350px;
+    max-height: 350px;
 }

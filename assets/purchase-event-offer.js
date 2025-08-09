@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', (event) => {
     var purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
-    
+
     if (purchaseEventOfferContainer) {
         var offerProductVariantPickerContainer = purchaseEventOfferContainer.querySelector(".variant-picker");
         var allAvailableVariantOptions = offerProductVariantPickerContainer?.querySelectorAll(".variant-picker__label");
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         if (offeredProductHandle) {
             allAvailableVariantOptions.forEach(function (variantOption) {
                 variantOption.addEventListener("click", async function () {
-                    var productData = await fetchEventOfferProductData();
+                    var productData = await fetchEventOfferProductData(offeredProductHandle);
 
                     if (productData && productData.variants) {
                         console.log(productData)
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 async function fetchEventOfferProductData(productHandle) {
-    var res = await fetch(window.Shopify.routes.root + 'products/exclsive-event-offer.js');
+    var res = await fetch(window.Shopify.routes.root + `products/${productHandle}.js`);
 
     if (!res.ok) throw new Error('Product not found');
 
@@ -37,7 +37,6 @@ function updateProductVariants(variants, productOptions) {
     var availableVariantsOptions1 = [];
     var availableVariantsOptions2 = [];
     var availableVariantsOptions3 = [];
-    //var allAvailableVariants = null;
 
     for (selectedOption of allSelectedOptionsEl) {
         currentSelectedOptions.push(selectedOption.value);
@@ -71,19 +70,15 @@ function updateProductVariants(variants, productOptions) {
         }
     }
 
+    var currentSelectedVariant = getCurrentSelectedVariant(variants, currentSelectedOptions, productOptions.length);
+
+    console.log(allAvailableVariants)
+
     disableAllVariationSwatches();
 
     updateVariationSwathesAvailability(allAvailableVariants);
 
     enableDependedVariationSwatches(productOptions, availableVariantsOptions1, availableVariantsOptions2);
-
-    var currentSelectedVariant = variants.filter((variant) => {
-        if (variant.option1 === currentSelectedOptions[0] 
-            && variant.option2 === currentSelectedOptions[1]
-            && variant.option3 === currentSelectedOptions[2]) {
-                return variant;
-        }
-    });
 
     updateCurrentProduct(currentSelectedVariant.length ? currentSelectedVariant[0] : {});
 }
@@ -172,6 +167,8 @@ function updateCurrentProduct(selectedProductData) {
     var localeTextSettings = window.variantStrings;
     var selectedProductImageId = selectedProductData.featured_media?.id;
 
+    console.log(selectedProductData)
+
     if (selectedProductData.available) {
 
         addToCartButton.removeAttribute("aria-disabled");
@@ -196,4 +193,33 @@ function updateCurrentProduct(selectedProductData) {
         activeThumbnailImage.removeAttribute("aria-pressed");
         searchThumbnailImage.setAttribute("aria-pressed", true);
     }
+}
+
+function getCurrentSelectedVariant(variants, currentSelectedOptions, allOptionsCount) {
+    return variants.filter((variant) => {
+        switch (allOptionsCount) {
+            case 1:
+                if (variant.option1 === currentSelectedOptions[0]) {
+                    return variant;
+                }
+
+                break;
+            case 2:
+                if (variant.option1 === currentSelectedOptions[0] 
+                    && variant.option2 === currentSelectedOptions[1]) {
+                    return variant;
+                }
+
+                break;
+            case 3:
+                if (variant.option1 === currentSelectedOptions[0] 
+                    && variant.option2 === currentSelectedOptions[1]
+                    && variant.option3 === currentSelectedOptions[2]) {
+                    return variant;
+                }
+                break;
+            default:
+                break;
+        }
+    });
 }

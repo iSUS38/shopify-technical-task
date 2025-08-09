@@ -1,14 +1,16 @@
-{{ 'section-purchase-event-offer.css' | asset_url | stylesheet_tag }}
-
-{% assign offered_product = section.settings.offered_product %}
+{% assign offered_product = section.settings.product %}
 
 {% if offered_product %}
-    <div>
+    <script src="{{ 'purchase-event-offer.js' | asset_url }}" defer="defer"></script>
+
+    {{ 'section-purchase-event-offer.css' | asset_url | stylesheet_tag }}
+
+    <div class="container container--xl padding--section">
         {% if section.settings.title %}
-            <h4>{{ section.settings.title | t }}</h4>
+            <h4>{{ section.settings.title }}</h4>
         {% endif %}
 
-        <div class="purchase-product-offer-wrapper">
+        <div class="purchase-product-offer-wrapper" data-product-handle="{{ offered_product.handle }}">
             <div class="pdp__media">
                 {% render 'event-offer-product-media' with id: section.id, product: offered_product %}
             </div>

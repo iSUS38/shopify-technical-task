@@ -11,3 +11,7 @@
     max-width: 350px;
     max-height: 350px;
 }
+
+.purchase-product-offer-wrapper .buy-buttons {
+    margin-block-start: var(--margin-block-start, var(--space-m-l));
+}

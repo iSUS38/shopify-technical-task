@@ -62,17 +62,22 @@ function updateProductVariants(variants, productOptions) {
 
         allAvailableVariants = variants.filter((variant) => variant.available && variant.options[0] ===  firstSelectedOption);
 
-        if (currentSelectedOptions.length > 2) {
+        if (currentSelectedOptions.length === 3) {
             var secondSelectedOption = currentSelectedOptions[1];
 
-            
             allAvailableVariants = allAvailableVariants.filter((variant) => variant.available && variant.options[1] === secondSelectedOption);
+        }
+
+        if (currentSelectedOptions.length === 2) {
+            var firstSelectedOption = currentSelectedOptions[0];
+
+            allAvailableVariants = allAvailableVariants.filter((variant) => variant.available && variant.options[0] === firstSelectedOption);
         }
     }
 
-    var currentSelectedVariant = getCurrentSelectedVariant(variants, currentSelectedOptions, productOptions.length);
-
     console.log(allAvailableVariants)
+
+    var currentSelectedVariant = getCurrentSelectedVariant(variants, currentSelectedOptions, productOptions.length);
 
     disableAllVariationSwatches();
 
@@ -84,18 +89,20 @@ function updateProductVariants(variants, productOptions) {
 }
 
 function enableDependedVariationSwatches(productOptions, availableVariantsOptions1, availableVariantsOptions2) {
-    if (productOptions.length > 2) {
+    if (productOptions.length >= 2) {
         var allVariantsSwatches = getAllVariantsSwatches();
 
         for (variationSwatch of allVariantsSwatches) {
-            var variationSwatchValue = variationSwatch.value;
+            let variationSwatchValue = variationSwatch.value;
 
             if (availableVariantsOptions1 && availableVariantsOptions1.indexOf(variationSwatchValue) !== -1) {
                 enableVariationSwatch(variationSwatch);
             }
 
-            if (availableVariantsOptions2 && availableVariantsOptions2.indexOf(variationSwatchValue) !== -1) {
-                enableVariationSwatch(variationSwatch);
+            if (productOptions.length === 3) {
+                if (availableVariantsOptions2 && availableVariantsOptions2.indexOf(variationSwatchValue) !== -1) {
+                    enableVariationSwatch(variationSwatch);
+                }
             }
         }
     }
@@ -159,15 +166,25 @@ function getAllVariantsSwatches() {
 
 function updateCurrentProduct(selectedProductData) {
     var purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
+
     var mediaWrapper = purchaseEventOfferContainer.querySelector(".pdp__media");
     var mainImagesWrapper = mediaWrapper.querySelector(".pdp-thumbnails__main-wrapper");
     var thumbnailImagesWrapper = mediaWrapper.querySelector(".pdp-thumbnails__list");
+
     var addToCartButton = purchaseEventOfferContainer.querySelector(".buy-buttons__buttons button[type='submit']");
     var addToCartButtonTextInner = addToCartButton.querySelector("span");
-    var localeTextSettings = window.variantStrings;
-    var selectedProductImageId = selectedProductData.featured_media?.id;
+    var addToCartForm = purchaseEventOfferContainer.querySelector(".buy-buttons__form");
 
-    console.log(selectedProductData)
+    var regularPriceContainer = purchaseEventOfferContainer.querySelector(".price__regular");
+    var salePriceContainer = purchaseEventOfferContainer.querySelector(".price__on-sale");
+
+    var allVariantPickerCaptions = purchaseEventOfferContainer.querySelectorAll(".variant-picker__legend legend span");
+
+    var currencyCode = purchaseEventOfferContainer.getAttribute("data-currency-code") || "€";
+    var selectedProductImageId = selectedProductData.featured_media?.id;
+    var selectedProductRegularPrice = selectedProductData.price;
+    var selectedProductSalePrice = selectedProductData.compare_at_price;
+    var localeTextSettings = window.variantStrings;
 
     if (selectedProductData.available) {
 
@@ -193,6 +210,28 @@ function updateCurrentProduct(selectedProductData) {
         activeThumbnailImage.removeAttribute("aria-pressed");
         searchThumbnailImage.setAttribute("aria-pressed", true);
     }
+
+    allVariantPickerCaptions.forEach((caption, index) => {
+        caption.innerHTML = selectedProductData.options[index];
+    });
+
+    console.log(selectedProductSalePrice)
+    console.log(selectedProductData)
+
+    if (selectedProductSalePrice) {
+        regularPriceContainer.style.display = "none";
+        salePriceContainer.style.display = "block";
+
+        salePriceContainer.querySelector(".exception").innerHTML = currencyCode + (selectedProductRegularPrice / 100).toFixed(2);
+        salePriceContainer.querySelector(".secondary").innerHTML = currencyCode + (selectedProductSalePrice / 100).toFixed(2);
+    } else {
+        regularPriceContainer.style.display = "block";
+        salePriceContainer.style.display = "none";
+
+        regularPriceContainer.querySelector(".price-item--regular").innerHTML = currencyCode + (selectedProductRegularPrice / 100).toFixed(2);
+    }
+
+    addToCartForm.querySelector("input[name='id']").value = selectedProductData.id;
 }
 
 function getCurrentSelectedVariant(variants, currentSelectedOptions, allOptionsCount) {

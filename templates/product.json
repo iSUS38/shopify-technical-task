@@ -167,6 +167,79 @@
         "enable_transparent_header": false
       }
     },
+    "purchase-event-offer": {
+      "type": "purchase-event-offer",
+      "blocks": {
+        "pdp_title_LGKHzt": {
+          "type": "_pdp-title",
+          "name": "t:title",
+          "settings": {
+            "heading_size": "h2",
+            "enable_share": false,
+            "share_color_scheme": ""
+          },
+          "blocks": {}
+        },
+        "pdp_description_w6m4Jh": {
+          "type": "_pdp-description",
+          "name": "t:description",
+          "settings": {
+            "text": "<p>{{ closest.product.description }}</p>",
+            "enable_truncation": false,
+            "word_limit": 40,
+            "title": "{{ closest.product.title }}"
+          },
+          "blocks": {}
+        },
+        "pdp_price_96zipk": {
+          "type": "_pdp-price",
+          "name": "t:price",
+          "settings": {
+            "font_style": "caption"
+          },
+          "blocks": {}
+        },
+        "pdp_variant_picker_6yQxAg": {
+          "type": "_pdp-variant-picker",
+          "name": "t:variant-picker",
+          "settings": {
+            "variant_picker_style": "buttons",
+            "swatch_style": "default",
+            "option_1": "",
+            "option_1_page": "",
+            "option_1_label": "icon",
+            "option_2": "",
+            "option_2_page": "",
+            "option_2_label": "icon",
+            "option_3": "",
+            "option_3_page": "",
+            "option_3_label": "icon"
+          },
+          "blocks": {}
+        },
+        "pdp_buy_buttons_TCjDQT": {
+          "type": "_pdp-buy-buttons",
+          "name": "t:buy-buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_quantity_selector": true,
+            "show_gift_card_recipient": true
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "pdp_title_LGKHzt",
+        "pdp_description_w6m4Jh",
+        "pdp_price_96zipk",
+        "pdp_variant_picker_6yQxAg",
+        "pdp_buy_buttons_TCjDQT"
+      ],
+      "settings": {
+        "title": "Join us and stay healthy",
+        "product": "kollageeni-biotiini"
+      }
+    },
     "media_grid_htFLjJ": {
       "type": "media-grid",
       "blocks": {
@@ -328,79 +401,6 @@
         "show_bottom_border": false
       }
     },
-    "purchase-event-offer": {
-      "type": "purchase-event-offer",
-      "blocks": {
-        "pdp_title_LGKHzt": {
-          "type": "_pdp-title",
-          "name": "t:title",
-          "settings": {
-            "heading_size": "h2",
-            "enable_share": false,
-            "share_color_scheme": ""
-          },
-          "blocks": {}
-        },
-        "pdp_description_w6m4Jh": {
-          "type": "_pdp-description",
-          "name": "t:description",
-          "settings": {
-            "text": "<p>{{ closest.product.description }}</p>",
-            "enable_truncation": false,
-            "word_limit": 40,
-            "title": "{{ closest.product.title }}"
-          },
-          "blocks": {}
-        },
-        "pdp_price_96zipk": {
-          "type": "_pdp-price",
-          "name": "t:price",
-          "settings": {
-            "font_style": "caption"
-          },
-          "blocks": {}
-        },
-        "pdp_variant_picker_6yQxAg": {
-          "type": "_pdp-variant-picker",
-          "name": "t:variant-picker",
-          "settings": {
-            "variant_picker_style": "buttons",
-            "swatch_style": "default",
-            "option_1": "",
-            "option_1_page": "",
-            "option_1_label": "icon",
-            "option_2": "",
-            "option_2_page": "",
-            "option_2_label": "icon",
-            "option_3": "",
-            "option_3_page": "",
-            "option_3_label": "icon"
-          },
-          "blocks": {}
-        },
-        "pdp_buy_buttons_TCjDQT": {
-          "type": "_pdp-buy-buttons",
-          "name": "t:buy-buttons",
-          "settings": {
-            "show_dynamic_checkout": true,
-            "show_quantity_selector": true,
-            "show_gift_card_recipient": true
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "pdp_title_LGKHzt",
-        "pdp_description_w6m4Jh",
-        "pdp_price_96zipk",
-        "pdp_variant_picker_6yQxAg",
-        "pdp_buy_buttons_TCjDQT"
-      ],
-      "settings": {
-        "title": "Join us and stay healthy",
-        "product": "exclsive-event-offer"
-      }
-    },
     "related-products": {
       "type": "related-products",
       "blocks": {
@@ -440,8 +440,8 @@
   },
   "order": [
     "main",
-    "media_grid_htFLjJ",
     "purchase-event-offer",
+    "media_grid_htFLjJ",
     "related-products"
   ]
 }

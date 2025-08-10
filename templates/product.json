@@ -375,6 +375,7 @@
           "type": "_media-grid-image",
           "name": "t:image",
           "settings": {
+            "image": "shopify://shop_images/491271832_1091536076351266_8544156471752842410_n.jpg",
             "image_ratio": "default",
             "link": "",
             "link_label": "",

@@ -365,11 +365,11 @@
           "settings": {
             "layout_header": "left",
             "subheading": "",
-            "heading": "Heading",
+            "heading": "",
             "page_title": false,
             "heading_size": "h2",
             "text": "",
-            "button_label": "Button label",
+            "button_label": "",
             "button_link": ""
           },
           "blocks": {}

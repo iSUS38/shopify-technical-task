@@ -811,6 +811,12 @@
     },
     "purchase_event_offer": {
       "name": "Purchase event offer",
+      "blocks": {
+        "member_form": 
+          {
+            "name": "Participant form"
+          }
+      },
       "settings": {
         "title": {
           "label": "Purchase event offer"

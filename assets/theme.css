@@ -7340,6 +7340,10 @@ deferred-media:not([data-loaded=true]) {
   transition: all .7s ease-in-out;
 }
 
+.sport-event-member-form-container .controls input[type='date'] {
+  -webkit-appearance: none;
+}
+
 .sport-event-member-form-container h4 {
   font-size: 26px;
 }

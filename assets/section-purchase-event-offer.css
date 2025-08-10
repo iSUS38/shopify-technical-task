@@ -8,8 +8,9 @@
 }
 
 .purchase-product-offer-wrapper .pdp__media .pdp-thumbnails__main-wrapper img {
-    max-width: 350px;
-    max-height: 350px;
+    width: 350px;
+    height: 300px;
+    object-fit: cover;
 }
 
 .purchase-product-offer-wrapper .buy-buttons {

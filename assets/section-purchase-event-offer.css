@@ -25,6 +25,12 @@
     display: none;
 }
 
+.purchase-product-offer-wrapper .pdp__media .media-gallery {
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
 @media  screen and (max-width: 768px) {
     .purchase-product-offer-wrapper {
         grid-template-columns: 1fr;

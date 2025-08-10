@@ -7290,4 +7290,48 @@ deferred-media:not([data-loaded=true]) {
   }
 }
 
+.sport-event-member-form-wrapper {
+  margin: 23px 0;
+  border: var(--border);
+  padding: 18px 22px;
+}
+
+.sport-event-member-form-wrapper label {
+  vertical-align: bottom;
+}
+
+.sport-event-member-form-wrapper .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sport-event-member-form-wrapper .controls {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.sport-event-member-form-wrapper .event-form-submit-button {
+  margin-top: 20px;
+}
+
+.sport-event-member-form-wrapper .event-form-submit-button button {
+  background-color: rgba(var(--color-primary-button));
+  height: clamp(25px,var(--shopify-accelerated-checkout-button-block-size, 44px),55px);
+  min-height: clamp(25px,var(--shopify-accelerated-checkout-button-block-size, 44px),55px);
+  border-radius: var(--shopify-accelerated-checkout-button-border-radius, 0px);
+  width: 100%;
+  border: none;
+  box-shadow: 0 0 0 0 transparent;
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  font-size: 1em;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  transition: background .2s ease-in-out;
+}
+
 /* css/theme.css */

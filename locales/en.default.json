@@ -11,7 +11,8 @@
   "general": {
     "continue_shopping": "Continue shopping",
     "breadcrumbs_homepage": "Home",
-    "error": "Something went wrong, please refresh the page and try again."
+    "error": "Something went wrong, please refresh the page and try again.",
+    "choose": "Choose"
   },
   "search": {
     "no_results": "No results found for “{{ terms }}”. Check the spelling or use a different word or phrase.",
@@ -67,6 +68,22 @@
     "cart_count": {
       "one": "{{ count }} item",
       "other": "{{ count }} items"
+    }
+  },
+  "forms": {
+    "first_name": "First name",
+    "last_name": "Last name",
+    "phone_number": "Phone number",
+    "sex": "sex",
+    "member_id": "Member id",
+    "postal_code": "Postal code",
+    "birth_date": "Birth date",
+    "email": "Email",
+    "submit": "Submit",
+    "sex_options": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
     }
   },
   "localization": {

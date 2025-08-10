@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', function () {
     var purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
 
     if (purchaseEventOfferContainer) {

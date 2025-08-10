@@ -217,6 +217,14 @@
           },
           "blocks": {}
         },
+        "sport_event_member_form_BVfV74": {
+          "type": "_sport-event-member-form",
+          "name": "Test",
+          "settings": {
+            "form_title": "<p>Fill participant form now or later</p>"
+          },
+          "blocks": {}
+        },
         "pdp_buy_buttons_TCjDQT": {
           "type": "_pdp-buy-buttons",
           "name": "t:buy-buttons",
@@ -233,6 +241,7 @@
         "pdp_description_w6m4Jh",
         "pdp_price_96zipk",
         "pdp_variant_picker_6yQxAg",
+        "sport_event_member_form_BVfV74",
         "pdp_buy_buttons_TCjDQT"
       ],
       "settings": {

@@ -1,22 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var allSportEventsForm = document.querySelectorAll(".sport-event-member-form-wrapper form");
+    const allSportEventsForm = document.querySelectorAll(".sport-event-member-form-wrapper form");
 
     allSportEventsForm.forEach(function (form) {
         form.addEventListener("submit", (event) => {
             event.preventDefault();
 
-            var formEl = event.target;
-            var actionUrl = formEl.action;
-            var requestObject = {};
+            const formEl = event.target;
+            const actionUrl = formEl.getAttribute("data-action");
+            const requestObject = {};
 
-            var firstName = formEl.querySelector("input[name='attributes[Firstname]']");
-            var lastName = formEl.querySelector("input[name='attributes[Lastname]']");
-            var email = formEl.querySelector("input[name='attributes[Email]']");
-            var phoneNumber = formEl.querySelector("input[name='attributes[Phone number]']");
-            var postalCode = formEl.querySelector("input[name='attributes[Postal code]']");
-            var sex = formEl.querySelector("select[name='attributes[Sex]']");
-            var birthDate = formEl.querySelector("input[name='attributes[Birth date]']");
-            var memberId = formEl.querySelector("input[name='attributes[Member id]']");
+            const firstName = formEl.querySelector("input[name='attributes[Firstname]']");
+            const lastName = formEl.querySelector("input[name='attributes[Lastname]']");
+            const email = formEl.querySelector("input[name='attributes[Email]']");
+            const phoneNumber = formEl.querySelector("input[name='attributes[Phone number]']");
+            const postalCode = formEl.querySelector("input[name='attributes[Postal code]']");
+            const sex = formEl.querySelector("select[name='attributes[Sex]']");
+            const birthDate = formEl.querySelector("input[name='attributes[Birth date]']");
+            const memberId = formEl.querySelector("input[name='attributes[Member id]']");
 
             if (firstName) {
                 requestObject["First name"] = firstName.value;
@@ -51,6 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if (actionUrl) {
+                actionUrl = "/" + actionUrl;
+
                 fetch(actionUrl, {
                     method: "POST",
                     headers: {
@@ -59,12 +61,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     body: JSON.stringify({
                         "attributes": requestObject
                     })
-                }).then(res => res.json()).then(res => console.log(res))
+                })
+                .then(res => res.json())
+                .then(() => {
+                    const blockParentContainer = formEl.closest(".sport-event-member-form-container");
+
+                    blockParentContainer.style.maxHeight = 0;
+                })
             }
-
-            console.log(requestObject)
-
-            console.log(actionUrl)
         });
     });
 });

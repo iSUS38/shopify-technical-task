@@ -15,3 +15,21 @@
 .purchase-product-offer-wrapper .buy-buttons {
     margin-block-start: var(--margin-block-start, var(--space-m-l));
 }
+
+.purchase-product-offer-container .event-offer-title {
+    margin-bottom: 20px;
+}
+
+.purchase-product-offer-container .quantity-input {
+    display: none;
+}
+
+@media  screen and (max-width: 768px) {
+    .purchase-product-offer-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .purchase-product-offer-container .event-offer-title {
+        text-align: center;
+    }
+}

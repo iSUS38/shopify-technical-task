@@ -1,55 +1,57 @@
 <script src="{{ 'sport-event-member-form.js' | asset_url }}" defer="defer"></script>
 
-<div class="sport-event-member-form-wrapper">
-    {% if block.settings.form_title %}
-        <h4>{{ block.settings.form_title }}</h4>
-    {% endif %}
+<div class="sport-event-member-form-container">
+    <div class="sport-event-member-form-wrapper">
+        {% if block.settings.form_title %}
+            <h4>{{ block.settings.form_title }}</h4>
+        {% endif %}
 
-    <form method="post" action="cart/update.js">
-        <div class="form-group">
-            <div class="controls">
-                <label>{{ 'forms.first_name' | t }}<sup>*</sup></label>
-                <input type="text" name="attributes[Firstname]" required>
+        <form method="post" data-action="cart/update.js">
+            <div class="form-group">
+                <div class="controls">
+                    <label>{{ 'forms.first_name' | t }}<sup>*</sup></label>
+                    <input type="text" name="attributes[Firstname]" required>
+                </div>
+                <div class="controls">
+                    <label>{{ 'forms.last_name' | t }}<sup>*</sup></label>
+                    <input type="text" name="attributes[Lastname]" required>
+                </div>
+                <div class="controls">
+                    <label>{{ 'forms.email' | t }}<sup>*</sup></label>
+                    <input type="email" name="attributes[Email]" required>
+                </div>
+                <div class="controls">
+                    <label>{{ 'forms.phone_number' | t }}<sup>*</sup></label>
+                    <input type="tel" name="attributes[Phone number]" required>
+                </div>
+                <div class="controls">
+                    <label>{{ 'forms.postal_code' | t }}<sup>*</sup></label>
+                    <input type="text" name="attributes[Postal code]" required>
+                </div>
+                <div class="controls">
+                    <label>{{ 'forms.birth_date' | t }}<sup>*</sup></label>
+                    <input type="date" name="attributes[Birth date]" required>
+                </div>
+                <div class="controls">
+                    <label>{{ 'forms.sex' | t }}<sup>*</sup></label>
+                    <select name="attributes[Sex]" required>
+                    <option value="">{{ 'general.choose' | t }}</option>
+                    <option value="Male">{{ 'forms.sex_options.male' | t }}</option>
+                    <option value="Female">{{ 'forms.sex_options.female' | t }}</option>
+                    <option value="Other">{{ 'forms.sex_options.other' | t }}</option>
+                    </select>
+                </div>
+                <div class="controls">
+                    <label>{{ 'forms.member_id' | t }}</label>
+                    <input type="text" name="attributes[Member id]">
+                </div>
             </div>
-            <div class="controls">
-                <label>{{ 'forms.last_name' | t }}<sup>*</sup></label>
-                <input type="text" name="attributes[Lastname]" required>
-            </div>
-            <div class="controls">
-                <label>{{ 'forms.email' | t }}<sup>*</sup></label>
-                <input type="email" name="attributes[Email]" required>
-            </div>
-            <div class="controls">
-                <label>{{ 'forms.phone_number' | t }}<sup>*</sup></label>
-                <input type="tel" name="attributes[Phone number]" required>
-            </div>
-            <div class="controls">
-                <label>{{ 'forms.postal_code' | t }}<sup>*</sup></label>
-                <input type="text" name="attributes[Postal code]" required>
-            </div>
-            <div class="controls">
-                <label>{{ 'forms.birth_date' | t }}<sup>*</sup></label>
-                <input type="date" name="attributes[Birth date]" required>
-            </div>
-            <div class="controls">
-                <label>{{ 'forms.sex' | t }}<sup>*</sup></label>
-                <select name="attributes[Sex]" required>
-                <option value="">{{ 'general.choose' | t }}</option>
-                <option value="Male">{{ 'forms.sex_options.male' | t }}</option>
-                <option value="Female">{{ 'forms.sex_options.female' | t }}</option>
-                <option value="Other">{{ 'forms.sex_options.other' | t }}</option>
-                </select>
-            </div>
-            <div class="controls">
-                <label>{{ 'forms.member_id' | t }}</label>
-                <input type="text" name="attributes[Member id]">
-            </div>
-        </div>
 
-        <div class="event-form-submit-button">
-            <button>{{ 'forms.submit' | t }}</button>
-        </div>
-    </form>
+            <div class="event-form-submit-button">
+                <button>{{ 'forms.submit' | t }}</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 

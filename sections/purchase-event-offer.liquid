@@ -5,9 +5,9 @@
 
     {{ 'section-purchase-event-offer.css' | asset_url | stylesheet_tag }}
 
-    <div class="container container--xl padding--section">
+    <div class="container container--xl padding--section purchase-product-offer-container">
         {% if section.settings.title %}
-            <h4>{{ section.settings.title }}</h4>
+            <h4 class="event-offer-title">{{ section.settings.title }}</h4>
         {% endif %}
 
         <div class="purchase-product-offer-wrapper" data-product-handle="{{ offered_product.handle }}" data-currency-code="{{ cart.currency.symbol }}">

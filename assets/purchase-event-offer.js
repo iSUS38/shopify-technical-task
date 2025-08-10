@@ -1,18 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
+    const purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
 
     if (purchaseEventOfferContainer) {
-        var offerProductVariantPickerContainer = purchaseEventOfferContainer.querySelector(".variant-picker");
-        var allAvailableVariantOptions = offerProductVariantPickerContainer?.querySelectorAll(".variant-picker__label");
-        var offeredProductHandle = purchaseEventOfferContainer.getAttribute("data-product-handle");
+        const offerProductVariantPickerContainer = purchaseEventOfferContainer.querySelector(".variant-picker");
+        const allAvailableVariantOptions = offerProductVariantPickerContainer?.querySelectorAll(".variant-picker__label");
+        const offeredProductHandle = purchaseEventOfferContainer.getAttribute("data-product-handle");
 
         if (offeredProductHandle) {
             allAvailableVariantOptions.forEach(function (variantOption) {
                 variantOption.addEventListener("click", async function () {
-                    var productData = await fetchEventOfferProductData(offeredProductHandle);
+                    const productData = await fetchEventOfferProductData(offeredProductHandle);
 
                     if (productData && productData.variants) {
-                        console.log(productData)
                         updateProductVariants(productData.variants, productData.options);
                     }
                 });
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function fetchEventOfferProductData(productHandle) {
-    var res = await fetch(window.Shopify.routes.root + `products/${productHandle}.js`);
+    let res = await fetch(window.Shopify.routes.root + `products/${productHandle}.js`);
 
     if (!res.ok) throw new Error('Product not found');
 
@@ -30,13 +29,13 @@ async function fetchEventOfferProductData(productHandle) {
 }
 
 function updateProductVariants(variants, productOptions) {
-    var purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
-    var allSelectedOptionsEl = purchaseEventOfferContainer.querySelectorAll(".variant-picker__radio:checked");
-    var allAvailableVariants = variants.filter((variant) => variant.available);
-    var currentSelectedOptions = [];
-    var availableVariantsOptions1 = [];
-    var availableVariantsOptions2 = [];
-    var availableVariantsOptions3 = [];
+    const purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
+    const allSelectedOptionsEl = purchaseEventOfferContainer.querySelectorAll(".variant-picker__radio:checked");
+    const allAvailableVariants = variants.filter((variant) => variant.available);
+    const currentSelectedOptions = [];
+    const availableVariantsOptions1 = [];
+    const availableVariantsOptions2 = [];
+    const availableVariantsOptions3 = [];
 
     for (selectedOption of allSelectedOptionsEl) {
         currentSelectedOptions.push(selectedOption.value);
@@ -57,25 +56,23 @@ function updateProductVariants(variants, productOptions) {
     });
 
     if (currentSelectedOptions.length > 1) {
-        var firstSelectedOption = currentSelectedOptions[0];
+        const firstSelectedOption = currentSelectedOptions[0];
 
 
         allAvailableVariants = variants.filter((variant) => variant.available && variant.options[0] ===  firstSelectedOption);
 
         if (currentSelectedOptions.length === 3) {
-            var secondSelectedOption = currentSelectedOptions[1];
+            const secondSelectedOption = currentSelectedOptions[1];
 
             allAvailableVariants = allAvailableVariants.filter((variant) => variant.available && variant.options[1] === secondSelectedOption);
         }
 
         if (currentSelectedOptions.length === 2) {
-            var firstSelectedOption = currentSelectedOptions[0];
+            const firstSelectedOption = currentSelectedOptions[0];
 
             allAvailableVariants = allAvailableVariants.filter((variant) => variant.available && variant.options[0] === firstSelectedOption);
         }
     }
-
-    console.log(allAvailableVariants)
 
     var currentSelectedVariant = getCurrentSelectedVariant(variants, currentSelectedOptions, productOptions.length);
 
@@ -93,7 +90,7 @@ function enableDependedVariationSwatches(productOptions, availableVariantsOption
         var allVariantsSwatches = getAllVariantsSwatches();
 
         for (variationSwatch of allVariantsSwatches) {
-            let variationSwatchValue = variationSwatch.value;
+            const variationSwatchValue = variationSwatch.value;
 
             if (availableVariantsOptions1 && availableVariantsOptions1.indexOf(variationSwatchValue) !== -1) {
                 enableVariationSwatch(variationSwatch);
@@ -109,8 +106,8 @@ function enableDependedVariationSwatches(productOptions, availableVariantsOption
 }
 
 function enableVariationSwatch(variationSwatch) {
-    var variationSwatchLabelEl = variationSwatch.nextElementSibling;
-    var variationSwatchValue = variationSwatch.value;
+    const variationSwatchLabelEl = variationSwatch.nextElementSibling;
+    const variationSwatchValue = variationSwatch.value;
 
     variationSwatch.classList.remove("disabled");
 
@@ -126,10 +123,10 @@ function updateVariationSwathesAvailability(availableVariants) {
         var allVariantsSwatches = getAllVariantsSwatches();
 
         for (variationSwatch of allVariantsSwatches) {
-            var variationSwatchValue = variationSwatch.value;
+            const variationSwatchValue = variationSwatch.value;
 
             for (let i = 0; i < availableVariants.length; i++) {
-                var variant  = availableVariants[i];
+                const variant  = availableVariants[i];
 
                 if (variant.options && variant.options.indexOf(variationSwatchValue) !== -1) {
                     enableVariationSwatch(variationSwatch);
@@ -140,7 +137,7 @@ function updateVariationSwathesAvailability(availableVariants) {
 }
 
 function disableAllVariationSwatches() {
-   var allVariantsSwatches = getAllVariantsSwatches();
+    const allVariantsSwatches = getAllVariantsSwatches();
 
    allVariantsSwatches.forEach(function (variantEl) {
         var optionValue = variantEl.value;
@@ -158,33 +155,33 @@ function disableAllVariationSwatches() {
 }
 
 function getAllVariantsSwatches() {
-    var purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
-    var allVariantsSwatches = purchaseEventOfferContainer.querySelectorAll(".variant-picker__radio");
+    const purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
+    const allVariantsSwatches = purchaseEventOfferContainer.querySelectorAll(".variant-picker__radio");
 
     return allVariantsSwatches;
 }
 
 function updateCurrentProduct(selectedProductData) {
-    var purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
+    const purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
 
-    var mediaWrapper = purchaseEventOfferContainer.querySelector(".pdp__media");
-    var mainImagesWrapper = mediaWrapper.querySelector(".pdp-thumbnails__main-wrapper");
-    var thumbnailImagesWrapper = mediaWrapper.querySelector(".pdp-thumbnails__list");
+    const mediaWrapper = purchaseEventOfferContainer.querySelector(".pdp__media");
+    const mainImagesWrapper = mediaWrapper.querySelector(".pdp-thumbnails__main-wrapper");
+    const thumbnailImagesWrapper = mediaWrapper.querySelector(".pdp-thumbnails__list");
 
-    var addToCartButton = purchaseEventOfferContainer.querySelector(".buy-buttons__buttons button[type='submit']");
-    var addToCartButtonTextInner = addToCartButton.querySelector("span");
-    var addToCartForm = purchaseEventOfferContainer.querySelector(".buy-buttons__form");
+    const addToCartButton = purchaseEventOfferContainer.querySelector(".buy-buttons__buttons button[type='submit']");
+    const addToCartButtonTextInner = addToCartButton.querySelector("span");
+    const addToCartForm = purchaseEventOfferContainer.querySelector(".buy-buttons__form");
 
-    var regularPriceContainer = purchaseEventOfferContainer.querySelector(".price__regular");
-    var salePriceContainer = purchaseEventOfferContainer.querySelector(".price__on-sale");
+    const regularPriceContainer = purchaseEventOfferContainer.querySelector(".price__regular");
+    const salePriceContainer = purchaseEventOfferContainer.querySelector(".price__on-sale");
 
-    var allVariantPickerCaptions = purchaseEventOfferContainer.querySelectorAll(".variant-picker__legend legend span");
+    const allVariantPickerCaptions = purchaseEventOfferContainer.querySelectorAll(".variant-picker__legend legend span");
 
-    var currencyCode = purchaseEventOfferContainer.getAttribute("data-currency-code") || "€";
-    var selectedProductImageId = selectedProductData.featured_media?.id;
-    var selectedProductRegularPrice = selectedProductData.price;
-    var selectedProductSalePrice = selectedProductData.compare_at_price;
-    var localeTextSettings = window.variantStrings;
+    const currencyCode = purchaseEventOfferContainer.getAttribute("data-currency-code") || "€";
+    const selectedProductImageId = selectedProductData.featured_media?.id;
+    const selectedProductRegularPrice = selectedProductData.price;
+    const selectedProductSalePrice = selectedProductData.compare_at_price;
+    const localeTextSettings = window.variantStrings;
 
     if (selectedProductData.available) {
 
@@ -214,9 +211,6 @@ function updateCurrentProduct(selectedProductData) {
     allVariantPickerCaptions.forEach((caption, index) => {
         caption.innerHTML = selectedProductData.options[index];
     });
-
-    console.log(selectedProductSalePrice)
-    console.log(selectedProductData)
 
     if (selectedProductSalePrice) {
         regularPriceContainer.style.display = "none";

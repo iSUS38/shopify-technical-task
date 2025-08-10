@@ -31,11 +31,12 @@ async function fetchEventOfferProductData(productHandle) {
 function updateProductVariants(variants, productOptions) {
     const purchaseEventOfferContainer = document.querySelector(".purchase-product-offer-wrapper");
     const allSelectedOptionsEl = purchaseEventOfferContainer.querySelectorAll(".variant-picker__radio:checked");
-    const allAvailableVariants = variants.filter((variant) => variant.available);
     const currentSelectedOptions = [];
     const availableVariantsOptions1 = [];
     const availableVariantsOptions2 = [];
     const availableVariantsOptions3 = [];
+
+    let allAvailableVariants = variants.filter((variant) => variant.available);
 
     for (selectedOption of allSelectedOptionsEl) {
         currentSelectedOptions.push(selectedOption.value);
@@ -140,11 +141,11 @@ function disableAllVariationSwatches() {
     const allVariantsSwatches = getAllVariantsSwatches();
 
    allVariantsSwatches.forEach(function (variantEl) {
-        var optionValue = variantEl.value;
-        var variantLabelEl = variantEl.nextElementSibling;
+        const optionValue = variantEl.value;
+        const variantLabelEl = variantEl.nextElementSibling;
 
         if (variantLabelEl) {
-            var variantLabelInner = variantLabelEl.querySelector("span");
+            const variantLabelInner = variantLabelEl.querySelector("span");
 
             variantLabelInner.innerHTML = `<s>${optionValue}</s>`;
             variantLabelEl.classList.add("disabled");

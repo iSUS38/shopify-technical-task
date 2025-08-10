@@ -221,7 +221,7 @@
           "type": "_sport-event-member-form",
           "name": "Test",
           "settings": {
-            "form_title": "<p>Fill participant form now or later</p>"
+            "form_title": "<p>Fill the participant form now or later</p>"
           },
           "blocks": {}
         },

@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const formEl = event.target;
-            const actionUrl = formEl.getAttribute("data-action");
             const requestObject = {};
+            let actionUrl = formEl.getAttribute("data-action");
 
             const firstName = formEl.querySelector("input[name='attributes[Firstname]']");
             const lastName = formEl.querySelector("input[name='attributes[Lastname]']");

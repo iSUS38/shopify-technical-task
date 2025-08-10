@@ -395,7 +395,7 @@
         "columns_desktop": "4",
         "columns_mobile": "2",
         "column_behavior": "slideshow",
-        "container_type": "max",
+        "container_type": "full",
         "grid_gap_vertical": "default",
         "grid_gap_horizontal": "default",
         "arrow_position": "overlay",

@@ -84,7 +84,8 @@
       "male": "Male",
       "female": "Female",
       "other": "Other"
-    }
+    },
+    "event_participant_form_submitted": "Your participant details have been submitted"
   },
   "localization": {
     "welcome": "Welcome",

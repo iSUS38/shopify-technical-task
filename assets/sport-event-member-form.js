@@ -64,9 +64,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .then(res => res.json())
                 .then(() => {
-                    const blockParentContainer = formEl.closest(".sport-event-member-form-container");
+                    const formContainerEl = formEl.closest(".sport-event-member-form-wrapper");
+                    const submittedFormTitleEl = formContainerEl.querySelector("h4[data-submitted-form-title]");
 
-                    blockParentContainer.style.maxHeight = 0;
+                    formEl.style.maxHeight = 0;
+                    submittedFormTitleEl.innerHTML = submittedFormTitleEl.getAttribute("data-submitted-form-title");
                 })
             }
         });

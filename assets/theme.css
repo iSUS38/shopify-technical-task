@@ -7336,8 +7336,17 @@ deferred-media:not([data-loaded=true]) {
 
 .sport-event-member-form-container {
   overflow: hidden;
+  transition: all .7s ease-in-out;
+}
+
+.sport-event-member-form-container form {
+  overflow: hidden;
   max-height: 700px;
   transition: all .7s ease-in-out;
+}
+
+.sport-event-member-form-container form.form-submitted {
+  max-height: 0;
 }
 
 .sport-event-member-form-container .controls input[type='date'] {

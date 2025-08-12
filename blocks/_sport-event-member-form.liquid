@@ -2,11 +2,13 @@
 
 <div class="sport-event-member-form-container">
     <div class="sport-event-member-form-wrapper">
-        {% if block.settings.form_title %}
-            <h4>{{ block.settings.form_title }}</h4>
-        {% endif %}
+        {% unless cart.attributes["Email"] %}
+            <h4 data-submitted-form-title="{{ 'forms.event_participant_form_submitted' | t  }}">{{ block.settings.form_title }}</h4>
+        {% else %}
+            <h4>{{ 'forms.event_participant_form_submitted' | t }}</h4>
+        {% endunless %}
 
-        <form method="post" data-action="cart/update.js">
+        <form method="post" data-action="cart/update.js" class="{% if cart.attributes["Email"] %}form-submitted{% endif %}">
             <div class="form-group">
                 <div class="controls">
                     <label>{{ 'forms.first_name' | t }}<sup>*</sup></label>

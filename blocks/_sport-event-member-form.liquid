@@ -2,13 +2,24 @@
 
 <div class="sport-event-member-form-container">
     <div class="sport-event-member-form-wrapper">
-        {% unless cart.attributes["Email"] %}
-            <h4 data-submitted-form-title="{{ 'forms.event_participant_form_submitted' | t  }}">{{ block.settings.form_title }}</h4>
-        {% else %}
-            <h4>{{ 'forms.event_participant_form_submitted' | t }}</h4>
-        {% endunless %}
+        {% liquid
+            assign form_title = ""
 
-        <form method="post" data-action="cart/update.js" class="{% if cart.attributes["Email"] %}form-submitted{% endif %}">
+            if  cart.attributes["sport_event_participant"]
+                assign form_title = 'forms.event_participant_form_submitted' | t
+            else 
+                assign form_title = block.settings.form_title
+            endif
+        %}
+
+        <h4
+            data-submitted-form-title="{{ 'forms.event_participant_form_submitted' | t  }}"
+            data-not-submitted-form-title="{{ block.settings.form_title }}"
+        >
+            {{ form_title }}
+        </h4>
+
+        <form method="post" data-action="cart/update.js" class="{% if cart.attributes["sport_event_participant"] %}form-submitted{% endif %}">
             <div class="form-group">
                 <div class="controls">
                     <label>{{ 'forms.first_name' | t }}<sup>*</sup></label>
@@ -53,6 +64,10 @@
                 <button>{{ 'forms.submit' | t }}</button>
             </div>
         </form>
+
+        <div class="event-form-edit-button">
+            <button>{{ 'forms.edit' | t }}</button>
+        </div>
     </div>
 </div>
 

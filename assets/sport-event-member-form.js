@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const allSportEventsForm = document.querySelectorAll(".sport-event-member-form-wrapper form");
+    const allSportEventsFormEditButtons = document.querySelectorAll(".sport-event-member-form-wrapper  .event-form-edit-button button");
 
     allSportEventsForm.forEach(function (form) {
         form.addEventListener("submit", (event) => {
@@ -50,6 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 requestObject["Member ID"] = memberId.value;
             }
 
+            requestObject["sport_event_participant"] = true;
+
             if (actionUrl) {
                 actionUrl = "/" + actionUrl;
 
@@ -67,10 +70,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     const formContainerEl = formEl.closest(".sport-event-member-form-wrapper");
                     const submittedFormTitleEl = formContainerEl.querySelector("h4[data-submitted-form-title]");
 
-                    formEl.style.maxHeight = 0;
+                    formEl.classList.add("form-submitted");
                     submittedFormTitleEl.innerHTML = submittedFormTitleEl.getAttribute("data-submitted-form-title");
                 })
             }
         });
     });
+
+    allSportEventsFormEditButtons.forEach(function (editButton) {
+        editButton.addEventListener("click", function () {
+            const parentEl = this.closest(".sport-event-member-form-wrapper");
+            const formEl = parentEl.querySelector("form");
+            const formTitleEl = parentEl.querySelector("h4[data-submitted-form-title]");
+
+            formEl.classList.remove("form-submitted");
+            formTitleEl.innerHTML = formTitleEl.getAttribute("data-not-submitted-form-title");
+        });
+    })
 });

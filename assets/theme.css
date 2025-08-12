@@ -7312,11 +7312,13 @@ deferred-media:not([data-loaded=true]) {
   align-items: flex-end;
 }
 
-.sport-event-member-form-wrapper .event-form-submit-button {
+.sport-event-member-form-wrapper .event-form-submit-button,
+.sport-event-member-form-wrapper .event-form-edit-button {
   margin-top: 20px;
 }
 
-.sport-event-member-form-wrapper .event-form-submit-button button {
+.sport-event-member-form-wrapper .event-form-submit-button button,
+.sport-event-member-form-wrapper .event-form-edit-button button {
   background-color: rgba(var(--color-primary-button));
   height: clamp(25px,var(--shopify-accelerated-checkout-button-block-size, 44px),55px);
   min-height: clamp(25px,var(--shopify-accelerated-checkout-button-block-size, 44px),55px);
@@ -7347,6 +7349,18 @@ deferred-media:not([data-loaded=true]) {
 
 .sport-event-member-form-container form.form-submitted {
   max-height: 0;
+}
+
+.sport-event-member-form-container form.form-submitted ~ .event-form-edit-button {
+  display: block;
+}
+
+.sport-event-member-form-container form.form-submitted button {
+  display: none;
+}
+
+.sport-event-member-form-container .event-form-edit-button {
+  display: none;
 }
 
 .sport-event-member-form-container .controls input[type='date'] {

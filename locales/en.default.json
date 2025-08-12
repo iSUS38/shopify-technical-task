@@ -85,6 +85,7 @@
       "female": "Female",
       "other": "Other"
     },
+    "edit": "Edit",
     "event_participant_form_submitted": "Your participant details have been submitted"
   },
   "localization": {

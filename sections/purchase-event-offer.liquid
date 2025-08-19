@@ -1,5 +1,6 @@
 {% assign offered_product = section.settings.product %}
-
+{{ cart.attributes["Firstname"] }}
+f
 {% if offered_product %}
     <script src="{{ 'purchase-event-offer.js' | asset_url }}" defer="defer"></script>
 
